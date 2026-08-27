@@ -4,7 +4,7 @@
 <head>
     <title>Hjem - Pellicula Film Forum</title>
     <meta name="description" content="TEMP">
-    <link rel="icon" type="styleheet" href="assets/css/index.css">
+    <link rel="stylesheet" href="/assets/css/fontpage.css">
     <?php include 'assets/php/header.php'; ?>
 </head>
 <body>
@@ -16,9 +16,7 @@
         <p>
             Dette er et skoleprojekt, der har til formål at demonstrere vores færdigheder inden for webudvikling. Du vil på sigt kunne diskuttere film, dele anmeldelser og deltage i filmrelaterede samtaler med andre filmelskere. Vi håber, du vil nyde din tid her!
         </p>
-        <p>
-            Test tes tse tse ste ts
-        </p>
+        <a href="category/">Gå til kategorier</a>
     </main>
     <?php include 'assets/php/footer.php'; ?>
 </body>

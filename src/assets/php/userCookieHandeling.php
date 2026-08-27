@@ -28,6 +28,7 @@ $isNewCookie = false;
 // Check if the cookie already exists
 if (isset($_COOKIE[$cookieName])) {
     $cookieValue = $_COOKIE[$cookieName];
+    echo "Existing cookie found: " . $cookieValue;
 } else {
     // Generate a new cookie value if it doesn't exist
     $cookieValue = generateCustomCookieValue();
