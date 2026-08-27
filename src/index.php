@@ -1,8 +1,10 @@
+<?php include 'assets/php/userCookieHandeling.php'; ?>
 <!DOCTYPE html>
 <html lang="da">
 <head>
     <title>Hjem - Pellicula Film Forum</title>
     <meta name="description" content="TEMP">
+    <link rel="icon" type="styleheet" href="assets/css/index.css">
     <?php include 'assets/php/header.php'; ?>
 </head>
 <body>
@@ -13,6 +15,9 @@
         <br>
         <p>
             Dette er et skoleprojekt, der har til formål at demonstrere vores færdigheder inden for webudvikling. Du vil på sigt kunne diskuttere film, dele anmeldelser og deltage i filmrelaterede samtaler med andre filmelskere. Vi håber, du vil nyde din tid her!
+        </p>
+        <p>
+            Test tes tse tse ste ts
         </p>
     </main>
     <?php include 'assets/php/footer.php'; ?>
