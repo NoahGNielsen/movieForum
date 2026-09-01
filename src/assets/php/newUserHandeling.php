@@ -29,10 +29,14 @@ if (!preg_match('/^[A-Za-z]+$/', $requestedUsername)) {
 	exit('Username may contain letters only.');
 }
 
+$rememberUser = isset($_POST['remember']) && $_POST['remember'] === 'on';
+$cookieLifetime = $rememberUser ? 365 * 24 * 60 * 60 : 12 * 60 * 60;
+
 if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId)) {
 	$userId = generateCustomCookieValue();
-	setUserSessionCookie($userId, 12 * 60 * 60);
 }
+
+setUserSessionCookie($userId, $cookieLifetime);
 
 $userName = $requestedUsername . '#' . substr($userId, -5);
 $lastSeen = date('Y-m-d H:i:s');
