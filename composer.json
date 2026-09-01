@@ -1,0 +1,15 @@
+{
+    "name": "NoahGNielsen/movieForum",
+    "description": "A movie forum project for a school assignment.",
+    "type": "project",
+    "license": "Apache-2.0",
+    "require": {},
+    "authors": [
+        {
+            "name": "Noah G. Nielsen",
+            "email": "noah@noahgajnielsen.dk",
+            "homepage": "https://noahgajnielsen.dk",
+            "role": "Lead Developer"
+        }
+    ]
+}
