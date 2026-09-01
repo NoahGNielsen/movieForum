@@ -32,8 +32,8 @@ if (!preg_match('/^[A-Za-z]+$/', $requestedUsername)) {
 $rememberUser = isset($_POST['remember']) && $_POST['remember'] === 'on';
 $cookieLifetime = $rememberUser ? 365 * 24 * 60 * 60 : 12 * 60 * 60;
 
-if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId)) {
-	$userId = generateCustomCookieValue();
+if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionCookieInUse($userId)) {
+	$userId = generateUniqueUserSessionCookie();
 }
 
 setUserSessionCookie($userId, $cookieLifetime);

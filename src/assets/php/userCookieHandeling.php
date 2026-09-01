@@ -38,11 +38,127 @@ function setUserSessionCookie($cookieValue, $seconds) {
     return $cookieValue;
 }
 
+function isUserSessionCookieInUse($cookieValue) {
+    if (!is_string($cookieValue) || !preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $cookieValue)) {
+        return true;
+    }
+
+    if (!loadDbConfigIfNeeded()) {
+        return false;
+    }
+
+    $dbConfig = $GLOBALS['db_config'] ?? null;
+    if (!is_array($dbConfig)) {
+        return false;
+    }
+
+    $conn = new mysqli($dbConfig['servername'], $dbConfig['username'], $dbConfig['password'], $dbConfig['dbname']);
+    if ($conn->connect_error) {
+        return false;
+    }
+
+    $checkCookie = $conn->prepare('SELECT userId FROM Users WHERE userId = ? LIMIT 1');
+    if ($checkCookie === false) {
+        $conn->close();
+        return false;
+    }
+
+    $checkCookie->bind_param('s', $cookieValue);
+    $checkCookie->execute();
+    $checkCookie->store_result();
+    $cookieInUse = $checkCookie->num_rows > 0;
+    $checkCookie->close();
+    $conn->close();
+
+    return $cookieInUse;
+}
+
+function generateUniqueUserSessionCookie() {
+    do {
+        $cookieValue = generateCustomCookieValue();
+    } while (isUserSessionCookieInUse($cookieValue));
+
+    return $cookieValue;
+}
+
 function updateUserSessionCookieToOneYear() {
     $cookieName = 'user_session_cookie';
-    $cookieValue = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : generateCustomCookieValue();
+    $cookieValue = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : generateUniqueUserSessionCookie();
 
     return setUserSessionCookie($cookieValue, 365 * 24 * 60 * 60);
+}
+
+function loadDbConfigIfNeeded() {
+    if (isset($GLOBALS['db_config'])) {
+        return true;
+    }
+
+    $candidatePaths = [
+        __DIR__ . '/../../config.php',
+        __DIR__ . '/../../../config.php',
+        dirname(__DIR__, 2) . '/config.php',
+        dirname(__DIR__, 3) . '/config.php',
+        ($_SERVER['DOCUMENT_ROOT'] ?? '') . '/config.php'
+    ];
+
+    foreach ($candidatePaths as $configPath) {
+        if (is_string($configPath) && $configPath !== '' && is_file($configPath)) {
+            require_once $configPath;
+            if (isset($GLOBALS['db_config'])) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+function updateUserLastSeenIfExists($userId) {
+    if (!is_string($userId) || $userId === '' || !preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId)) {
+        return false;
+    }
+
+    if (!loadDbConfigIfNeeded()) {
+        return false;
+    }
+
+    $dbConfig = $GLOBALS['db_config'] ?? null;
+    if (!is_array($dbConfig)) {
+        return false;
+    }
+
+    $conn = new mysqli($dbConfig['servername'], $dbConfig['username'], $dbConfig['password'], $dbConfig['dbname']);
+    if ($conn->connect_error) {
+        return false;
+    }
+
+    $checkUser = $conn->prepare('SELECT userId FROM Users WHERE userId = ? LIMIT 1');
+    if ($checkUser === false) {
+        $conn->close();
+        return false;
+    }
+
+    $checkUser->bind_param('s', $userId);
+    $checkUser->execute();
+    $checkUser->store_result();
+    $userExists = $checkUser->num_rows > 0;
+    $checkUser->close();
+
+    if (!$userExists) {
+        $conn->close();
+        return false;
+    }
+
+    $lastSeen = date('Y-m-d H:i:s');
+    $updateUser = $conn->prepare('UPDATE Users SET lastSeen = ? WHERE userId = ?');
+    if ($updateUser !== false) {
+        $updateUser->bind_param('ss', $lastSeen, $userId);
+        $updateUser->execute();
+        $updateUser->close();
+    }
+
+    $conn->close();
+    return true;
 }
 
 $cookieName = 'user_session_cookie';
@@ -51,9 +167,17 @@ $isNewCookie = false;
 
 if (isset($_COOKIE[$cookieName])) {
     $cookieValue = $_COOKIE[$cookieName];
+
+    if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $cookieValue) || !isUserSessionCookieInUse($cookieValue)) {
+        $cookieValue = generateUniqueUserSessionCookie();
+        setUserSessionCookie($cookieValue, 12 * 60 * 60);
+        $isNewCookie = true;
+    }
 } else {
-    $cookieValue = generateCustomCookieValue();
+    $cookieValue = generateUniqueUserSessionCookie();
     setUserSessionCookie($cookieValue, 12 * 60 * 60);
     $isNewCookie = true;
 }
+
+updateUserLastSeenIfExists($cookieValue);
 ?>
