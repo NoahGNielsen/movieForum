@@ -10,11 +10,27 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #e4e4f7;
-    --background: #0f0f14;
+    --background: #121212;
     --primary: #9b95df;
     --secondary: #7a2442;
     --accent: #e14414;
   }
+}
+
+:root[data-theme="light"] {
+    --text: #08081b;
+    --background: #f1ebe9;
+    --primary: #26206a;
+    --secondary: #db85a3;
+    --accent: #eb4e1e;
+}
+
+:root[data-theme="dark"] {
+    --text: #e4e4f7;
+    --background: #121212;
+    --primary: #9b95df;
+    --secondary: #7a2442;
+    --accent: #e14414;
 }
 
 
@@ -27,6 +43,10 @@ h1 {
     font-size: 30px;
 }
 p {
+    color: var(--text);
+    font-size: 15px;
+}
+label {
     color: var(--text);
     font-size: 15px;
 }
