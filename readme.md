@@ -22,19 +22,19 @@ movieForum/
 │   ├── .well-known/     # Well-known URIs configuration
 │   ├── assets/          # Static assets and resources
 │   │   ├── css/         # Stylesheets
-│   │   ├── images/      # Image resources
+│   │   ├── images/      # Image assets
 │   │   └── php/         # PHP scripts, templates, and layout partials (nav, footer, header)
-│   ├── legal/           # Legal pages and documents
+│   ├── legal/           # Legal pages
 │   ├── userMgmt/        # User management logic
 │   ├── .htaccess        # Apache server configuration
 │   ├── category.php     # Category view/handler
-│   ├── index.php        # Main entry point
+│   ├── index.php        # Homepage
 │   ├── post.php         # Post view/handler
 │   ├── robots.txt       # Search engine crawler instructions
 │   └── userProfile.php  # User profile page
 ├── .gitattributes       # Git attribute rules
 ├── .gitignore           # Git ignore rules
-├── composer.json        # PHP dependency manager configuration
+├── composer.json        # PHP dependency manager configuration file, needed for PHP Composer 
 ├── LICENSE              # Project license
 ├── NOTICE               # Project notice file
 ├── readme.md            # Documentation
