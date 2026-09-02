@@ -2,7 +2,7 @@
 
 ![HTML](https://img.shields.io/badge/language-HTML%2C%20CSS%20%26%20PHP-blue.svg?style=for-the-badge)
 ![GitHub License](https://img.shields.io/github/license/NoahGNielsen/movieForum?style=for-the-badge)
-![Website](https://img.shields.io/website?url=https%3A%2F%2Fnoahgajnielsen.dk%2F&style=for-the-badge&link=https%3A%2F%2Fforum.noahgajnielsen.dk%2F)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fnoahgajnielsen.dk%2F&link=https%3A%2F%2Fforum.noahgajnielsen.dk%2F)
 
 
 
