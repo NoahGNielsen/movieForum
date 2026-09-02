@@ -4,7 +4,7 @@
 <head>
     <title>Hjem - Pellicula Film Forum</title>
     <meta name="description" content="TEMP">
-    <link rel="stylesheet" href="/assets/css/fontpage.css">
+    <link rel="stylesheet" href="/assets/css/frontpage.css">
     <?php include 'assets/php/header.php'; ?>
 </head>
 <body>

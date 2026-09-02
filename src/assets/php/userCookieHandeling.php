@@ -10,7 +10,7 @@ function generateRandomString($length, $characters) {
 }
 
 // Function to create the custom format: AAAAAAAA_000_00000
-//I think that 53,457,372,028,800,000,000,000 combinations is enough for this project.
+// I think that 53,457,372,028,800,000,000,000 combinations is enough for this project.
 function generateCustomCookieValue() {
     $letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     $numbers = '0123456789';

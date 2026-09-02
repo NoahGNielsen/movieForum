@@ -1,12 +1,32 @@
+@media (prefers-color-scheme: light) {
+  :root {
+    --text: #08081b;
+    --background: #f1ebe9;
+    --primary: #26206a;
+    --secondary: #db85a3;
+    --accent: #eb4e1e;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e4e4f7;
+    --background: #0f0f14;
+    --primary: #9b95df;
+    --secondary: #7a2442;
+    --accent: #e14414;
+  }
+}
+
+
 body {
-    background-color: #fafbf7;
+    background-color: var(--background);
     font-family: 'Raleway', sans-serif, 'Roboto';
 }
 h1 {
-    color: #0a0c05;
+    color: var(--text);
     font-size: 30px;
 }
 p {
-    color: #0a0c05;
+    color: var(--text);
     font-size: 15px;
 }

@@ -30,7 +30,7 @@ FileETag MTime Size
     Header set X-Content-Type-Options "nosniff"
 
     # Enforce HTTPS for 1 year, including subdomains
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
     # Limit Referrer Information Shared Off-Site
     Header set Referrer-Policy "strict-origin-when-cross-origin"
