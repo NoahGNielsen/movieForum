@@ -1,11 +1,11 @@
-<?php include 'assets/php/userCookieHandeling.php'; ?>
+<?php include __DIR__ . '/assets/php/userCookieHandeling.php'; ?>
 <!DOCTYPE html>
 <html lang="da">
 <head>
     <title>Hjem - Pellicula Film Forum</title>
     <meta name="description" content="TEMP">
     <link rel="stylesheet" href="/assets/css/frontpage.css">
-    <?php include 'assets/php/header.php'; ?>
+    <?php include __DIR__ . '/assets/php/header.php'; ?>
 </head>
 <body>
     <main>
@@ -19,6 +19,6 @@
         <a href="/category">Gå til kategorier</a>
         <a href="/userMgmt/onboarding">Gå til onboarding</a>
     </main>
-    <?php include 'assets/php/footer.php'; ?>
+    <?php include __DIR__ . '/assets/php/footer.php'; ?>
 </body>
 </html>
