@@ -100,6 +100,7 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
     <?php include '../assets/php/header.php'; ?>
 </head>
 <body>
+    <?php include __DIR__ . '/../assets/php/navBar.php'; ?>
     <main>
         <div class="change-username-container">
             <h1>Ændring af brugernavn</h1>
@@ -136,7 +137,7 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
                 <div class="changeUsername-info-box">
                     <p><strong>Vigtig information:</strong></p>
                     <ul class="changeUsername-info-list">
-                        <li>Dit brugernavn kan kun indeholde bogstaver (A-Z, a-z)</li>
+                        <li>Dit brugernavn kan kun indeholde bogstaver (A-Z, a-z - ikke Æ, Ø og Å)</li>
                         <li>Dit unikke ID-nummer (#xxxxx) bliver automatisk tilføjet til dit brugernavn</li>
                         <li>Brugernavnet skal være mellem 3 og 20 tegn langt</li>
                         <small>Du kan ikke vælge et brugernavn, hvis en anden bruger med samme ID allerede har det.</small>

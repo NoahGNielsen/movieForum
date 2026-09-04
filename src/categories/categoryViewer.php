@@ -8,6 +8,7 @@
     <?php include __DIR__ . '/../assets/php/header.php'; ?>
 </head>
 <body>
+    <?php include __DIR__ . '/../assets/php/navBar.php'; ?>
     <main>
         <h1>
             Kategorier
