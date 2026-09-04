@@ -16,8 +16,11 @@
         <p>
             Dette er et skoleprojekt, der har til formål at demonstrere vores færdigheder inden for webudvikling. Du vil på sigt kunne diskuttere film, dele anmeldelser og deltage i filmrelaterede samtaler med andre filmelskere. Vi håber, du vil nyde din tid her!
         </p>
-        <a href="/category">Gå til kategorier</a>
         <a href="/userMgmt/onboarding">Gå til onboarding</a>
+        <br>
+        <a href="/categories/allCategory">Gå til alle kategorier</a>
+        <a href="/categories/newCategory">Gå til ny kategorier</a>
+        <a href="/categories/categoryViewer">Gå til enkelt kategorier</a>sd
     </main>
     <?php include __DIR__ . '/assets/php/footer.php'; ?>
 </body>

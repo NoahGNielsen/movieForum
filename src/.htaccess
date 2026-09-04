@@ -49,8 +49,8 @@ FileETag MTime Size
     # --------------------------------------------------------------------------
     # SMART CACHING STRATEGY (Fixes Security Scanner & Handles 304 Validation)
     # --------------------------------------------------------------------------
-    # Default for Static Assets (Images, CSS, JS, Fonts): Cache locally for 7 days
-    Header set Cache-Control "max-age=604800, public"
+    # Default for Static Assets (Images, CSS, JS, Fonts): Cache locally for 90 days
+    Header set Cache-Control "max-age=7776000, public"
 
     # Dynamic Pages (HTML/PHP): Force browser to revalidate with 304 checks every time
     <FilesMatch "\.(html|htm|php)$">

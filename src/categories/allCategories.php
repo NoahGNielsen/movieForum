@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../../assets/php/userCookieHandeling.php'; ?>
+<?php include __DIR__ . '/../assets/php/userCookieHandeling.php'; ?>
 <!DOCTYPE html>
 <html lang="da">
 <head>

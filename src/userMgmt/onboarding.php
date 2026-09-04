@@ -8,7 +8,7 @@
     <?php include '../assets/php/header.php'; ?>
 </head>
 <body>
-    <form action="../assets/php/newUserHandeling" method="post">
+    <form action="../assets/php/newUserHandeling" method="post" class="newUserForm">
         <label for="username">Brugernavn:</label>
         <input type="text" name="username" placeholder="Brugernavn" class ="newUserUsernameInput" required minlength="3" maxlength="25">
         

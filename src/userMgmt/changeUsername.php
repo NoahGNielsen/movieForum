@@ -133,9 +133,9 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
                     <button type="submit" class="btn-submit">Ændre brugernavn</button>
                 </form>
 
-                <div class="info-box">
+                <div class="changeUsername-info-box">
                     <p><strong>Vigtig information:</strong></p>
-                    <ul>
+                    <ul class="changeUsername-info-list">
                         <li>Dit brugernavn kan kun indeholde bogstaver (A-Z, a-z)</li>
                         <li>Dit unikke ID-nummer (#xxxxx) bliver automatisk tilføjet til dit brugernavn</li>
                         <li>Brugernavnet skal være mellem 3 og 20 tegn langt</li>
