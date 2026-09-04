@@ -3,6 +3,8 @@
     <ul class="navBar-list">
         <li class="navBar-item"><a href="https://forum.noahgajnielsen.dk/">Forside</a></li>
         <li class="navBar-item"><a href="https://forum.noahgajnielsen.dk/categories/allCategories.php">Kategorier</a></li>
-        <li class="navBar-item"><a href="https://forum.noahgajnielsen.dk/userMgmt/onboarding.php">Onboarding</a></li>
     </ul>
+    <a class="navBar-Onboarding" target="_self" href="https://forum.noahgajnielsen.dk/userMgmt/onboarding">
+        Onboarding
+    </a>
 </nav>
