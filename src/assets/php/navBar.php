@@ -1,3 +1,4 @@
+<?php include __DIR__ . '/newUserPopUp.php'; ?>
 <nav class="navBar">
     <img src="https://forum.noahgajnielsen.dk/assets/images/navBarLogo.webp" alt="Pellicula Film Forum Logo" class="navBar-logo" width="75" height="75">
     <ul class="navBar-list">

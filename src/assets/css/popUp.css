@@ -1,0 +1,127 @@
+.new-user-popup {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+	background: rgba(0, 0, 0, 0.76);
+	backdrop-filter: blur(4px);
+}
+
+.new-user-popup-content {
+	width: min(100%, 560px);
+	padding: 34px;
+	color: var(--text);
+	background: var(--background);
+	border: 1px solid color-mix(in srgb, var(--primary) 70%, transparent);
+	border-radius: 8px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+	animation: new-user-popup-appear 220ms ease-out both;
+}
+
+.new-user-popup-content h2 {
+	margin: 0 0 12px;
+	color: var(--text);
+	font-size: clamp(24px, 4vw, 32px);
+	line-height: 1.15;
+}
+
+.new-user-popup-content > p {
+	margin: 0 0 26px;
+	line-height: 1.55;
+}
+
+.new-user-popup-consent {
+	display: grid;
+	grid-template-columns: 20px 1fr;
+	gap: 12px;
+	align-items: start;
+	margin: 18px 0;
+	color: var(--text);
+	font-size: 15px;
+	line-height: 1.55;
+	cursor: pointer;
+}
+
+.new-user-popup-consent input {
+	width: 17px;
+	height: 17px;
+	margin: 3px 0 0;
+	accent-color: var(--accent);
+	cursor: pointer;
+}
+
+.new-user-popup-content button {
+	min-width: 120px;
+	margin-top: 12px;
+	padding: 12px 22px;
+	color: #fff;
+	background: var(--accent);
+	border: 0;
+	border-radius: 4px;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background-color 180ms ease, opacity 180ms ease, transform 180ms ease;
+}
+
+.new-user-popup-content button:not(:disabled):hover {
+	transform: translateY(-1px);
+}
+
+.new-user-popup-content button:disabled {
+	background: #808080;
+	opacity: 0.7;
+	cursor: not-allowed;
+}
+
+.newUserPopUpLink {
+	color: var(--accent);
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.newUserPopUpLink:hover {
+	color: var(--primary);
+}
+
+@keyframes new-user-popup-appear {
+	from {
+		opacity: 0;
+		transform: translateY(8px) scale(0.98);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@media (max-width: 520px) {
+	.new-user-popup {
+		padding: 16px;
+	}
+
+	.new-user-popup-content {
+		padding: 26px 22px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.new-user-popup-content,
+	.new-user-popup-content button {
+		animation: none;
+		transition: none;
+	}
+}
+
+.newUserPopUpLink {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.newUserPopUpLink:hover {
+    text-decoration: underline;
+}

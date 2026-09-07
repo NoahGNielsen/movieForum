@@ -18,35 +18,41 @@
 }
 
 :root[data-theme="light"] {
-    --text: #08081b;
-    --background: #f1ebe9;
-    --primary: #26206a;
-    --secondary: #db85a3;
-    --accent: #eb4e1e;
+  --text: #08081b;
+  --background: #f1ebe9;
+  --primary: #26206a;
+  --secondary: #db85a3;
+  --accent: #eb4e1e;
 }
 
 :root[data-theme="dark"] {
-    --text: #e4e4f7;
-    --background: #121212;
-    --primary: #9b95df;
-    --secondary: #7a2442;
-    --accent: #e14414;
+  --text: #e4e4f7;
+  --background: #121212;
+  --primary: #9b95df;
+  --secondary: #7a2442;
+  --accent: #e14414;
 }
 
 
 body {
-    background-color: var(--background);
-    font-family: 'Raleway', sans-serif, 'Roboto';
+  background-color: var(--background);
+  font-family: 'Raleway', sans-serif, 'Roboto';
 }
 h1 {
-    color: var(--text);
-    font-size: 30px;
+  color: var(--text);
+  font-size: 30px;
 }
 p {
-    color: var(--text);
-    font-size: 15px;
+  color: var(--text);
+  font-size: 15px;
 }
 label {
-    color: var(--text);
-    font-size: 15px;
+  color: var(--text);
+  font-size: 15px;
+}
+
+img {
+  color: var(--text);
+  size: 15px;
+  font-family: 'Raleway', sans-serif, 'Roboto';
 }

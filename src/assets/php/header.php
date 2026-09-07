@@ -3,6 +3,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/x-icon" href="https://forum.noahgajnielsen.dk/assets/images/favicon.ico">
 <link rel="stylesheet" href="https://forum.noahgajnielsen.dk/assets/css/mainStyle.css?v=<?= filemtime(__DIR__ . '/../css/mainStyle.css') ?>">
+<link rel="stylesheet" href="https://forum.noahgajnielsen.dk/assets/css/popUp.css?v=<?= filemtime(__DIR__ . '/../css/popUp.css') ?>">
 <?php include __DIR__ . '/darkModeHandler.php'; ?>
 <link rel="terms-of-service" href="https://noahgajnielsen.dk/legal/terms.html">
 <link rel="privacy-policy" href="https://noahgajnielsen.dk/legal/privacy.html">
