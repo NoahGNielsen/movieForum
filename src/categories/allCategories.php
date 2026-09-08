@@ -10,12 +10,18 @@
 <body>
     <?php include __DIR__ . '/../assets/php/navBar.php'; ?>
     <main>
-        <h1>
+        <div>
+            <h1>
             Kategorier
-        </h1>
-        <p>
-            Her kan du finde forskellige kategorier, hvor du kan deltage i diskussioner om film. Vælg en kategori for at udforske de tilgængelige emner og deltage i samtaler med andre filmelskere.
-        </p>
+            </h1>
+            <p>
+                Her kan du finde forskellige kategorier, hvor du kan deltage i diskussioner om film. Vælg en kategori for at udforske de tilgængelige emner og deltage i samtaler med andre filmelskere.
+            </p>
+        </div>
+        <div class="category-container">
+            <?php include __DIR__ . '/../assets/php/allCategories.php';?>
+        </div>
+        
     </main>
     <?php include __DIR__ . '/../assets/php/footer.php'; ?>
 </body>

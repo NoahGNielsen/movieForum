@@ -1,7 +1,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/x-icon" href="https://forum.noahgajnielsen.dk/assets/images/favicon.ico">
+<link rel="icon" type="image/x-icon" href="https://forum.noahgajnielsen.dk/assets/images/favicon.webp" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/x-icon" href="https://forum.noahgajnielsen.dk/assets/images/favicon-dark.webp" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="https://forum.noahgajnielsen.dk/assets/css/mainStyle.css?v=<?= filemtime(__DIR__ . '/../css/mainStyle.css') ?>">
 <link rel="stylesheet" href="https://forum.noahgajnielsen.dk/assets/css/popUp.css?v=<?= filemtime(__DIR__ . '/../css/popUp.css') ?>">
 <?php include __DIR__ . '/darkModeHandler.php'; ?>
