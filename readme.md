@@ -17,13 +17,14 @@ Coming soon
 ## Project Structure
 ```
 movieForum/
-├── .github/             # GitHub workflow configurations
+├── .github/workflows/   # GitHub workflow configurations
 ├── src/                 # Source code directory
 │   ├── .well-known/     # Well-known URIs configuration
 │   ├── assets/          # Static assets and resources
 │   │   ├── css/         # Stylesheets
 │   │   ├── images/      # Image assets
-│   │   └── php/         # PHP scripts, templates, and layout partials (nav, footer, header)
+│   │   ├── js/          # JavaScript scripts
+│   │   └── php/         # PHP scripts, templates, and layout partials (nav, footer, header etc.)
 │   ├── legal/           # Legal pages, eg. ToS and Privacy Policy
 │   ├── userMgmt/        # User management logic
 │   ├── .htaccess        # Apache server configuration
