@@ -1,4 +1,4 @@
-name: Deploy to FTP
+name: Deploy Folder to FTP
 
 on:
   push:
@@ -6,17 +6,17 @@ on:
 
 jobs:
   web-deploy:
-    name: Upload file
+    name: Upload Folder
     runs-on: ubuntu-latest
     steps:
-      - name: Get latest code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Upload file
-        uses: tomasbkk/action-ftp-upload@v1.2.1
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4
         with:
-          user: ${{ secrets.FTP_USER }}
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          host: ${{ secrets.FTP_HOST }}
-          src: src/
-          dest: public_forumAssignment/
+          local-dir: src/
+          server-dir: public_forumAssignment/
