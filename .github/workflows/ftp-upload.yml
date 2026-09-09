@@ -1,8 +1,22 @@
-- name: Upload file
-  uses: tomasbkk/action-ftp-upload@v1.2.1
-  with:
-    user: ${{ secrets.FTP_USER }}
-    password: ${{ secrets.FTP_PASSWORD }}
-    host: ${{ secrets.FTP_HOST }}
-    src: src/*
-    dest: public_forumAssignment/
+name: Deploy to FTP
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  web-deploy:
+    name: Upload file
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v4
+
+      - name: Upload file
+        uses: tomasbkk/action-ftp-upload@v1.2.1
+        with:
+          user: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          host: ${{ secrets.FTP_HOST }}
+          src: src/*
+          dest: public_forumAssignment/
