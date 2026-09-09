@@ -83,6 +83,14 @@ FileETag MTime Size
     RewriteRule ^ - [F,L]
 
     # --------------------------------------------------------------------------
+    # CATEGORY CLEAN URL REWRITE
+    # --------------------------------------------------------------------------
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/categories/(newCategory|allCategories)/?$ [NC]
+    RewriteRule ^categories/([^/]+)/?$ categories/viewCategory?categoryName=$1 [L,QSA]
+
+    # --------------------------------------------------------------------------
     # UNIVERSAL FILE EXTENSION REMOVAL (.html, .php, .htm)
     # --------------------------------------------------------------------------
     # A. Redirect external requests containing extensions to their clean URL version

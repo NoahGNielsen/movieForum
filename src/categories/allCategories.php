@@ -4,7 +4,7 @@
 <head>
     <title>Kategorier - Pellicula Film Forum</title>
     <meta name="description" content="På denne side kan du finde forskellige kategorier, hvor du kan deltage i diskussioner om film. Vælg en kategori for at udforske de tilgængelige emner og deltage i samtaler med andre filmelskere.">
-    <link rel="stylesheet" href="../assets/css/allCategories.css">
+    <link rel="stylesheet" href="../assets/css/allCategories.css?v=2">
     <?php include __DIR__ . '/../assets/php/header.php'; ?>
 </head>
 <body>
