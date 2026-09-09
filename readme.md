@@ -1,9 +1,8 @@
 # Pellicula Film Forum
 
-![HTML](https://img.shields.io/badge/language-HTML%2C%20CSS%20%26%20PHP-blue.svg)
-![GitHub License](https://img.shields.io/github/license/NoahGNielsen/movieForum)
 [![PHP Composer](https://github.com/NoahGNielsen/movieForum/actions/workflows/php.yml/badge.svg)](https://github.com/NoahGNielsen/movieForum/actions/workflows/php.yml)
 ![Uptime Robot ratio (7 days)](https://img.shields.io/uptimerobot/ratio/7/m803898037-34ae5a84c8b56baffe97ec9a)
+![GitHub License](https://img.shields.io/github/license/NoahGNielsen/movieForum)
 
 
 ## Overview
