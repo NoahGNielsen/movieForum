@@ -1,0 +1,8 @@
+- name: Upload file
+  uses: tomasbkk/action-ftp-upload@v1.2.1
+  with:
+    user: ${{ secrets.FTP_USER }}
+    password: ${{ secrets.FTP_PASSWORD }}
+    host: ${{ secrets.FTP_HOST }}
+    src: src/*
+    dest: public_forumAssignment/
