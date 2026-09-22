@@ -66,12 +66,13 @@ Distributed under the [Apache License 2.0](https://www.apache.org/licenses/LICEN
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SebDeep"><img src="https://avatars.githubusercontent.com/u/118676800?v=4?s=100" width="100px;" alt="SebDeep"/><br /><sub><b>SebDeep</b></sub></a><br /><a href="#projectManagement-SebDeep" title="Project Management">📆</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MizzoOfficial"><img src="https://avatars.githubusercontent.com/u/316894576?v=4?s=100" width="100px;" alt="MizzoOfficial"/><br /><sub><b>MizzoOfficial</b></sub></a><br /><a href="https://github.com/NoahGNielsen/movieForum/pulls?q=is%3Apr+reviewed-by%3AMizzoOfficial" title="Reviewed Pull Requests">👀</a> <a href="#research-MizzoOfficial" title="Research">🔬</a> <a href="#userTesting-MizzoOfficial" title="User Testing">📓</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/vhendzn"><img src="https://avatars.githubusercontent.com/u/99031847?v=4?s=100" width="100px;" alt="vhendzn"/><br /><sub><b>vhendzn</b></sub></a><br /><a href="#design-vhendzn" title="Design">🎨</a></td>
-      
     </tr>
   </tbody>
 </table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
