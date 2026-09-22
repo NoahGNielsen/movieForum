@@ -1,4 +1,7 @@
 # Pellicula Film Forum
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![PHP Composer](https://github.com/NoahGNielsen/movieForum/actions/workflows/php.yml/badge.svg)](https://github.com/NoahGNielsen/movieForum/actions/workflows/php.yml)
 ![Uptime Robot ratio (7 days)](https://img.shields.io/uptimerobot/ratio/7/m803898037-34ae5a84c8b56baffe97ec9a)
@@ -53,6 +56,20 @@ Distributed under the [Apache License 2.0](https://www.apache.org/licenses/LICEN
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Superged07"><img src="https://avatars.githubusercontent.com/u/316896259?v=4?s=100" width="100px;" alt="Superged07"/><br /><sub><b>Superged07</b></sub></a><br /><a href="https://github.com/NoahGNielsen/movieForum/pulls?q=is%3Apr+reviewed-by%3ASuperged07" title="Reviewed Pull Requests">👀</a> <a href="#research-Superged07" title="Research">🔬</a> <a href="#userTesting-Superged07" title="User Testing">📓</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 
