@@ -15,6 +15,18 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "NoahGNielsen",
+      "name": "Noah G. N.",
+      "avatar_url": "https://avatars.githubusercontent.com/u/109825490?v=4",
+      "profile": "https://noahgajnielsen.dk/",
+      "contributions": [
+        "design",
+        "code",
+        "infra",
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
