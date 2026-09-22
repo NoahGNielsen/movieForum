@@ -1,0 +1,28 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "MizzoOfficial",
+      "name": "MizzoOfficial",
+      "avatar_url": "https://avatars.githubusercontent.com/u/316894576?v=4",
+      "profile": "https://github.com/MizzoOfficial",
+      "contributions": [
+        "review",
+        "research",
+        "userTesting"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "movieForum",
+  "projectOwner": "NoahGNielsen"
+}
