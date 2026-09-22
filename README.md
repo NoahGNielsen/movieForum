@@ -16,29 +16,29 @@ Coming soon
 ## Project Structure
 ```
 movieForum/
-├── .github/workflows/   # GitHub workflow configurations
-├── src/                 # Source code directory
-│   ├── .well-known/     # Well-known URIs configuration
-│   ├── assets/          # Static assets and resources
-│   │   ├── css/         # Stylesheets
-│   │   ├── images/      # Image assets
-│   │   ├── js/          # JavaScript scripts
-│   │   └── php/         # PHP scripts, templates, and layout partials (nav, footer, header etc.)
-│   ├── legal/           # Legal pages, eg. ToS and Privacy Policy
-│   ├── userMgmt/        # User management logic
-│   ├── .htaccess        # Apache server configuration
-│   ├── category.php     # Category viewer
-│   ├── index.php        # Main entry point, or just homepage :)
-│   ├── post.php         # Post/thread page
-│   ├── robots.txt       # Search engine crawler instructions
-│   └── userProfile.php  # User profile page
-├── .gitattributes       # Git attribute rules
-├── .gitignore           # Git ignore rules
-├── composer.json        # PHP dependency manager configuration file, needed for PHP Composer 
-├── LICENSE              # Project license
-├── NOTICE               # Project notice file
-├── readme.md            # Documentation
-└── SECURITY.md          # Security policy
+├── .github/                 # GitHub configuration and workflow files
+├── .gitignore               # Git ignore rules
+├── .gitattributes           # Git attribute rules
+├── composer.json            # PHP dependency manager configuration
+├── LICENSE                  # Project license
+├── NOTICE                   # Project notice file
+├── README.md                # Project documentation
+├── SECURITY.md              # Security policy
+└── src/                     # Main application source code
+    ├── .htaccess            # Apache URL and rewrite rules
+    ├── .well-known/         # Well-known public files
+    ├── assets/              # Static assets and shared UI components
+    │   ├── css/             # Stylesheets for pages and layout
+    │   ├── js/              # Client-side JavaScript
+    │   ├── images/          # Image assets
+    │   └── php/             # Reusable PHP partials and handlers
+    ├── categories/          # Category pages and creation flow
+    ├── legal/               # Privacy and terms pages
+    ├── posts/               # Post and comment-related pages
+    ├── userMgmt/            # User account and onboarding pages
+    ├── index.php            # Homepage
+    ├── userProfile.php      # User profile page
+    └── robots.txt           # Crawler instructions
 ```
 
 ## License
