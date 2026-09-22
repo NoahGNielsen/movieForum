@@ -85,10 +85,14 @@ FileETag MTime Size
     # --------------------------------------------------------------------------
     # CATEGORY CLEAN URL REWRITE
     # --------------------------------------------------------------------------
+    # Redirect direct access to categoryViewer.php back to the clean URL
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /categories/categoryViewer\.php\?categoryName=([^&\ ]+) [NC]
+    RewriteRule ^ /categories/%1? [R=301,L]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !^/categories/(newCategory|allCategories)/?$ [NC]
-    RewriteRule ^categories/([^/]+)/?$ categories/viewCategory?categoryName=$1 [L,QSA]
+    RewriteRule ^categories/([^/]+)/?$ categories/categoryViewer.php?categoryName=$1 [L,QSA]
 
     # --------------------------------------------------------------------------
     # UNIVERSAL FILE EXTENSION REMOVAL (.html, .php, .htm)
