@@ -49,3 +49,14 @@ Distributed under the [Apache License 2.0](https://www.apache.org/licenses/LICEN
 
 **Developer:** [Noah G. Nielsen](https://github.com/NoahGNielsen/) <br>
 **School:** [HANSENBERG Tekniske Gymnasium](https://www.hansenberg.dk/htx/)
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
