@@ -12,12 +12,18 @@
       "name": "Superged07",
       "avatar_url": "https://avatars.githubusercontent.com/u/316896259?v=4",
       "profile": "https://github.com/Superged07",
+      "contributions": []
+    },
+    {
       "login": "SebDeep",
       "name": "SebDeep",
       "avatar_url": "https://avatars.githubusercontent.com/u/118676800?v=4",
       "profile": "https://github.com/SebDeep",
       "contributions": [
         "projectManagement"
+      ]
+    },
+    {
       "login": "MizzoOfficial",
       "name": "MizzoOfficial",
       "avatar_url": "https://avatars.githubusercontent.com/u/316894576?v=4",
@@ -26,6 +32,9 @@
         "review",
         "research",
         "userTesting"
+      ]
+    },
+    {
       "login": "vhendzn",
       "name": "vhendzn",
       "avatar_url": "https://avatars.githubusercontent.com/u/99031847?v=4",
@@ -53,5 +62,4 @@
   "repoHost": "https://github.com",
   "projectName": "movieForum",
   "projectOwner": "NoahGNielsen"
-}
 }
