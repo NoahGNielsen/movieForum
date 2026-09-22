@@ -1,8 +1,7 @@
 # Pellicula Film Forum
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
-
 [![PHP Composer](https://github.com/NoahGNielsen/movieForum/actions/workflows/php.yml/badge.svg)](https://github.com/NoahGNielsen/movieForum/actions/workflows/php.yml)
 ![Uptime Robot ratio (7 days)](https://img.shields.io/uptimerobot/ratio/7/m803898037-34ae5a84c8b56baffe97ec9a)
 ![GitHub License](https://img.shields.io/github/license/NoahGNielsen/movieForum)
@@ -48,11 +47,6 @@ movieForum/
 
 Distributed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
----
-
-**Developer:** [Noah G. Nielsen](https://github.com/NoahGNielsen/) <br>
-**School:** [HANSENBERG Tekniske Gymnasium](https://www.hansenberg.dk/htx/)
-
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
@@ -76,3 +70,4 @@ Distributed under the [Apache License 2.0](https://www.apache.org/licenses/LICEN
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+**School:** [HANSENBERG Tekniske Gymnasium](https://www.hansenberg.dk/htx/)
