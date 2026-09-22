@@ -20,7 +20,7 @@ movieForum/
 ├── .gitignore               # Git ignore rules
 ├── .gitattributes           # Git attribute rules
 ├── composer.json            # PHP dependency manager configuration
-├── CODE_OF_CONDUCT.md       # 
+├── CODE_OF_CONDUCT.md       # Code of conduct policy file
 ├── LICENSE                  # Project license
 ├── NOTICE                   # Project notice file
 ├── README.md                # Project documentation
