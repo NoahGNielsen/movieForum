@@ -61,6 +61,7 @@ Distributed under the [Apache License 2.0](https://www.apache.org/licenses/LICEN
 <table>
   <tbody>
     <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/vhendzn"><img src="https://avatars.githubusercontent.com/u/99031847?v=4?s=100" width="100px;" alt="vhendzn"/><br /><sub><b>vhendzn</b></sub></a><br /><a href="#design-vhendzn" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://noahgajnielsen.dk/"><img src="https://avatars.githubusercontent.com/u/109825490?v=4?s=100" width="100px;" alt="Noah G. N."/><br /><sub><b>Noah G. N.</b></sub></a><br /><a href="#design-NoahGNielsen" title="Design">🎨</a> <a href="https://github.com/NoahGNielsen/movieForum/commits?author=NoahGNielsen" title="Code">💻</a> <a href="#infra-NoahGNielsen" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-NoahGNielsen" title="Maintenance">🚧</a></td>
     </tr>
   </tbody>
