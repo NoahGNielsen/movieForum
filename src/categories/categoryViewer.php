@@ -59,9 +59,6 @@ $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QU
                                 <?php foreach ($categoryViewer['subcategories'] as $subcategory): ?>
                                     <li>
                                         <a href="/categories/<?= $escape(rawurlencode($subcategory['name'])) ?>"><?= $escape($subcategory['name']) ?></a>
-                                        <?php if (!empty($subcategory['description'])): ?>
-                                            <p><?= $escape($subcategory['description']) ?></p>
-                                        <?php endif; ?>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
