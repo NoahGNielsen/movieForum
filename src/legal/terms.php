@@ -13,9 +13,9 @@
         <h1>
             Vilkår og betingelser
         </h1>
-        <small>
+        <p>
             Midlertidig fil
-        </small>
+        </p>
         <p>Brug <a href="https://noahgajnielsen.dk/legal/terms" target="_blank">https://noahgajnielsen.dk/legal/terms</a></p>
     
     </main>
