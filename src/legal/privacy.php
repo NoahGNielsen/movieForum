@@ -13,9 +13,9 @@
         <h1>
             Privatlivs politik
         </h1>
-        <h5>
+        <small>
             Midlertidig fil
-        </h5>
+        </small>
         <p>Brug <a href="https://noahgajnielsen.dk/legal/privacy" target="_blank">https://noahgajnielsen.dk/legal/privacy</a></p>
     
     </main>
