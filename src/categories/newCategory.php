@@ -13,7 +13,7 @@
         <h1>
             Lav en ny under kategori
         </h1>
-        <Form class="newCategoriForm" action="../assets/php/newCategoryHandler.php" method="post">
+        <Form class="newCategoriForm" action="../assets/php/newCategoryHandler" method="post">
             <label class="newCategoriFormLabel" for="newCategoriName">Navn: </label>
             <input class="newCategoriFormInput" type="text" name="newCategoriName" id="newCategoriName" minlength="3" maxlength="35" pattern="[A-Za-z0-9.,_@:!?()+& -]+" required>
 
