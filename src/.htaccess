@@ -92,7 +92,7 @@ FileETag MTime Size
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !^/categories/(newCategory|allCategories)/?$ [NC]
-    RewriteRule ^categories/([^/]+)/?$ categories/categoryViewer.php?categoryName=$1 [L,QSA]
+    RewriteRule ^categories/([^/]+)/?$ categories/categoryViewer.php?categoryName=$1 [B,L,QSA]
 
     # --------------------------------------------------------------------------
     # UNIVERSAL FILE EXTENSION REMOVAL (.html, .php, .htm)
