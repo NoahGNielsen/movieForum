@@ -88,23 +88,40 @@ if ($columnsResult === false) {
 	rejectCategoryRequest(500, 'Kategoritabellen kunne ikke kontrolleres.');
 }
 
-$parentColumn = null;
-$parentColumnCandidates = ['parentChannelId', 'parentChannelID', 'parentId', 'channelParentId', 'parent_channel_id', 'parentCategoryId', 'parent_category_id', 'topChannelId'];
+$channelColumns = [];
 while ($column = $columnsResult->fetch_assoc()) {
-	if (in_array($column['Field'], $parentColumnCandidates, true) || preg_match('/^(parent.*(channel|category|id)|(channel|category).*parent)/i', $column['Field'])) {
-		$parentColumn = $column['Field'];
-		break;
-	}
+	$channelColumns[] = $column;
 }
 $columnsResult->free();
 
-if ($parentColumn === null) {
+$topColumn = null;
+$topColumnCandidates = ['isTopChannel', 'isTopChannelID', 'isTopCategory', 'isTopCategoryID', 'topChannel', 'top_channel', 'isTop', 'is_top'];
+foreach ($channelColumns as $column) {
+	$field = $column['Field'];
+	if (in_array($field, $topColumnCandidates, true) || preg_match('/^(is.*top.*(channel|category)|top.*(channel|category))/i', (string) $field)) {
+		$topColumn = $field;
+		break;
+	}
+}
+
+$parentColumn = null;
+$parentColumnCandidates = ['parentChannelId', 'parentChannelID', 'parentId', 'channelParentId', 'parent_channel_id', 'parentCategoryId', 'parent_category_id', 'topChannelId'];
+foreach ($channelColumns as $column) {
+	$field = $column['Field'];
+	if (in_array($field, $parentColumnCandidates, true) || preg_match('/^(parent.*(channel|category|id)|(channel|category).*parent)/i', (string) $field)) {
+		$parentColumn = $field;
+		break;
+	}
+}
+
+if ($topColumn === null || $parentColumn === null) {
 	$conn->close();
 	rejectCategoryRequest(500, 'Kategoritabellen mangler en understøttet overkategori-reference.');
 }
 
 $safeParentColumn = '`' . str_replace('`', '``', $parentColumn) . '`';
-$parentCheck = $conn->prepare('SELECT channelId FROM Channels WHERE channelId = ? AND isTopChannel = 1 LIMIT 1');
+$safeTopColumn = '`' . str_replace('`', '``', $topColumn) . '`';
+$parentCheck = $conn->prepare('SELECT channelId FROM Channels WHERE channelId = ? AND ' . $safeTopColumn . ' = 1 LIMIT 1');
 if ($parentCheck === false) {
 	$conn->close();
 	rejectCategoryRequest(500, 'Overkategorien kunne ikke kontrolleres.');
@@ -139,7 +156,7 @@ if ($isDuplicate) {
 }
 
 $insert = $conn->prepare(
-	'INSERT INTO Channels (channelName, channelDescription, isTopChannel, ' . $safeParentColumn . ') VALUES (?, ?, 0, ?)'
+	'INSERT INTO Channels (channelName, channelDescription, ' . $safeTopColumn . ', ' . $safeParentColumn . ') VALUES (?, ?, 0, ?)'
 );
 if ($insert === false) {
 	$conn->close();
