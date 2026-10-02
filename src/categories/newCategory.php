@@ -27,7 +27,7 @@
                 </select>
             </div>
 
-            <label for="acceptTerms">Jeg afgivere herved lov & tro at denne kategori opfylder forumets retningslinjer og at den ikke indeholder ulovlige eller stødende indhold. Derudover så findes en lignene kategori ikke.</label>
+            <label for="acceptTerms">Jeg afgivere herved tro- og love at denne kategori opfylder forumets retningslinjer og at den ikke indeholder ulovlige eller stødende indhold. Derudover så findes en lignene kategori ikke.</label>
             <input class="newCategoriFormSubmit" type="checkbox" name="acceptTerms" id="acceptTerms" value="1" required>
 
             <button class="newCategoriFormSubmit" type="submit">Opret ny under kategori</button>
