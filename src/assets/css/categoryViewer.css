@@ -1,0 +1,108 @@
+.category-heading {
+	margin-bottom: 2rem;
+	padding-bottom: 1.25rem;
+	border-bottom: 1px solid color-mix(in srgb, var(--text) 18%, transparent);
+}
+
+.category-heading h1 {
+	margin-bottom: 0.5rem;
+}
+
+.category-heading p:last-child {
+	max-width: 70ch;
+	margin-bottom: 0;
+	opacity: 0.78;
+}
+
+.category-eyebrow {
+	margin-bottom: 0.4rem;
+	color: var(--accent);
+	font-size: 0.78rem;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.category-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 2.5rem;
+	align-items: start;
+}
+
+.category-layout.has-subcategories {
+	grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+}
+
+.post-list h2,
+.subcategory-list h2 {
+	margin-bottom: 1rem;
+	font-size: 1.25rem;
+}
+
+.post-entry {
+	padding: 1.25rem 0;
+	border-top: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.post-entry:last-child {
+	border-bottom: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.post-content {
+	margin-bottom: 1rem;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+.post-meta {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 0.5rem 1rem;
+	color: color-mix(in srgb, var(--text) 68%, transparent);
+	font-size: 0.85rem;
+}
+
+.subcategory-list {
+	padding-left: 1.25rem;
+	border-left: 2px solid var(--secondary);
+}
+
+.subcategory-list ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.subcategory-list li {
+	padding: 0.85rem 0;
+	border-top: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.subcategory-list li:last-child {
+	border-bottom: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.subcategory-list li p {
+	margin: 0.3rem 0 0;
+	color: color-mix(in srgb, var(--text) 68%, transparent);
+	font-size: 0.9rem;
+}
+
+.empty-state,
+.category-message {
+	color: color-mix(in srgb, var(--text) 72%, transparent);
+}
+
+@media (max-width: 700px) {
+	.category-layout.has-subcategories {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 2rem;
+	}
+
+	.subcategory-list {
+		padding: 1.25rem 0 0;
+		border-top: 2px solid var(--secondary);
+		border-left: 0;
+	}
+}
