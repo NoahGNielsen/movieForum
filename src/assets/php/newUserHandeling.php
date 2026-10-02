@@ -24,9 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['username'])) {
 $requestedUsername = trim($_POST['username']);
 $userId = $_COOKIE['user_session_cookie'] ?? '';
 
-if (!preg_match('/^[A-Za-z]+$/', $requestedUsername)) {
+if (!preg_match('/^[A-Za-z0-9.,_@:!?()+&-]+$/', $requestedUsername)) {
 	http_response_code(400);
-	exit('Username may contain letters only.');
+	exit('Username contains unsupported characters.');
 }
 
 $rememberUser = isset($_POST['remember']) && $_POST['remember'] === 'on';

@@ -18,7 +18,7 @@
         </p>
         <form action="../assets/php/newUserHandeling" method="post" class="newUserForm">
             <label for="username">Brugernavn:</label>
-            <input type="text" name="username" placeholder="Brugernavn" class ="newUserUsernameInput" required minlength="3" maxlength="25">
+            <input type="text" name="username" placeholder="Brugernavn" class ="newUserUsernameInput" required minlength="3" maxlength="25" pattern="[A-Za-z0-9.,_@:!?()+&-]+" title="Brug bogstaver, tal eller tegnene . , _ @ : ! ? ( ) + & -">
             
             <label for="remember">Husk Mig</label>
             <input type="checkbox" name="remember" class ="newUserRememberCheckBox">
@@ -30,7 +30,7 @@
             <div class="onboarding-info-box">
                         <p><strong>Vigtig information:</strong></p>
                         <ul class="changeUsername-info-list">
-                            <li>Dit brugernavn kan kun indeholde bogstaver (A-Z, a-z - ikke Æ, Ø og Å)</li>
+                            <li>Brugernavnet må indeholde A-Z, a-z, 0-9 (ikke Æ, Ø og Å)</li>
                             <li>Dit unikke ID-nummer (#xxxxx) bliver automatisk tilføjet til dit brugernavn</li>
                             <li>Brugernavnet skal være mellem 3 og 20 tegn langt</li>
                             <small>Du kan ikke vælge et brugernavn, hvis en anden bruger med samme ID allerede har det.</small>

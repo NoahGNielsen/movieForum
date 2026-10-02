@@ -48,8 +48,8 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
             if (empty($newUsernameInput)) {
                 $message = 'Brugernavnet kan ikke være tomt.';
                 $messageType = 'error';
-            } elseif (!preg_match('/^[A-Za-z]+$/', $newUsernameInput)) {
-                $message = 'Brugernavnet må kun indeholde bogstaver.';
+            } elseif (!preg_match('/^[A-Za-z0-9.,_@:!?()+&-]+$/', $newUsernameInput)) {
+                $message = 'Brugernavnet indeholder ugyldige tegn.';
                 $messageType = 'error';
             } elseif (strlen($newUsernameInput) < 3) {
                 $message = 'Brugernavnet skal være mindst 3 tegn langt.';
@@ -126,6 +126,8 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
                             name="new_username"
                             minlength="3" 
                             maxlength="20" 
+                            pattern="[A-Za-z0-9.,_@:!?()+&-]+"
+                            title="Brug bogstaver, tal eller tegnene . , _ @ : ! ? ( ) + & -"
                             placeholder="Indtast nyt brugernavn"
                             required
                         >
@@ -137,7 +139,7 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
                 <div class="changeUsername-info-box">
                     <p><strong>Vigtig information:</strong></p>
                     <ul class="changeUsername-info-list">
-                        <li>Dit brugernavn kan kun indeholde bogstaver (A-Z, a-z - ikke Æ, Ø og Å)</li>
+                        <li>Brugernavnet må indeholde A-Z, a-z, 0-9</li>
                         <li>Dit unikke ID-nummer (#xxxxx) bliver automatisk tilføjet til dit brugernavn</li>
                         <li>Brugernavnet skal være mellem 3 og 20 tegn langt</li>
                         <small>Du kan ikke vælge et brugernavn, hvis en anden bruger med samme ID allerede har det.</small>
