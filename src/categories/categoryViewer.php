@@ -39,7 +39,7 @@ $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QU
                             <article class="post-entry">
                                 <p class="post-content"><?= nl2br($escape($post['content'])) ?></p>
                                 <footer class="post-meta">
-                                    <span>Skrevet af <?= $escape($post['user_id']) ?></span>
+                                    <span>Skrevet af <?= $escape($post['username']) ?></span>
                                     <?php if (!empty($post['timestamp'])): ?>
                                         <time datetime="<?= $escape($post['timestamp']) ?>"><?= $escape($post['timestamp']) ?></time>
                                     <?php endif; ?>

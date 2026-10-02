@@ -76,20 +76,21 @@ if ((int) $isTopChannel === 1) {
 
 $posts = [];
 $findPosts = $conn->prepare(
-	'SELECT postId, userId, postContent, timeStamp
-	 FROM Posts
-	 WHERE channelId = ?
-	 ORDER BY timeStamp DESC, postId DESC'
+	' SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), p.postContent, p.timeStamp
+	 FROM Posts AS p
+	 LEFT JOIN Users AS u ON u.userId = p.userId
+	 WHERE p.channelId = ?
+	 ORDER BY p.timeStamp DESC, p.postId DESC'
 );
 
 if ($findPosts !== false) {
 	$findPosts->bind_param('i', $channelId);
 	$findPosts->execute();
-	$findPosts->bind_result($postId, $userId, $postContent, $postTimestamp);
+	$findPosts->bind_result($postId, $userName, $postContent, $postTimestamp);
 	while ($findPosts->fetch()) {
 		$posts[] = [
 			'id' => $postId,
-			'user_id' => $userId,
+			'username' => $userName,
 			'content' => $postContent,
 			'timestamp' => $postTimestamp,
 		];
