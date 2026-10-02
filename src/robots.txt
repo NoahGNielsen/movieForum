@@ -1,2 +1,9 @@
 User-agent: *
 Disallow: /
+
+User-agent: Claude-User
+Allow: /
+Disallow: /assets/php/
+Disallow: /assets/css/
+Disallow: /assets/js/
+Disallow: /.well-known/
