@@ -89,7 +89,7 @@ if ($columnsResult === false) {
 }
 
 $parentColumn = null;
-$parentColumnCandidates = ['parentChannelId', 'parentChannelID', 'parentId', 'channelParentId', 'parent_channel_id', 'parentCategoryId', 'parent_category_id'];
+$parentColumnCandidates = ['parentChannelId', 'parentChannelID', 'parentId', 'channelParentId', 'parent_channel_id', 'parentCategoryId', 'parent_category_id', 'topChannelId'];
 while ($column = $columnsResult->fetch_assoc()) {
 	if (in_array($column['Field'], $parentColumnCandidates, true) || preg_match('/^(parent.*(channel|category|id)|(channel|category).*parent)/i', $column['Field'])) {
 		$parentColumn = $column['Field'];
