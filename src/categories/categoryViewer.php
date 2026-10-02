@@ -51,7 +51,7 @@ $postSlug = static function ($content): string {
                                         <time datetime="<?= $escape($post['timestamp']) ?>"><?= $escape($post['timestamp']) ?></time>
                                     <?php endif; ?>
                                 </footer>
-                                <a class="post-link" href="https://foum.noahgajnielsen.dk/posts/<?= rawurlencode($postSlug($post['content'])) ?>-<?= (int) $post['id'] ?>">Gå til indlæg</a>
+                                <a class="post-link" href="https://forum.noahgajnielsen.dk/posts/<?= (int) $post['id'] ?>">Gå til indlæg</a>
                             </article>
                         <?php endforeach; ?>
                     <?php endif; ?>
