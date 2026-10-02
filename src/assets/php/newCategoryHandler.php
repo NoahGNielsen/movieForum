@@ -1,51 +1,58 @@
 <?php
 require_once __DIR__ . '/userCookieHandeling.php';
 
-function rejectCategoryRequest($statusCode, $message)
-{
+$respondWithError = static function (int $statusCode, string $message): void {
+	header('Content-Type: text/html; charset=UTF-8');
 	http_response_code($statusCode);
-	header('Content-Type: text/plain; charset=UTF-8');
-	exit($message);
-}
+	$safeMessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+	exit('<!doctype html><html lang="da"><meta charset="UTF-8"><title>Kunne ikke oprette kategori</title><body><p>' . $safeMessage . '</p><p><a href="../../categories/newCategory.php">Tilbage til kategorioprettelse</a></p></body></html>');
+};
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-	rejectCategoryRequest(405, 'Ugyldig forespørgsel.');
+	$respondWithError(405, 'Ugyldig forespørgsel.');
 }
 
-$name = $_POST['newCategoriName'] ?? null;
-$description = $_POST['newCategoriDescription'] ?? null;
-$parentId = $_POST['newCategoriFormListSelect'] ?? null;
-
-if (!is_string($name) || !is_string($description) || !is_string($parentId)) {
-	rejectCategoryRequest(400, 'Udfyld alle felter korrekt.');
+$channelNameInput = $_POST['newCategoriName'] ?? null;
+$channelDescriptionInput = $_POST['newCategoriDescription'] ?? null;
+$ownerChannelIdInput = $_POST['newCategoriFormListSelect'] ?? null;
+if (!is_string($channelNameInput) || !is_string($channelDescriptionInput) || !is_string($ownerChannelIdInput)) {
+	$respondWithError(400, 'Udfyld alle felter korrekt.');
 }
 
-$name = trim($name);
-$description = trim($description);
+$channelName = trim($channelNameInput);
+$channelDescription = trim($channelDescriptionInput);
+$ownerChannelId = filter_var(
+	$ownerChannelIdInput,
+	FILTER_VALIDATE_INT,
+	['options' => ['min_range' => 1]]
+);
+$acceptedTerms = ($_POST['acceptTerms'] ?? '') === '1';
+$allowedTextPattern = '/\A[A-Za-z0-9.,_@:!?()+& -]+\z/';
 
-if (strlen($name) < 3 || strlen($name) > 35 || !preg_match('/^[A-Za-z0-9.,_@:!?()+& -]+$/D', $name)) {
-	rejectCategoryRequest(400, 'Kategorinavnet skal være 3-35 tegn og må kun indeholde tilladte tegn.');
+if (
+	strlen($channelName) < 3 || strlen($channelName) > 35 || !preg_match($allowedTextPattern, $channelName) ||
+	strlen($channelDescription) < 10 || strlen($channelDescription) > 254 || !preg_match($allowedTextPattern, $channelDescription) ||
+	$ownerChannelId === false
+) {
+	$respondWithError(400, 'Kontrollér navn, beskrivelse og valgt overkategori.');
 }
 
-if (strlen($description) < 10 || strlen($description) > 254 || !preg_match('/^[A-Za-z0-9.,_@:!?()+& -]+$/D', $description)) {
-	rejectCategoryRequest(400, 'Beskrivelsen skal være 10-254 tegn og må kun indeholde tilladte tegn.');
+if (!$acceptedTerms) {
+	$respondWithError(400, 'Du skal acceptere erklæringen for at oprette en kategori.');
 }
 
-if (!preg_match('/^[1-9][0-9]*$/D', $parentId)) {
-	rejectCategoryRequest(400, 'Vælg en gyldig overkategori.');
-}
-
-if (($_POST['acceptTerms'] ?? null) !== '1') {
-	rejectCategoryRequest(400, 'Du skal acceptere erklæringen for at oprette en kategori.');
+$userId = $_COOKIE['user_session_cookie'] ?? '';
+if (!is_string($userId) || !preg_match('/\A[A-Za-z]{8}_[0-9]{3}_[0-9]{5}\z/', $userId) || !isUserSessionCookieInUse($userId)) {
+	$respondWithError(403, 'Du skal have en registreret bruger for at oprette en kategori.');
 }
 
 if (!loadDbConfigIfNeeded()) {
-	rejectCategoryRequest(500, 'Databasekonfigurationen kunne ikke indlæses.');
+	$respondWithError(500, 'Databasekonfigurationen kunne ikke indlæses.');
 }
 
 $dbConfig = $GLOBALS['db_config'] ?? null;
 if (!is_array($dbConfig)) {
-	rejectCategoryRequest(500, 'Databasekonfigurationen kunne ikke indlæses.');
+	$respondWithError(500, 'Databasekonfigurationen kunne ikke indlæses.');
 }
 
 mysqli_report(MYSQLI_REPORT_OFF);
@@ -57,121 +64,64 @@ $conn = new mysqli(
 );
 
 if ($conn->connect_error) {
-	rejectCategoryRequest(500, 'Databaseforbindelsen mislykkedes.');
+	$respondWithError(500, 'Forbindelsen til databasen mislykkedes.');
 }
 
-$userId = $_COOKIE['user_session_cookie'] ?? '';
-if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/D', $userId)) {
-	$conn->close();
-	rejectCategoryRequest(403, 'Du skal have en aktiv bruger for at oprette en kategori.');
-}
+$conn->set_charset('utf8mb4');
 
-$userCheck = $conn->prepare('SELECT userId FROM Users WHERE userId = ? LIMIT 1');
-if ($userCheck === false) {
-	$conn->close();
-	rejectCategoryRequest(500, 'Brugeren kunne ikke kontrolleres.');
-}
-$userCheck->bind_param('s', $userId);
-$userCheck->execute();
-$userCheck->store_result();
-$hasUser = $userCheck->num_rows > 0;
-$userCheck->close();
-
-if (!$hasUser) {
-	$conn->close();
-	rejectCategoryRequest(403, 'Du skal have en aktiv bruger for at oprette en kategori.');
-}
-
-$columnsResult = $conn->query('SHOW COLUMNS FROM Channels');
-if ($columnsResult === false) {
-	$conn->close();
-	rejectCategoryRequest(500, 'Kategoritabellen kunne ikke kontrolleres.');
-}
-
-$channelColumns = [];
-while ($column = $columnsResult->fetch_assoc()) {
-	$channelColumns[] = $column;
-}
-$columnsResult->free();
-
-$topColumn = null;
-$topColumnCandidates = ['isTopChannel', 'isTopChannelID', 'isTopCategory', 'isTopCategoryID', 'topChannel', 'top_channel', 'isTop', 'is_top'];
-foreach ($channelColumns as $column) {
-	$field = $column['Field'];
-	if (in_array($field, $topColumnCandidates, true) || preg_match('/^(is.*top.*(channel|category)|top.*(channel|category))/i', (string) $field)) {
-		$topColumn = $field;
-		break;
-	}
-}
-
-$parentColumn = null;
-$parentColumnCandidates = ['parentChannelId', 'parentChannelID', 'parentId', 'channelParentId', 'parent_channel_id', 'parentCategoryId', 'parent_category_id', 'topChannelId'];
-foreach ($channelColumns as $column) {
-	$field = $column['Field'];
-	if (in_array($field, $parentColumnCandidates, true) || preg_match('/^(parent.*(channel|category|id)|(channel|category).*parent)/i', (string) $field)) {
-		$parentColumn = $field;
-		break;
-	}
-}
-
-if ($topColumn === null || $parentColumn === null) {
-	$conn->close();
-	rejectCategoryRequest(500, 'Kategoritabellen mangler en understøttet overkategori-reference.');
-}
-
-$safeParentColumn = '`' . str_replace('`', '``', $parentColumn) . '`';
-$safeTopColumn = '`' . str_replace('`', '``', $topColumn) . '`';
-$parentCheck = $conn->prepare('SELECT channelId FROM Channels WHERE channelId = ? AND ' . $safeTopColumn . ' = 1 LIMIT 1');
+$parentCheck = $conn->prepare('SELECT channelId FROM Channels WHERE channelId = ? AND isTopChannel = 1 LIMIT 1');
 if ($parentCheck === false) {
 	$conn->close();
-	rejectCategoryRequest(500, 'Overkategorien kunne ikke kontrolleres.');
+	$respondWithError(500, 'Den valgte overkategori kunne ikke kontrolleres.');
 }
-$parentCheck->bind_param('i', $parentId);
+
+$parentCheck->bind_param('i', $ownerChannelId);
 $parentCheck->execute();
 $parentCheck->store_result();
-$hasParent = $parentCheck->num_rows > 0;
+$parentExists = $parentCheck->num_rows === 1;
 $parentCheck->close();
 
-if (!$hasParent) {
+if (!$parentExists) {
 	$conn->close();
-	rejectCategoryRequest(400, 'Den valgte overkategori findes ikke.');
+	$respondWithError(400, 'Den valgte overkategori findes ikke.');
 }
 
-$duplicateCheck = $conn->prepare(
-	'SELECT channelId FROM Channels WHERE ' . $safeParentColumn . ' = ? AND LOWER(channelName) = LOWER(?) LIMIT 1'
-);
+$duplicateCheck = $conn->prepare('SELECT channelId FROM Channels WHERE ownerChannelId = ? AND LOWER(channelName) = LOWER(?) LIMIT 1');
 if ($duplicateCheck === false) {
 	$conn->close();
-	rejectCategoryRequest(500, 'Kategorien kunne ikke kontrolleres for dubletter.');
+	$respondWithError(500, 'Kategorien kunne ikke kontrolleres for dubletter.');
 }
-$duplicateCheck->bind_param('is', $parentId, $name);
+
+$duplicateCheck->bind_param('is', $ownerChannelId, $channelName);
 $duplicateCheck->execute();
 $duplicateCheck->store_result();
-$isDuplicate = $duplicateCheck->num_rows > 0;
+$duplicateExists = $duplicateCheck->num_rows > 0;
 $duplicateCheck->close();
 
-if ($isDuplicate) {
+if ($duplicateExists) {
 	$conn->close();
-	rejectCategoryRequest(409, 'Der findes allerede en underkategori med dette navn.');
+	$respondWithError(409, 'Der findes allerede en kategori med dette navn under den valgte overkategori.');
 }
 
-$insert = $conn->prepare(
-	'INSERT INTO Channels (channelName, channelDescription, ' . $safeTopColumn . ', ' . $safeParentColumn . ') VALUES (?, ?, 0, ?)'
+$createChannel = $conn->prepare(
+	'INSERT INTO Channels (isTopChannel, ownerChannelId, channelName, channelDescription, channelCreator)
+	 VALUES (0, ?, ?, ?, ?)'
 );
-if ($insert === false) {
-	$conn->close();
-	rejectCategoryRequest(500, 'Kategorien kunne ikke oprettes.');
-}
-$insert->bind_param('ssi', $name, $description, $parentId);
 
-if (!$insert->execute()) {
-	$insert->close();
+if ($createChannel === false) {
 	$conn->close();
-	rejectCategoryRequest(500, 'Kategorien kunne ikke oprettes.');
+	$respondWithError(500, 'Kategorien kunne ikke oprettes. Kontrollér også, at channelCreator er en tekstkolonne.');
 }
 
-$insert->close();
+$createChannel->bind_param('isss', $ownerChannelId, $channelName, $channelDescription, $userId);
+$created = $createChannel->execute();
+$createChannel->close();
 $conn->close();
+
+if (!$created) {
+	$respondWithError(500, 'Kategorien kunne ikke oprettes. Kontrollér også, at channelCreator er en tekstkolonne.');
+}
+
 header('Location: ../../categories/');
 exit;
 ?>
