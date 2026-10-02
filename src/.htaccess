@@ -82,6 +82,14 @@ FileETag MTime Size
     RewriteCond %{REQUEST_URI} \.(bak|config|sql|ini|log|sh|inc|swp|dist|env|yml|yaml)$ [NC]
     RewriteRule ^ - [F,L]
 
+    # Redirect legacy post URLs to their clean numeric URL.
+    RewriteCond %{THE_REQUEST} \s/+posts/post(?:\.php)?(?:\?|\s) [NC]
+    RewriteCond %{QUERY_STRING} (^|&)postId=([0-9]+)(&|$) [NC]
+    RewriteRule ^posts/post(?:\.php)?/?$ /posts/%2? [R=301,L]
+
+    # Keep numeric post URLs clean while serving the post viewer internally.
+    RewriteRule ^posts/([0-9]+)/?$ posts/post.php?postId=$1 [B,L,QSA]
+
     # --------------------------------------------------------------------------
     # CATEGORY CLEAN URL REWRITE
     # --------------------------------------------------------------------------
