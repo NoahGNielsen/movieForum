@@ -3,6 +3,12 @@ require_once __DIR__ . '/../assets/php/userCookieHandeling.php';
 $categoryViewer = require __DIR__ . '/../assets/php/categoryViewer.php';
 $category = $categoryViewer['category'] ?? null;
 $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+$postSlug = static function ($content): string {
+    $title = trim(explode("\n", (string) $content, 2)[0]);
+    $title = function_exists('mb_substr') ? mb_substr($title, 0, 80, 'UTF-8') : substr($title, 0, 80);
+    $title = function_exists('mb_strtolower') ? mb_strtolower($title, 'UTF-8') : strtolower($title);
+    return trim(preg_replace('/[^\pL\pN]+/u', '-', $title) ?? '', '-');
+};
 ?>
 <!DOCTYPE html>
 <html lang="da">
@@ -40,10 +46,12 @@ $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QU
                                 <p class="post-content"><?= nl2br($escape($post['content'])) ?></p>
                                 <footer class="post-meta">
                                     <span>Skrevet af <?= $escape($post['username']) ?></span>
+                                    <span><?= (int) $post['comment_count'] ?> kommentarer</span>
                                     <?php if (!empty($post['timestamp'])): ?>
                                         <time datetime="<?= $escape($post['timestamp']) ?>"><?= $escape($post['timestamp']) ?></time>
                                     <?php endif; ?>
                                 </footer>
+                                <a class="post-link" href="https://foum.noahgajnielsen.dk/posts/<?= rawurlencode($postSlug($post['content'])) ?>-<?= (int) $post['id'] ?>">Gå til indlæg</a>
                             </article>
                         <?php endforeach; ?>
                     <?php endif; ?>

@@ -63,6 +63,23 @@
 	font-size: 0.85rem;
 }
 
+.post-link {
+	display: inline-block;
+	margin-top: 0.75rem;
+	padding: 0.45rem 0.8rem;
+	border: 1px solid var(--accent);
+	border-radius: 4px;
+	color: var(--text);
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.post-link:hover,
+.post-link:focus-visible {
+	background: var(--accent);
+	color: var(--background);
+}
+
 .subcategory-list {
 	padding-left: 1.25rem;
 	border-left: 2px solid var(--secondary);

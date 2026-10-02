@@ -75,8 +75,41 @@ if ((int) $isTopChannel === 1) {
 }
 
 $posts = [];
+$commentPostColumn = null;
+$commentColumnsResult = $conn->query('SHOW COLUMNS FROM Comments');
+$commentPostCandidates = ['postId', 'post_id', 'postID', 'postReference', 'post_id_fk'];
+
+if ($commentColumnsResult !== false) {
+	$commentColumns = [];
+	while ($column = $commentColumnsResult->fetch_assoc()) {
+		$commentColumns[] = $column;
+	}
+	$commentColumnsResult->free();
+
+	foreach ($commentPostCandidates as $candidate) {
+		foreach ($commentColumns as $column) {
+			if ($column['Field'] === $candidate) {
+				$commentPostColumn = $candidate;
+				break 2;
+			}
+		}
+	}
+
+	if ($commentPostColumn === null) {
+		foreach ($commentColumns as $column) {
+			if (preg_match('/post.*(id|reference)/i', (string) $column['Field'])) {
+				$commentPostColumn = $column['Field'];
+				break;
+			}
+		}
+	}
+}
+
+$commentCountExpression = $commentPostColumn !== null
+	? '(SELECT COUNT(*) FROM Comments AS c WHERE c.`' . str_replace('`', '``', $commentPostColumn) . '` = p.postId)'
+	: '0';
 $findPosts = $conn->prepare(
-	' SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), p.postContent, p.timeStamp
+	' SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), p.postContent, p.timeStamp, ' . $commentCountExpression . '
 	 FROM Posts AS p
 	 LEFT JOIN Users AS u ON u.userId = p.userId
 	 WHERE p.channelId = ?
@@ -86,13 +119,14 @@ $findPosts = $conn->prepare(
 if ($findPosts !== false) {
 	$findPosts->bind_param('i', $channelId);
 	$findPosts->execute();
-	$findPosts->bind_result($postId, $userName, $postContent, $postTimestamp);
+	$findPosts->bind_result($postId, $userName, $postContent, $postTimestamp, $commentCount);
 	while ($findPosts->fetch()) {
 		$posts[] = [
 			'id' => $postId,
 			'username' => $userName,
 			'content' => $postContent,
 			'timestamp' => $postTimestamp,
+			'comment_count' => (int) $commentCount,
 		];
 	}
 	$findPosts->close();
