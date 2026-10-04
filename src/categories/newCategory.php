@@ -15,10 +15,10 @@
         </h1>
         <Form class="newCategoriForm" action="../assets/php/newCategoryHandler" method="post">
             <label class="newCategoriFormLabel" for="newCategoriName">Navn: </label>
-            <input class="newCategoriFormInput" type="text" name="newCategoriName" id="newCategoriName" minlength="3" maxlength="35" pattern="[A-Za-z0-9.,_@:!?()+& -]+" required>
+            <input class="newCategoriFormInput" type="text" name="newCategoriName" id="newCategoriName" minlength="3" maxlength="35" pattern="[\p{L}\p{N} .,_@:!?\(\)+&'&quot;#%*=\-]+" required>
 
             <label class="newCategoriFormLabel" for="newCategoriDescription">Beskrivelse: </label>
-            <input class="newCategoriFormInput" type="text" name="newCategoriDescription" id="newCategoriDescription" minlength="10" maxlength="254" pattern="[A-Za-z0-9.,_@:!?()+& -]+" required>
+            <input class="newCategoriFormInput" type="text" name="newCategoriDescription" id="newCategoriDescription" minlength="10" maxlength="254" pattern="[\p{L}\p{N} .,_@:!?\(\)+&'&quot;#%*=\/;€$\-]+" required>
 
             <div class="newCategoryCategoryList">
                 <label class="newCategoriFormLabel" class="newCategoriesListLabel" for="newCategoriFormListSelect">Vælg over kategori</label>

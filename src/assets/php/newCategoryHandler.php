@@ -27,11 +27,13 @@ $ownerChannelId = filter_var(
 	['options' => ['min_range' => 1]]
 );
 $acceptedTerms = ($_POST['acceptTerms'] ?? '') === '1';
-$allowedTextPattern = '/\A[A-Za-z0-9.,_@:!?()+& -]+\z/';
+// Names end up in the URL path, so slashes are not allowed there.
+$allowedNamePattern = '/\A[\p{L}\p{N} .,_@:!?()+&\'"#%*=-]+\z/u';
+$allowedDescriptionPattern = '/\A[\p{L}\p{N} .,_@:!?()+&\'"#%*=\/;€$-]+\z/u';
 
 if (
-	strlen($channelName) < 3 || strlen($channelName) > 35 || !preg_match($allowedTextPattern, $channelName) ||
-	strlen($channelDescription) < 10 || strlen($channelDescription) > 254 || !preg_match($allowedTextPattern, $channelDescription) ||
+	!preg_match($allowedNamePattern, $channelName) || mb_strlen($channelName, 'UTF-8') < 3 || mb_strlen($channelName, 'UTF-8') > 35 ||
+	!preg_match($allowedDescriptionPattern, $channelDescription) || mb_strlen($channelDescription, 'UTF-8') < 10 || mb_strlen($channelDescription, 'UTF-8') > 254 ||
 	$ownerChannelId === false
 ) {
 	$respondWithError(400, 'Kontrollér navn, beskrivelse og valgt overkategori.');
