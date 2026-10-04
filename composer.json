@@ -10,6 +10,11 @@
             "email": "noah@noahgajnielsen.dk",
             "homepage": "https://noahgajnielsen.dk",
             "role": "Lead Developer"
+        },
+        {
+            "name": "August Q. Stender",
+            "homepage": "https://github.com/vhendzn",
+            "role": "Frontend Developer / UX Designer"
         }
     ]
 }
