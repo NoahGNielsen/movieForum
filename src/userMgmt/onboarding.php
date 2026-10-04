@@ -33,6 +33,7 @@
                             <li>Brugernavnet må indeholde A-Z, a-z, 0-9 (ikke Æ, Ø og Å)</li>
                             <li>Dit unikke ID-nummer (#xxxxx) bliver automatisk tilføjet til dit brugernavn</li>
                             <li>Brugernavnet skal være mellem 3 og 20 tegn langt</li>
+                            <li>Hvis du <u>IKKE</u> vælger "Husk Mig", bliver der tilføjet et G- foran dit brugernavn som betyder du er gæst</li>
                             <small>Du kan ikke vælge et brugernavn, hvis en anden bruger med samme ID allerede har det.</small>
                         </ul>
                     </div>
