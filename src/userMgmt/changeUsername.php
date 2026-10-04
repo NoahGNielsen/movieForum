@@ -59,7 +59,8 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
                 $messageType = 'error';
             } else {
                 // Check if username already exists
-                $newUsername = $newUsernameInput . '#' . substr($userId, -5);
+                $userPrefix = strncmp($currentUsername, 'G-', 2) === 0 ? 'G-' : '';
+                $newUsername = $userPrefix . $newUsernameInput . '#' . substr($userId, -5);
                 $checkUsernameQuery = $conn->prepare('SELECT userId FROM Users WHERE userName = ? AND userId != ? LIMIT 1');
                 $checkUsernameQuery->bind_param('ss', $newUsername, $userId);
                 $checkUsernameQuery->execute();
@@ -140,6 +141,7 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
                     <p><strong>Vigtig information:</strong></p>
                     <ul class="changeUsername-info-list">
                         <li>Brugernavnet må indeholde A-Z, a-z, 0-9</li>
+                        <li>G- tilføjes automatisk for brugere, der ikke valgte "Husk Mig"</li>
                         <li>Dit unikke ID-nummer (#xxxxx) bliver automatisk tilføjet til dit brugernavn</li>
                         <li>Brugernavnet skal være mellem 3 og 20 tegn langt</li>
                         <small>Du kan ikke vælge et brugernavn, hvis en anden bruger med samme ID allerede har det.</small>
