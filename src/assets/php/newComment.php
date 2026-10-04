@@ -42,6 +42,10 @@ $contentInput = $_POST['newCommentContent'] ?? '';
 $content = is_string($contentInput) ? $cleanText($contentInput) : '';
 $state['values'] = ['content' => $content];
 
+if (!isValidCsrfRequest()) {
+	$state['errors'][] = 'Formularen er udløbet. Prøv at sende kommentaren igen.';
+}
+
 if (!$isRegistered) {
 	$state['errors'][] = 'Du skal have en registreret bruger for at skrive en kommentar.';
 }

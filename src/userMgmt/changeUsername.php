@@ -41,11 +41,14 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
         $getUserQuery->close();
 
         // Handle form submission
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_username'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_username']) && is_string($_POST['new_username'])) {
             $newUsernameInput = trim($_POST['new_username']);
 
             // Validate username
-            if (empty($newUsernameInput)) {
+            if (!isValidCsrfRequest()) {
+                $message = 'Formularen er udløbet. Prøv igen.';
+                $messageType = 'error';
+            } elseif (empty($newUsernameInput)) {
                 $message = 'Brugernavnet kan ikke være tomt.';
                 $messageType = 'error';
             } elseif (!preg_match('/^[A-Za-z0-9.,_@:!?()+&-]+$/', $newUsernameInput)) {
@@ -57,16 +60,16 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
             } elseif (strlen($newUsernameInput) > 20) {
                 $message = 'Brugernavnet må maksimalt være 20 tegn langt.';
                 $messageType = 'error';
+            } elseif (stripos($newUsernameInput, 'G-') === 0) {
+                // "G-" marks guests, so users may not type it themselves.
+                $message = 'Brugernavnet må ikke starte med "G-".';
+                $messageType = 'error';
             } else {
                 // Check if username already exists
                 $userPrefix = strncmp($currentUsername, 'G-', 2) === 0 ? 'G-' : '';
                 $newUsername = $userPrefix . $newUsernameInput . '#' . substr($userId, -5);
-                $checkUsernameQuery = $conn->prepare('SELECT userId FROM Users WHERE userName = ? AND userId != ? LIMIT 1');
-                $checkUsernameQuery->bind_param('ss', $newUsername, $userId);
-                $checkUsernameQuery->execute();
-                $checkUsernameQuery->store_result();
 
-                if ($checkUsernameQuery->num_rows > 0) {
+                if (isUsernameTaken($conn, $newUsernameInput, substr($userId, -5), $userId)) {
                     $message = 'Dette brugernavn er allerede i brug af en anden bruger med samme ID.';
                     $messageType = 'error';
                 } else {
@@ -76,7 +79,7 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
 
                     if ($updateQuery->execute()) {
                         $currentUsername = $newUsername;
-                        $message = 'Dit brugernavn blev ændret til: ' . htmlspecialchars($newUsername, ENT_QUOTES, 'UTF-8');
+                        $message = 'Dit brugernavn blev ændret til: ' . $newUsername;
                         $messageType = 'success';
                     } else {
                         $message = 'Der opstod en fejl ved ændring af brugernavnet. Prøv igen senere.';
@@ -84,7 +87,6 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
                     }
                     $updateQuery->close();
                 }
-                $checkUsernameQuery->close();
             }
         }
 
@@ -119,6 +121,7 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
                 </div>
 
                 <form method="POST" class="change-username-form">
+                    <?= csrfTokenField() ?>
                     <div class="form-group">
                         <label for="new_username">Nyt brugernavn:</label>
                         <input 

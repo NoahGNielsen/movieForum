@@ -14,6 +14,7 @@
             Lav en ny under kategori
         </h1>
         <Form class="newCategoriForm" action="../assets/php/newCategoryHandler" method="post">
+            <?= csrfTokenField() ?>
             <label class="newCategoriFormLabel" for="newCategoriName">Navn: </label>
             <input class="newCategoriFormInput" type="text" name="newCategoriName" id="newCategoriName" minlength="3" maxlength="35" pattern="[\p{L}\p{N} .,_@:!?\(\)+&'&quot;#%*=\-]+" required>
 

@@ -99,6 +99,10 @@ $title = is_string($titleInput) ? $cleanText(str_replace(["\n", "\t"], ' ', $tit
 $content = is_string($contentInput) ? $cleanText($contentInput) : '';
 $state['values'] = ['title' => $title, 'content' => $content];
 
+if (!isValidCsrfRequest()) {
+	$state['errors'][] = 'Formularen er udløbet. Prøv at sende indlægget igen.';
+}
+
 if (!$isRegistered) {
 	$state['errors'][] = 'Du skal have en registreret bruger for at oprette et indlæg.';
 }

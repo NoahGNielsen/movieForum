@@ -16,17 +16,36 @@ if ($conn->connect_error) {
 	exit('Database connection failed.');
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['username'])) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['username']) || !is_string($_POST['username'])) {
 	http_response_code(400);
 	exit('Invalid request.');
 }
 
+if (!isValidCsrfRequest()) {
+	http_response_code(403);
+	exit('Formularen er udløbet. Gå tilbage, genindlæs siden og prøv igen.');
+}
+
 $requestedUsername = trim($_POST['username']);
 $userId = $_COOKIE['user_session_cookie'] ?? '';
+if (!is_string($userId)) {
+	$userId = '';
+}
 
 if (!preg_match('/^[A-Za-z0-9.,_@:!?()+&-]+$/', $requestedUsername)) {
 	http_response_code(400);
 	exit('Username contains unsupported characters.');
+}
+
+if (strlen($requestedUsername) < 3 || strlen($requestedUsername) > 20) {
+	http_response_code(400);
+	exit('Brugernavnet skal være mellem 3 og 20 tegn langt.');
+}
+
+// "G-" marks guests, so users may not type it themselves.
+if (stripos($requestedUsername, 'G-') === 0) {
+	http_response_code(400);
+	exit('Brugernavnet må ikke starte med "G-".');
 }
 
 $rememberUser = isset($_POST['remember']) && $_POST['remember'] === 'on';
@@ -34,6 +53,14 @@ $cookieLifetime = $rememberUser ? 365 * 24 * 60 * 60 : 12 * 60 * 60;
 
 if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionCookieInUse($userId)) {
 	$userId = generateUniqueUserSessionCookie();
+}
+
+if (isUsernameTaken($conn, $requestedUsername, substr($userId, -5), $userId)) {
+	$conn->close();
+	header('Content-Type: text/html; charset=UTF-8');
+	http_response_code(409);
+	$safeUsername = htmlspecialchars($requestedUsername, ENT_QUOTES, 'UTF-8');
+	exit("<p>Navnet <strong>{$safeUsername}</strong> er allerede i brug af en anden bruger med samme ID.</p><p><a href=\"https://forum.noahgajnielsen.dk/userMgmt/onboarding\">Prøv et andet brugernavn</a>.</p>");
 }
 
 setUserSessionCookie($userId, $cookieLifetime);

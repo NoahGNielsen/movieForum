@@ -17,8 +17,9 @@
             Velkommen til Pellicula Film Forum! For at få adgang til alle funktioner på vores forum, skal du oprette et brugernavn. Udfyld formularen nedenfor for at vælge dit brugernavn og begynde din rejse som en del af vores filmelskende fællesskab.
         </p>
         <form action="../assets/php/newUserHandeling" method="post" class="newUserForm">
+            <?= csrfTokenField() ?>
             <label for="username">Brugernavn:</label>
-            <input type="text" name="username" placeholder="Brugernavn" class ="newUserUsernameInput" required minlength="3" maxlength="25" pattern="[A-Za-z0-9.,_@:!?()+&-]+" title="Brug bogstaver, tal eller tegnene . , _ @ : ! ? ( ) + & -">
+            <input type="text" name="username" placeholder="Brugernavn" class ="newUserUsernameInput" required minlength="3" maxlength="20" pattern="[A-Za-z0-9.,_@:!?()+&-]+" title="Brug bogstaver, tal eller tegnene . , _ @ : ! ? ( ) + & -">
             
             <label for="remember">Husk Mig</label>
             <input type="checkbox" name="remember" class ="newUserRememberCheckBox">

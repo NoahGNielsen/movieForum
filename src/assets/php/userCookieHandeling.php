@@ -1,10 +1,11 @@
 <?php
-// Function to generate a random string of specified length using given characters
+// Function to generate a random string of specified length using given characters.
+// random_int() is cryptographically secure, unlike mt_rand(), so session values can't be predicted.
 function generateRandomString($length, $characters) {
     $charLength = strlen($characters);
     $randomString = '';
     for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[mt_rand(0, $charLength - 1)];
+        $randomString .= $characters[random_int(0, $charLength - 1)];
     }
     return $randomString;
 }
@@ -161,6 +162,70 @@ function updateUserLastSeenIfExists($userId) {
     $conn->close();
     return true;
 }
+
+// CSRF protection (double-submit cookie). The __Host- prefix makes browsers refuse the cookie
+// unless it is Secure, has Path=/ and no Domain, so other subdomains can't overwrite it.
+const CSRF_COOKIE_NAME = '__Host-csrf_token';
+
+function getCsrfToken() {
+    static $token = null;
+    if ($token !== null) {
+        return $token;
+    }
+
+    $existingToken = $_COOKIE[CSRF_COOKIE_NAME] ?? '';
+    if (is_string($existingToken) && preg_match('/\A[0-9a-f]{64}\z/', $existingToken)) {
+        $token = $existingToken;
+        return $token;
+    }
+
+    $token = bin2hex(random_bytes(32));
+    setcookie(CSRF_COOKIE_NAME, $token, [
+        'expires'  => time() + 365 * 24 * 60 * 60,
+        'path'     => '/',
+        'secure'   => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+    return $token;
+}
+
+function isValidCsrfRequest() {
+    $cookieToken = $_COOKIE[CSRF_COOKIE_NAME] ?? '';
+    $postedToken = $_POST['csrf_token'] ?? '';
+
+    return is_string($cookieToken)
+        && is_string($postedToken)
+        && preg_match('/\A[0-9a-f]{64}\z/', $cookieToken)
+        && hash_equals($cookieToken, $postedToken);
+}
+
+function csrfTokenField() {
+    return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(getCsrfToken(), ENT_QUOTES, 'UTF-8') . '">';
+}
+
+// Usernames are displayed as [G-]name#12345. "Alice#12345" and "G-Alice#12345" count as the same
+// name, so nobody can pass themselves off as another user. Fails closed if the query can't run.
+function isUsernameTaken($conn, $baseUsername, $suffix, $excludeUserId = '') {
+    $registeredName = $baseUsername . '#' . $suffix;
+    $guestName = 'G-' . $registeredName;
+
+    $checkName = $conn->prepare('SELECT userId FROM Users WHERE (LOWER(userName) = LOWER(?) OR LOWER(userName) = LOWER(?)) AND userId <> ? LIMIT 1');
+    if ($checkName === false) {
+        return true;
+    }
+
+    $checkName->bind_param('sss', $registeredName, $guestName, $excludeUserId);
+    $checkName->execute();
+    $checkName->store_result();
+    $nameTaken = $checkName->num_rows > 0;
+    $checkName->close();
+
+    return $nameTaken;
+}
+
+// Set the CSRF cookie now, before any page output starts.
+getCsrfToken();
 
 $cookieName = 'user_session_cookie';
 $cookieValue = '';

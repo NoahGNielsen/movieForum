@@ -12,6 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 	$respondWithError(405, 'Ugyldig forespørgsel.');
 }
 
+if (!isValidCsrfRequest()) {
+	$respondWithError(403, 'Formularen er udløbet. Gå tilbage, genindlæs siden og prøv igen.');
+}
+
 $channelNameInput = $_POST['newCategoriName'] ?? null;
 $channelDescriptionInput = $_POST['newCategoriDescription'] ?? null;
 $ownerChannelIdInput = $_POST['newCategoriFormListSelect'] ?? null;

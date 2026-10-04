@@ -73,6 +73,7 @@
                 <?php endif; ?>
 
                 <form class="commentForm" action="/posts/<?= (int) $post['id'] ?>" method="post">
+                    <?= csrfTokenField() ?>
                     <label class="commentFormLabel" for="newCommentContent">Kommentar: </label>
                     <textarea class="commentFormInput" name="newCommentContent" id="newCommentContent" rows="5" minlength="<?= (int) $commentLimits['content_min'] ?>" maxlength="<?= (int) $commentLimits['content_max'] ?>" required<?= $newComment['is_registered'] ? '' : ' disabled' ?>><?= $escape($commentValues['content']) ?></textarea>
                     <button class="commentFormSubmit" type="submit"<?= $newComment['is_registered'] ? '' : ' disabled' ?>>Send kommentar</button>

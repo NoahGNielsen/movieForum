@@ -47,6 +47,7 @@ $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QU
             <?php endif; ?>
 
             <form class="newPostForm" action="" method="post">
+                <?= csrfTokenField() ?>
                 <label class="newPostFormLabel" for="newPostTitle">Titel: </label>
                 <input class="newPostFormInput" type="text" name="newPostTitle" id="newPostTitle" minlength="<?= (int) $limits['title_min'] ?>" maxlength="<?= (int) $limits['title_max'] ?>" value="<?= $escape($values['title']) ?>" required>
 
