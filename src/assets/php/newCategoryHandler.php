@@ -124,6 +124,6 @@ if (!$created) {
 	$respondWithError(500, 'Kategorien kunne ikke oprettes. Kontrollér også, at channelCreator er en tekstkolonne.');
 }
 
-header('Location: ../../categories/');
+header('Location: /categories/' . rawurlencode($channelName));
 exit;
 ?>
