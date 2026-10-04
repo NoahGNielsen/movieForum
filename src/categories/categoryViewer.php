@@ -41,6 +41,7 @@ $postSlug = static function ($content): string {
             <div class="category-layout<?= $category['is_top'] ? ' has-subcategories' : '' ?>">
                 <section class="post-list" aria-labelledby="posts-heading">
                     <h2 id="posts-heading">Indlæg</h2>
+                    <a class="new-post-link" href="https://forum.noahgajnielsen.dk/categories/<?= $escape(rawurlencode($category['name'])) ?>?newPost=true">Lav et nyt indlæg</a>
                     <?php if (empty($categoryViewer['posts'])): ?>
                         <p class="empty-state">Der er endnu ingen indlæg i denne kategori.</p>
                     <?php else: ?>

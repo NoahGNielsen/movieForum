@@ -97,6 +97,13 @@ FileETag MTime Size
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /categories/categoryViewer\.php\?categoryName=([^&\ ]+) [NC]
     RewriteRule ^ /categories/%1? [R=301,L]
 
+    # Serve the new post form for /categories/{name}?newPost=true
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/categories/(newCategory|allCategories)/?$ [NC]
+    RewriteCond %{QUERY_STRING} (^|&)newPost=true(&|$) [NC]
+    RewriteRule ^categories/([^/]+)/?$ posts/newPost.php?categoryName=$1 [B,L,QSA]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !^/categories/(newCategory|allCategories)/?$ [NC]

@@ -63,7 +63,8 @@
 	font-size: 0.85rem;
 }
 
-.post-link {
+.post-link,
+.new-post-link {
 	display: inline-block;
 	margin-top: 0.75rem;
 	padding: 0.45rem 0.8rem;
@@ -75,7 +76,9 @@
 }
 
 .post-link:hover,
-.post-link:focus-visible {
+.post-link:focus-visible,
+.new-post-link:hover,
+.new-post-link:focus-visible {
 	background: var(--accent);
 	color: var(--background);
 }
