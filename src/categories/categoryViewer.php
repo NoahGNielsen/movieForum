@@ -51,7 +51,10 @@
 
                 <?php if ($category['is_top']): ?>
                     <aside class="subcategory-list" aria-labelledby="subcategories-heading">
-                        <h2 id="subcategories-heading">Underkategorier</h2>
+                        <div class="subcategory-heading">
+                            <h2 id="subcategories-heading">Underkategorier</h2>
+                            <a class="new-subcategory-link" href="/categories/newCategory?parentId=<?= (int) $category['id'] ?>" aria-label="Lav en ny underkategori" title="Lav en ny underkategori">+</a>
+                        </div>
                         <?php if (empty($subcategories)): ?>
                             <p class="empty-state">Der er endnu ingen underkategorier.</p>
                         <?php else: ?>

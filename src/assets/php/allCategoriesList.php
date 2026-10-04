@@ -28,11 +28,14 @@ $result = $conn->query(
 	 ORDER BY channelName'
 );
 
+$selectedParentId = filter_input(INPUT_GET, 'parentId', FILTER_VALIDATE_INT);
+
 if ($result !== false) {
 	while ($category = $result->fetch_assoc()) {
 		$categoryId = htmlspecialchars((string) $category['channelId'], ENT_QUOTES, 'UTF-8');
 		$categoryName = htmlspecialchars((string) $category['channelName'], ENT_QUOTES, 'UTF-8');
-		echo '<option value="' . $categoryId . '">' . $categoryName . '</option>';
+		$selected = (int) $category['channelId'] === $selectedParentId ? ' selected' : '';
+		echo '<option value="' . $categoryId . '"' . $selected . '>' . $categoryName . '</option>';
 	}
 
 	$result->free();

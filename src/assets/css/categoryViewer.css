@@ -97,6 +97,38 @@
 	border-left: 2px solid var(--secondary);
 }
 
+.subcategory-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	margin-bottom: 1rem;
+}
+
+.subcategory-heading h2 {
+	margin: 0;
+}
+
+.new-subcategory-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	border: 2px solid var(--secondary);
+	border-radius: 50%;
+	color: var(--text);
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 1;
+	text-decoration: none;
+}
+
+.new-subcategory-link:hover,
+.new-subcategory-link:focus-visible {
+	background: var(--secondary);
+}
+
 .subcategory-list ul {
 	margin: 0;
 	padding: 0;
