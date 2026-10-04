@@ -8,7 +8,7 @@
         </select>
     </div>
     <div class="footer-info">
-        <p>&copy; 2026 Noah Gaj Nielsen. Alle rettigheder forbeholdes.</p>
+        <p>&copy; 2026 Pellicula Film Forum. Alle rettigheder forbeholdes.</p>
     </div>
     <div class="footer-links">
         <a href="https://forum.noahgajnielsen.dk/legal/terms" target="_blank">Vilkar og betingelser</a>
