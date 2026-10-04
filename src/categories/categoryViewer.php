@@ -31,17 +31,19 @@ $postSlug = static function ($content): string {
             </section>
         <?php else: ?>
             <header class="category-heading">
-                <p class="category-eyebrow">Kategori</p>
-                <h1><?php echo $escape($category['name']) ?></h1>
-                <?php if (!empty($category['description'])): ?>
-                    <p><?php echo $escape($category['description']) ?></p>
-                <?php endif; ?>
+                <div class="category-heading-text">
+                    <p class="category-eyebrow">Kategori</p>
+                    <h1><?php echo $escape($category['name']) ?></h1>
+                    <?php if (!empty($category['description'])): ?>
+                        <p><?php echo $escape($category['description']) ?></p>
+                    <?php endif; ?>
+                </div>
+                <a class="new-post-link" href="https://forum.noahgajnielsen.dk/categories/<?= $escape(rawurlencode($category['name'])) ?>?newPost=true">Lav et nyt indlæg</a>
             </header>
 
             <div class="category-layout<?= $category['is_top'] ? ' has-subcategories' : '' ?>">
                 <section class="post-list" aria-labelledby="posts-heading">
                     <h2 id="posts-heading">Indlæg</h2>
-                    <a class="new-post-link" href="https://forum.noahgajnielsen.dk/categories/<?= $escape(rawurlencode($category['name'])) ?>?newPost=true">Lav et nyt indlæg</a>
                     <?php if (empty($categoryViewer['posts'])): ?>
                         <p class="empty-state">Der er endnu ingen indlæg i denne kategori.</p>
                     <?php else: ?>

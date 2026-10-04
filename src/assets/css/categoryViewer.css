@@ -1,4 +1,9 @@
 .category-heading {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem;
 	margin-bottom: 2rem;
 	padding-bottom: 1.25rem;
 	border-bottom: 1px solid color-mix(in srgb, var(--text) 18%, transparent);
@@ -61,6 +66,10 @@
 	gap: 0.5rem 1rem;
 	color: color-mix(in srgb, var(--text) 68%, transparent);
 	font-size: 0.85rem;
+}
+
+.new-post-link {
+	flex-shrink: 0;
 }
 
 .post-link,
