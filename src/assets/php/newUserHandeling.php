@@ -38,7 +38,8 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
 
 setUserSessionCookie($userId, $cookieLifetime);
 
-$userName = $requestedUsername . '#' . substr($userId, -5);
+$userPrefix = $rememberUser ? '' : 'G-';
+$userName = $userPrefix . $requestedUsername . '#' . substr($userId, -5);
 $lastSeen = date('Y-m-d H:i:s');
 
 $checkUser = $conn->prepare('SELECT userId FROM Users WHERE userId = ?');
