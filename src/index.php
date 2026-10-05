@@ -19,12 +19,8 @@
         </p>
         <h6>To-Do</h6>
         <ul>
-            <li>
-                <p>Opdatere automatisk</p>
-            </li>
-            li>
-                <p>Billedere</p>
-            </li>
+            <li>Opdatere automatisk</li>
+            <li>Billedere</li>
         </ul>
     </main>
     <?php include __DIR__ . '/assets/php/footer.php'; ?>
