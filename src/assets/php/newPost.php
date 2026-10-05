@@ -3,7 +3,7 @@ require_once __DIR__ . '/userCookieHandeling.php';
 mysqli_report(MYSQLI_REPORT_OFF);
 
 $titleMinLength = 3;
-$titleMaxLength = 120;
+$titleMaxLength = 60; // Posts.postTitle is VARCHAR(60)
 $contentMinLength = 10;
 $contentMaxLength = 5000;
 
@@ -125,11 +125,8 @@ if (!empty($state['errors'])) {
 	return $state;
 }
 
-// The first line of postContent is used as the post title elsewhere on the site.
-$postContent = $title . "\n" . $content;
-
 // timeStamp is filled in by the database (DEFAULT CURRENT_TIMESTAMP).
-$createPost = $conn->prepare('INSERT INTO Posts (userId, channelId, postContent) VALUES (?, ?, ?)');
+$createPost = $conn->prepare('INSERT INTO Posts (userId, channelId, postTitle, postContent) VALUES (?, ?, ?, ?)');
 if ($createPost === false) {
 	$conn->close();
 	http_response_code(500);
@@ -137,7 +134,7 @@ if ($createPost === false) {
 	return $state;
 }
 
-$createPost->bind_param('sis', $userId, $channelId, $postContent);
+$createPost->bind_param('siss', $userId, $channelId, $title, $content);
 $created = $createPost->execute();
 $newPostId = $conn->insert_id;
 $createPost->close();

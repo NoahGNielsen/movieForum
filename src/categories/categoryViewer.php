@@ -35,6 +35,7 @@
                     <?php else: ?>
                         <?php foreach ($posts as $post): ?>
                             <article class="post-entry">
+                                <h3 class="post-title"><?= $escape($post['title']) ?></h3>
                                 <p class="post-content"><?= nl2br($escape($post['content'])) ?></p>
                                 <footer class="post-meta">
                                     <span>Skrevet af <?= $escape($post['username']) ?></span>

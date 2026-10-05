@@ -31,7 +31,7 @@ function loadPostViewer(): array
 
 	$conn->set_charset('utf8mb4');
 	$findPost = $conn->prepare(
-		'SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), p.postContent, p.timeStamp, c.channelName
+		'SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), p.postTitle, p.postContent, p.timeStamp, c.channelName
 		 FROM Posts AS p
 		 LEFT JOIN Users AS u ON u.userId = p.userId
 		 LEFT JOIN Channels AS c ON c.channelId = p.channelId
@@ -46,7 +46,7 @@ function loadPostViewer(): array
 
 	$findPost->bind_param('i', $postId);
 	$findPost->execute();
-	$findPost->bind_result($resolvedPostId, $userName, $postContent, $postTimestamp, $categoryName);
+	$findPost->bind_result($resolvedPostId, $userName, $postTitle, $postContent, $postTimestamp, $categoryName);
 	$postFound = $findPost->fetch();
 	$findPost->close();
 
@@ -54,9 +54,6 @@ function loadPostViewer(): array
 		$conn->close();
 		return ['error' => 'not_found'];
 	}
-
-	// The first line of postContent is the title, the rest is the body (see newPost.php).
-	$contentParts = explode("\n", (string) $postContent, 2);
 
 	$comments = [];
 	$findComments = $conn->prepare(
@@ -87,8 +84,8 @@ function loadPostViewer(): array
 	return [
 		'post' => [
 			'id' => $resolvedPostId,
-			'title' => trim($contentParts[0]),
-			'body' => trim($contentParts[1] ?? ''),
+			'title' => trim((string) $postTitle),
+			'body' => trim((string) $postContent),
 			'username' => $userName,
 			'timestamp' => $postTimestamp,
 			'category' => $categoryName,

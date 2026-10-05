@@ -53,6 +53,11 @@
 	border-bottom: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
 }
 
+.post-title {
+	margin: 0 0 0.5rem;
+	overflow-wrap: anywhere;
+}
+
 .post-content {
 	margin-bottom: 1rem;
 	white-space: pre-wrap;

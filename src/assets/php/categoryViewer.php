@@ -113,7 +113,7 @@ function loadCategoryViewer(): array
 		? '(SELECT COUNT(*) FROM Comments AS c WHERE c.`' . str_replace('`', '``', $commentPostColumn) . '` = p.postId)'
 		: '0';
 	$findPosts = $conn->prepare(
-		' SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), p.postContent, p.timeStamp, ' . $commentCountExpression . '
+		' SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), p.postTitle, p.postContent, p.timeStamp, ' . $commentCountExpression . '
 		 FROM Posts AS p
 		 LEFT JOIN Users AS u ON u.userId = p.userId
 		 WHERE p.channelId = ?
@@ -123,11 +123,12 @@ function loadCategoryViewer(): array
 	if ($findPosts !== false) {
 		$findPosts->bind_param('i', $channelId);
 		$findPosts->execute();
-		$findPosts->bind_result($postId, $userName, $postContent, $postTimestamp, $commentCount);
+		$findPosts->bind_result($postId, $userName, $postTitle, $postContent, $postTimestamp, $commentCount);
 		while ($findPosts->fetch()) {
 			$posts[] = [
 				'id' => $postId,
 				'username' => $userName,
+				'title' => $postTitle,
 				'content' => $postContent,
 				'timestamp' => $postTimestamp,
 				'comment_count' => (int) $commentCount,
@@ -161,8 +162,8 @@ if ($category === null && $categoryError === 'not_found') {
 }
 
 $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-$postSlug = static function ($content): string {
-	$title = trim(explode("\n", (string) $content, 2)[0]);
+$postSlug = static function ($title): string {
+	$title = trim((string) $title);
 	$title = function_exists('mb_substr') ? mb_substr($title, 0, 80, 'UTF-8') : substr($title, 0, 80);
 	$title = function_exists('mb_strtolower') ? mb_strtolower($title, 'UTF-8') : strtolower($title);
 	return trim(preg_replace('/[^\pL\pN]+/u', '-', $title) ?? '', '-');
