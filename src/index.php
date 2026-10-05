@@ -17,6 +17,15 @@
         <p>
             Dette er et skoleprojekt, der har til formål at demonstrere vores færdigheder inden for webudvikling. Du vil på sigt kunne diskuttere film, dele anmeldelser og deltage i filmrelaterede samtaler med andre filmelskere. Vi håber, du vil nyde din tid her!
         </p>
+        <h6>To-Do</h6>
+        <ul>
+            <li>
+                <p>Opdatere automatisk</p>
+            </li>
+            li>
+                <p>Billedere</p>
+            </li>
+        </ul>
     </main>
     <?php include __DIR__ . '/assets/php/footer.php'; ?>
 </body>
