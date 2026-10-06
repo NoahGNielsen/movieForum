@@ -1,19 +1,32 @@
 .newPostCategory {
 	margin-bottom: 1.5rem;
-	opacity: 0.78;
+	color: var(--text-muted);
 }
 
 .newPostNotice,
 .newPostErrors {
 	margin-bottom: 1.5rem;
 	padding: 0.75rem 1rem;
-	border: 1px solid var(--accent);
+	border: 1px solid var(--stroke);
 	border-radius: 6px;
+	background: var(--surface);
 }
 
 .newPostErrors {
 	padding-left: 2rem;
+	border-color: var(--error);
+	border-left-width: 4px;
 }
+
+/* Fejl vises med ikon + tekst + farve (ikke kun farve) */
+.newPostErrors::before {
+	display: block;
+	margin: 0 0 0.35rem -1.25rem;
+	color: var(--error);
+	font-weight: 700;
+	content: "\2715  Fejl";
+}
+
 
 .newPostForm {
 	display: flex;
@@ -30,9 +43,9 @@
 	width: 100%;
 	margin-bottom: 0.75rem;
 	padding: 0.5rem 0.65rem;
-	border: 1px solid color-mix(in srgb, var(--text) 30%, transparent);
+	border: 1px solid var(--text-muted);
 	border-radius: 6px;
-	background: transparent;
+	background: var(--surface);
 	color: var(--text);
 	font: inherit;
 }
@@ -59,7 +72,7 @@
 	border: 1px solid var(--accent);
 	border-radius: 6px;
 	background: var(--accent);
-	color: var(--background, #fff);
+	color: var(--on-accent);
 	font: inherit;
 	cursor: pointer;
 }

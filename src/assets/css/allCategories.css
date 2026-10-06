@@ -17,12 +17,12 @@ main > div:first-child h1 {
 main > div:first-child p {
 	max-width: 780px;
 	margin-bottom: 0;
-	color: color-mix(in srgb, var(--text) 72%, var(--background));
+	color: var(--text-muted);
 }
 
 .category-container {
 	overflow: hidden;
-	border-top: 1px solid color-mix(in srgb, var(--text) 18%, transparent);
+	border-top: 1px solid var(--stroke);
 }
 
 .category {
@@ -30,13 +30,13 @@ main > div:first-child p {
 	flex-direction: column;
 	align-items: flex-start;
 	padding: 1.35rem 1rem;
-	border-bottom: 1px solid color-mix(in srgb, var(--text) 13%, transparent);
-	background: var(--background);
+	border-bottom: 1px solid var(--stroke);
+	background: var(--bg);
 	transition: background-color 160ms ease;
 }
 
 .category:hover {
-	background: color-mix(in srgb, var(--text) 6%, var(--background));
+	background: var(--text-muted);
 }
 
 .category-title {
@@ -53,7 +53,7 @@ main > div:first-child p {
 	max-width: 850px;
 	margin-bottom: 0.65rem;
 	overflow: hidden;
-	color: color-mix(in srgb, var(--text) 70%, var(--background));
+	color: var(--text-muted);
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;
@@ -64,20 +64,20 @@ main > div:first-child p {
 	grid-column: 1;
 	grid-row: 3;
 	justify-self: start;
-	color: color-mix(in srgb, var(--text) 72%, var(--background));
+	color: var(--text-muted);
 	font-size: 0.9rem;
 	text-decoration: none;
 }
 
 .category-link::after {
 	margin-left: 0.35rem;
-	color: var(--accent);
+	color: var(--accent-text);
 	content: "->";
 }
 
 .category-link:hover,
 .category-link:focus-visible {
-	color: var(--accent);
+	color: var(--accent-text);
 	text-decoration: none;
 }
 
@@ -89,23 +89,23 @@ main > div:first-child p {
 	flex-wrap: wrap;
 	gap: 0.25rem 1rem;
 	margin-bottom: 0.75rem;
-	color: color-mix(in srgb, var(--text) 72%, var(--background));
+	color: var(--text-muted);
 	font-size: 0.82rem;
 }
 
 .category-posts,
 .category-comments {
-	color: color-mix(in srgb, var(--text) 72%, var(--background));
+	color: var(--text-muted);
 }
 
 .category-time {
-	color: color-mix(in srgb, var(--text) 72%, var(--background));
+	color: var(--text-muted);
 }
 
 .category-icon {
 	display: inline-block;
 	min-width: 1rem;
-	color: var(--accent);
+	color: var(--text-muted);
 	font-size: 1rem;
 	line-height: 1;
 	text-align: center;

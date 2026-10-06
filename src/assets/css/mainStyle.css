@@ -1,68 +1,54 @@
-@media (prefers-color-scheme: light) {
-  :root {
-    --text: #08081b;
-    --background: #f1ebe9;
-    --primary: #26206a;
-    --secondary: #db85a3;
-    --accent: #eb4e1e;
-  }
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #e4e4f7;
-    --background: #121212;
-    --primary: #9b95df;
-    --secondary: #7a2442;
-    --accent: #e14414;
-  }
-}
+/* ==========================================================================
+   Pellicula - farver og design
+   Følger dokumentet "Farver og design" (6. okt. 2026).
+   Mørk tilstand er standard. Lys tilstand slås til med klassen .light på <html>.
+   60 % baggrund (--bg) / 30 % flader (--surface, navigation, footer) / 10 % accent.
+   ========================================================================== */
 
-:root[data-theme="light"] {
-  --text: #08081b;
-  --background: #f1ebe9;
-  --primary: #26206a;
-  --secondary: #db85a3;
-  --accent: #eb4e1e;
-}
+:root {
+  color-scheme: dark;
 
-:root[data-theme="dark"] {
-  --text: #e4e4f7;
-  --background: #121212;
-  --primary: #9b95df;
-  --secondary: #7a2442;
-  --accent: #e14414;
-}
+  --bg: #0F1420;
+  --surface: #1A2233;
+  --stroke: #2E3A55;
+  --text: #F2F4F8;
+  --text-muted: #A3ACBF;
+  --accent: #F5B841;
+  --accent-text: #F5B841;
+  --on-accent: #0F1420;
+  --error: #F47174;
+  --success: #4CC38A;
 
-.navBar-logo-dark {
-  display: none;
+  /* Navigation og footer er mørkeblå i begge temaer (#1A2233 i lys tilstand) */
+  --chrome-bg: #1A2233;
+  --chrome-stroke: #2E3A55;
+  --chrome-text: #F2F4F8;
+  --chrome-muted: #A3ACBF;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --content-width: 68rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .navBar-logo-light {
-    display: none;
-  }
+:root.light {
+  color-scheme: light;
 
-  .navBar-logo-dark {
-    display: block;
-  }
+  --bg: #F6F7FA;
+  --surface: #FFFFFF;
+  --stroke: #D5DAE5;
+  --text: #141A28;
+  --text-muted: #556077;
+  --accent: #F5B841;
+  --accent-text: #8A5300;
+  --on-accent: #0F1420;
+  --error: #B3261E;
+  --success: #1B7A4B;
 }
-
-:root[data-theme="light"] .navBar-logo-light {
-  display: block;
-}
-
-:root[data-theme="light"] .navBar-logo-dark {
-  display: none;
-}
-
-:root[data-theme="dark"] .navBar-logo-light {
-  display: none;
-}
-
-:root[data-theme="dark"] .navBar-logo-dark {
-  display: block;
-}
-
 
 *,
 *::before,
@@ -72,23 +58,29 @@
 
 html {
   color: var(--text);
-  background-color: var(--background);
+  background-color: var(--bg);
   font-size: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   min-width: 320px;
   min-height: 100vh;
-  margin: 0 10vw;
-  background-color: var(--background);
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2rem);
+  background-color: var(--bg);
   color: var(--text);
   font-family: 'Raleway', sans-serif;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 main {
+  flex: 1;
   min-height: 60vh;
-  padding: 2rem 0;
+  padding: var(--space-4) 0;
 }
 
 h1,
@@ -106,9 +98,20 @@ label {
   color: var(--text);
 }
 
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
 h1 {
-  font-size: 2rem;
-  line-height: 1.2;
+  font-size: clamp(1.9rem, 4vw + 1rem, 3rem);
+}
+
+h2 {
+  font-size: clamp(1.4rem, 2vw + 1rem, 1.9rem);
 }
 
 p,
@@ -130,19 +133,229 @@ textarea {
   font: inherit;
 }
 
+/* Links bruger --accent-text: guld i mørk tilstand, mørk ravgul i lys (5,9:1) */
 a {
-  color: var(--primary);
+  color: var(--accent-text);
 }
 
 a:hover,
-a:focus-visible,
-.navBar-link:hover,
-.navBar-link:focus-visible {
+a:focus-visible {
   text-decoration: underline;
 }
 
-.navBar-link {
+:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 1px;
+}
+
+/* Inputfelter: kant i sekundær tekstfarve (over 3:1, WCAG 1.4.11) */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  border: 1px solid var(--text-muted);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
   color: var(--text);
-  font-size: 1rem;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Knapper -------------------------------------------------------------
+   Højst én gylden primærknap pr. side (.btn). Tekst på guld er altid mørk. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
   text-decoration: none;
+  cursor: pointer;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  text-decoration: none;
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  border-color: var(--text-muted);
+  background: transparent;
+  color: var(--text);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  border-color: var(--text);
+  filter: none;
+}
+
+/* --- Navigation og footer (mørkeblå flade i begge temaer) ---------------- */
+
+.navBar,
+footer {
+  background: var(--chrome-bg);
+  color: var(--chrome-text);
+}
+
+.navBar a:focus-visible,
+footer a:focus-visible,
+footer select:focus-visible {
+  outline-color: var(--accent);
+}
+
+.navBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  margin-top: var(--space-2);
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--chrome-stroke);
+  border-radius: var(--radius);
+}
+
+/* Logoet er en bred wordmark (750x171) i hvid udgave, som kan ses på mørkeblå */
+.navBar-logo {
+  width: auto;
+  height: 40px;
+}
+
+.navBar-list {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navBar-link {
+  display: inline-block;
+  padding: 0.35rem 0;
+  border-bottom: 2px solid transparent;
+  color: var(--chrome-text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navBar-link:hover,
+.navBar-link:focus-visible {
+  border-bottom-color: var(--accent);
+  text-decoration: none;
+}
+
+@media (max-width: 40rem) {
+  .navBar {
+    justify-content: space-between;
+    column-gap: var(--space-1);
+    padding: 0.75rem 1rem;
+  }
+
+  .navBar-Onboarding {
+    padding: 0.4rem 0.85rem;
+  }
+
+  .navBar-list {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
+
+/* Sekundær handling i navigationen, så siden kun har én gylden primærknap */
+.navBar-Onboarding {
+  padding: 0.5rem 1.1rem;
+  border: 2px solid var(--chrome-muted);
+  border-radius: 999px;
+  color: var(--chrome-text);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.navBar-Onboarding:hover,
+.navBar-Onboarding:focus-visible {
+  border-color: var(--chrome-text);
+  text-decoration: none;
+}
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  margin: var(--space-4) 0 var(--space-2);
+  padding: var(--space-3) 1.25rem;
+  border: 1px solid var(--chrome-stroke);
+  border-radius: var(--radius);
+  color: var(--chrome-muted);
+  font-size: 0.9rem;
+}
+
+footer p {
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+footer a {
+  color: var(--chrome-text);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+
+.footer-darkmode-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.footer-darkmode-label {
+  color: var(--chrome-muted);
+  font-size: 0.9rem;
+}
+
+.darkModeSwitch {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--chrome-muted);
+  border-radius: var(--radius-sm);
+  background: #0F1420;
+  color: var(--chrome-text);
 }
