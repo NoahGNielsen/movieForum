@@ -1,23 +1,21 @@
 (function () {
 	const cookieName = 'theme';
 	const cookieLifetime = 31536000;
-	const validThemes = ['auto', 'light', 'dark'];
+	const validThemes = ['dark', 'light'];
+	const defaultTheme = 'dark';
 
 	function getSavedTheme() {
 		const themeCookie = document.cookie.split('; ').find(function (cookie) {
 			return cookie.startsWith(cookieName + '=');
 		});
-		const theme = themeCookie ? decodeURIComponent(themeCookie.split('=')[1]) : 'auto';
+		const theme = themeCookie ? decodeURIComponent(themeCookie.split('=')[1]) : defaultTheme;
 
-		return validThemes.includes(theme) ? theme : 'auto';
+		// Ældre cookies kan have værdien "auto"; den falder tilbage til mørk
+		return validThemes.includes(theme) ? theme : defaultTheme;
 	}
 
 	function applyTheme(theme) {
-		if (theme === 'auto') {
-			document.documentElement.removeAttribute('data-theme');
-		} else {
-			document.documentElement.dataset.theme = theme;
-		}
+		document.documentElement.classList.toggle('light', theme === 'light');
 	}
 
 	function saveTheme(theme) {

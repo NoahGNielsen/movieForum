@@ -13,8 +13,8 @@
 	width: min(100%, 560px);
 	padding: 34px;
 	color: var(--text);
-	background: var(--background);
-	border: 1px solid color-mix(in srgb, var(--primary) 70%, transparent);
+	background: var(--surface);
+	border: 1px solid var(--stroke);
 	border-radius: 8px;
 	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 	animation: new-user-popup-appear 220ms ease-out both;
@@ -57,7 +57,7 @@
 	margin-top: 12px;
 	padding: 12px 22px;
 	color: var(--on-accent);
-	background: var(--accent-strong);
+	background: var(--accent);
 	border: 0;
 	border-radius: 4px;
 	font: inherit;
@@ -84,7 +84,7 @@
 }
 
 .newUserPopUpLink:hover {
-	color: var(--primary);
+	color: var(--accent-text);
 }
 
 @keyframes new-user-popup-appear {

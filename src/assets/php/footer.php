@@ -2,9 +2,8 @@
     <div class="footer-darkmode-toggle">
         <label class="footer-darkmode-label" for="darkModeSwitch">Tema:</label>
         <select class="darkModeSwitch" name="darkModeSwitch" id="darkModeSwitch">
-            <option value="auto">--Auto--</option>
-            <option value="light">Lys</option>
             <option value="dark">Mørk</option>
+            <option value="light">Lys</option>
         </select>
     </div>
     <div class="footer-info">
