@@ -4,7 +4,7 @@
 <head>
     <title>Hjem - Pellicula Film Forum</title>
     <meta name="description" content="Pellicula Film Forum: dansk forum hvor du kan diskutere film, dele anmeldelser og finde nye film at se.">
-    <link rel="stylesheet" href="/assets/css/frontpage.css">
+    <link rel="stylesheet" href="/assets/css/frontpage.css?v=<?= filemtime(__DIR__ . '/../css/frontpage.css') ?>">
     <?php include __DIR__ . '/assets/php/header.php'; ?>
 </head>
 <body>

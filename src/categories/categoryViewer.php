@@ -4,7 +4,7 @@
 <head>
     <title><?= $escape($pageTitle) ?> - Pellicula Film Forum</title>
     <meta name="description" content="<?= $escape($pageDescription) ?>">
-    <link rel="stylesheet" href="../assets/css/categoryViewer.css">
+    <link rel="stylesheet" href="../assets/css/categoryViewer.css?v=<?= filemtime(__DIR__ . '/../css/categoryViewer.css') ?>">
     <?php include __DIR__ . '/../assets/php/header.php'; ?>
 </head>
 <body>
