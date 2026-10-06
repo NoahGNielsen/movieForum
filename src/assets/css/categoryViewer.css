@@ -21,7 +21,7 @@
 
 .category-eyebrow {
 	margin-bottom: 0.4rem;
-	color: var(--accent);
+	color: var(--accent-text);
 	font-size: 0.78rem;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -93,8 +93,8 @@
 .post-link:focus-visible,
 .new-post-link:hover,
 .new-post-link:focus-visible {
-	background: var(--accent);
-	color: var(--background);
+	background: var(--accent-strong);
+	color: var(--on-accent);
 }
 
 .subcategory-list {

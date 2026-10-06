@@ -71,13 +71,13 @@ main > div:first-child p {
 
 .category-link::after {
 	margin-left: 0.35rem;
-	color: var(--accent);
+	color: var(--accent-text);
 	content: "->";
 }
 
 .category-link:hover,
 .category-link:focus-visible {
-	color: var(--accent);
+	color: var(--accent-text);
 	text-decoration: none;
 }
 

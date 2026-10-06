@@ -12,7 +12,7 @@
 .postCategory {
 	display: inline-block;
 	margin-bottom: 0.4rem;
-	color: var(--accent);
+	color: var(--accent-text);
 	font-size: 0.78rem;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -123,10 +123,10 @@
 .commentFormSubmit {
 	align-self: flex-start;
 	padding: 0.5rem 1rem;
-	border: 1px solid var(--accent);
+	border: 1px solid var(--accent-strong);
 	border-radius: 6px;
-	background: var(--accent);
-	color: var(--background, #fff);
+	background: var(--accent-strong);
+	color: var(--on-accent);
 	font: inherit;
 	cursor: pointer;
 }

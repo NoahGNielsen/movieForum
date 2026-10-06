@@ -1,36 +1,48 @@
-@media (prefers-color-scheme: light) {
-  :root {
-    --text: #08081b;
-    --background: #f1ebe9;
-    --primary: #26206a;
-    --secondary: #db85a3;
-    --accent: #eb4e1e;
-  }
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #e4e4f7;
-    --background: #121212;
-    --primary: #9b95df;
-    --secondary: #7a2442;
-    --accent: #e14414;
-  }
+/* ==========================================================================
+   Pellicula design system
+   Tokens -> base -> layout -> navigation -> buttons -> footer
+   Farver defineres én gang med light-dark(). data-theme styrer color-scheme.
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* Brand (uændret palette) */
+  --text: light-dark(#08081b, #e4e4f7);
+  --background: light-dark(#f1ebe9, #121212);
+  --primary: light-dark(#26206a, #9b95df);
+  --secondary: light-dark(#db85a3, #7a2442);
+  --accent: light-dark(#eb4e1e, #e14414);
+
+  /* Nye tokens */
+  --surface: light-dark(#fbf8f7, #1b1b1f);
+  --border: color-mix(in srgb, var(--text) 16%, transparent);
+  --muted: color-mix(in srgb, var(--text) 72%, transparent);
+  /* --accent har for lav kontrast til tekst/knapper i lys tilstand (3,2:1).
+     Brug disse to, når accentfarven skal bære tekst. */
+  --accent-strong: light-dark(#c23d12, #ff6a38);
+  --accent-text: light-dark(#b93a12, #ff7a4d);
+  --on-accent: light-dark(#ffffff, #121212);
+
+  /* Skala */
+  --radius: 10px;
+  --radius-sm: 6px;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --content-width: 68rem;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.08);
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--primary) 55%, transparent);
 }
 
 :root[data-theme="light"] {
-  --text: #08081b;
-  --background: #f1ebe9;
-  --primary: #26206a;
-  --secondary: #db85a3;
-  --accent: #eb4e1e;
+  color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --text: #e4e4f7;
-  --background: #121212;
-  --primary: #9b95df;
-  --secondary: #7a2442;
-  --accent: #e14414;
+  color-scheme: dark;
 }
 
 .navBar-logo-dark {
@@ -63,7 +75,6 @@
   display: block;
 }
 
-
 *,
 *::before,
 *::after {
@@ -74,21 +85,27 @@ html {
   color: var(--text);
   background-color: var(--background);
   font-size: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   min-width: 320px;
   min-height: 100vh;
-  margin: 0 10vw;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2rem);
   background-color: var(--background);
   color: var(--text);
   font-family: 'Raleway', sans-serif;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 main {
+  flex: 1;
   min-height: 60vh;
-  padding: 2rem 0;
+  padding: var(--space-4) 0;
 }
 
 h1,
@@ -106,9 +123,20 @@ label {
   color: var(--text);
 }
 
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
 h1 {
-  font-size: 2rem;
-  line-height: 1.2;
+  font-size: clamp(1.9rem, 4vw + 1rem, 3rem);
+}
+
+h2 {
+  font-size: clamp(1.4rem, 2vw + 1rem, 1.9rem);
 }
 
 p,
@@ -135,14 +163,183 @@ a {
 }
 
 a:hover,
-a:focus-visible,
-.navBar-link:hover,
-.navBar-link:focus-visible {
+a:focus-visible {
   text-decoration: underline;
 }
 
+/* Synlig fokus til tastaturbrugere (tidligere kun browserens standard) */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Knapper (genbruges på tværs af sider) ------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border: 2px solid var(--accent-strong);
+  border-radius: 999px;
+  background: var(--accent-strong);
+  color: var(--on-accent);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease, color 120ms ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  border-color: var(--text);
+}
+
+/* --- Navigation ---------------------------------------------------------- */
+
+.navBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Logoet er en bred wordmark (750x171), så højden styrer størrelsen */
+.navBar-logo {
+  width: auto;
+  height: 40px;
+}
+
+.navBar-list {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .navBar-link {
+  display: inline-block;
+  padding: 0.35rem 0;
+  border-bottom: 2px solid transparent;
   color: var(--text);
   font-size: 1rem;
+  font-weight: 600;
   text-decoration: none;
+}
+
+.navBar-link:hover,
+.navBar-link:focus-visible {
+  border-bottom-color: var(--accent);
+  text-decoration: none;
+}
+
+@media (max-width: 40rem) {
+  .navBar {
+    justify-content: space-between;
+  }
+
+  /* Logo + knap på første række, links på anden */
+  .navBar-list {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
+
+.navBar-Onboarding {
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  background: var(--accent-strong);
+  color: var(--on-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.navBar-Onboarding:hover,
+.navBar-Onboarding:focus-visible {
+  text-decoration: none;
+  filter: brightness(1.08);
+}
+
+/* --- Footer -------------------------------------------------------------- */
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-3) 0 var(--space-4);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+footer p {
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+footer a {
+  color: var(--text);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+
+.footer-darkmode-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.footer-darkmode-label {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.darkModeSwitch {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
 }
