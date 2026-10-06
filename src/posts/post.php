@@ -5,6 +5,7 @@
     <title><?= $escape($pageTitle) ?> - Pellicula Film Forum</title>
     <meta name="description" content="<?= $escape($pageDescription) ?>">
     <link rel="stylesheet" href="/assets/css/post.css">
+    <script src="/assets/js/commentPoller.js?v=<?= filemtime(__DIR__ . '/../assets/js/commentPoller.js') ?>" defer></script>
     <?php include __DIR__ . '/../assets/php/header.php'; ?>
 </head>
 <body>
@@ -39,22 +40,27 @@
                 <h2 id="commentsHeading">Kommentarer (<?= count($comments) ?>)</h2>
 
                 <?php if (empty($comments)): ?>
-                    <p class="postEmptyState">Der er endnu ingen kommentarer. Vær den første til at kommentere.</p>
-                <?php else: ?>
-                    <ol class="commentList">
-                        <?php foreach ($comments as $comment): ?>
-                            <li class="commentEntry" id="comment-<?= (int) $comment['id'] ?>">
-                                <p class="postMeta">
-                                    <span><?= $escape($comment['username']) ?></span>
-                                    <?php if (!empty($comment['timestamp'])): ?>
-                                        <time datetime="<?= $escape($comment['timestamp']) ?>"><?= $escape($formatTime($comment['timestamp'])) ?></time>
-                                    <?php endif; ?>
-                                </p>
-                                <p class="commentContent"><?= $escape($comment['content']) ?></p>
-                            </li>
-                        <?php endforeach; ?>
-                    </ol>
+                    <p class="postEmptyState" id="commentsEmptyState">Der er endnu ingen kommentarer. Vær den første til at kommentere.</p>
                 <?php endif; ?>
+
+                <?php // Always rendered (hidden when empty) so commentPoller.js has a list to add new comments to. ?>
+                <ol class="commentList" id="commentList" data-post-id="<?= (int) $post['id'] ?>" data-last-comment-id="<?= (int) $lastCommentId ?>"<?= empty($comments) ? ' hidden' : '' ?>>
+                    <?php foreach ($comments as $comment): ?>
+                        <li class="commentEntry" id="comment-<?= (int) $comment['id'] ?>">
+                            <p class="postMeta">
+                                <span><?= $escape($comment['username']) ?></span>
+                                <?php if (!empty($comment['timestamp'])): ?>
+                                    <time datetime="<?= $escape($comment['timestamp']) ?>"><?= $escape($formatTime($comment['timestamp'])) ?></time>
+                                <?php endif; ?>
+                            </p>
+                            <p class="commentContent"><?= $escape($comment['content']) ?></p>
+                        </li>
+                    <?php endforeach; ?>
+                </ol>
+
+                <div aria-live="polite">
+                    <button class="newCommentsButton" id="newCommentsButton" type="button" hidden></button>
+                </div>
 
                 <h3>Skriv en kommentar</h3>
 

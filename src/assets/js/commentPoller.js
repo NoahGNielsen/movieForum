@@ -1,0 +1,150 @@
+(function () {
+	// Poll every 10 seconds, slowing down to once a minute while nothing new arrives.
+	const baseDelay = 10000;
+	const maxDelay = 60000;
+
+	function initializeCommentPoller() {
+		const list = document.getElementById('commentList');
+		const button = document.getElementById('newCommentsButton');
+		const heading = document.getElementById('commentsHeading');
+
+		if (!list || !button) {
+			return;
+		}
+
+		const postId = list.dataset.postId;
+		let lastCommentId = Number(list.dataset.lastCommentId) || 0;
+		let pendingComments = [];
+		let delay = baseDelay;
+		let timer = null;
+		let isFetching = false;
+
+		function scheduleCheck() {
+			clearTimeout(timer);
+			if (document.visibilityState === 'visible') {
+				timer = setTimeout(checkForComments, delay);
+			}
+		}
+
+		function checkForComments() {
+			if (isFetching) {
+				return;
+			}
+			isFetching = true;
+
+			fetch('/posts/newComments?postId=' + encodeURIComponent(postId) + '&after=' + lastCommentId, {
+				headers: { Accept: 'application/json' }
+			})
+				.then(function (response) {
+					if (!response.ok) {
+						throw new Error('Request failed with status ' + response.status);
+					}
+					return response.json();
+				})
+				.then(function (data) {
+					const comments = Array.isArray(data.comments) ? data.comments : [];
+					if (comments.length > 0) {
+						pendingComments = pendingComments.concat(comments);
+						lastCommentId = comments[comments.length - 1].id;
+						delay = baseDelay;
+						updateButton();
+					} else {
+						delay = Math.min(delay * 1.5, maxDelay);
+					}
+				})
+				.catch(function () {
+					delay = Math.min(delay * 2, maxDelay);
+				})
+				.finally(function () {
+					isFetching = false;
+					scheduleCheck();
+				});
+		}
+
+		function updateButton() {
+			const count = pendingComments.length;
+			button.hidden = count === 0;
+			button.textContent = count === 1 ? 'Vis 1 ny kommentar' : 'Vis ' + count + ' nye kommentarer';
+		}
+
+		// Built with textContent so user-written text is never parsed as HTML.
+		function buildComment(comment) {
+			const entry = document.createElement('li');
+			entry.className = 'commentEntry';
+			entry.id = 'comment-' + comment.id;
+
+			const meta = document.createElement('p');
+			meta.className = 'postMeta';
+			const author = document.createElement('span');
+			author.textContent = comment.username;
+			meta.appendChild(author);
+
+			if (comment.timestamp) {
+				const time = document.createElement('time');
+				time.dateTime = comment.timestamp;
+				time.textContent = comment.displayTime;
+				meta.appendChild(time);
+			}
+
+			const content = document.createElement('p');
+			content.className = 'commentContent';
+			content.textContent = comment.content;
+
+			entry.appendChild(meta);
+			entry.appendChild(content);
+			return entry;
+		}
+
+		function showPendingComments() {
+			const newEntries = pendingComments
+				.filter(function (comment) {
+					return !document.getElementById('comment-' + comment.id);
+				})
+				.map(buildComment);
+			pendingComments = [];
+			updateButton();
+
+			if (newEntries.length === 0) {
+				return;
+			}
+
+			newEntries.forEach(function (entry) {
+				list.appendChild(entry);
+			});
+			list.hidden = false;
+
+			const emptyState = document.getElementById('commentsEmptyState');
+			if (emptyState) {
+				emptyState.remove();
+			}
+			if (heading) {
+				heading.textContent = 'Kommentarer (' + list.children.length + ')';
+			}
+
+			// The button disappears on click, so move focus to the first new comment instead.
+			const firstEntry = newEntries[0];
+			const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			firstEntry.tabIndex = -1;
+			firstEntry.focus({ preventScroll: true });
+			firstEntry.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+		}
+
+		button.addEventListener('click', showPendingComments);
+
+		// Only poll while the tab is visible, and check straight away when the reader comes back.
+		document.addEventListener('visibilitychange', function () {
+			clearTimeout(timer);
+			if (document.visibilityState === 'visible') {
+				checkForComments();
+			}
+		});
+
+		scheduleCheck();
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initializeCommentPoller);
+	} else {
+		initializeCommentPoller();
+	}
+}());

@@ -98,6 +98,8 @@ $postViewer = loadPostViewer();
 $post = $postViewer['post'] ?? null;
 $postError = $postViewer['error'] ?? '';
 $comments = $postViewer['comments'] ?? [];
+// Starting point for commentPoller.js, which asks for comments newer than this.
+$lastCommentId = empty($comments) ? 0 : max(array_column($comments, 'id'));
 $commentValues = $newComment['values'];
 $commentLimits = $newComment['limits'];
 
