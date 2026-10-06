@@ -1,7 +1,7 @@
 (function () {
 	// Poll every 10 seconds, slowing down to once a minute while nothing new arrives.
-	const baseDelay = 10000;
-	const maxDelay = 60000;
+	const baseDelay = 5000;
+	const maxDelay = 30000;
 
 	function initializeCommentPoller() {
 		const list = document.getElementById('commentList');
@@ -14,6 +14,8 @@
 
 		const postId = list.dataset.postId;
 		let lastCommentId = Number(list.dataset.lastCommentId) || 0;
+		let totalComments = Number(list.dataset.totalComments) || list.children.length;
+		const commentLimit = Number(list.dataset.commentLimit) || 30;
 		let pendingComments = [];
 		let delay = baseDelay;
 		let timer = null;
@@ -108,21 +110,27 @@
 				return;
 			}
 
+			// Pending comments arrive oldest first, so prepending each one leaves the newest at the top.
 			newEntries.forEach(function (entry) {
-				list.appendChild(entry);
+				list.prepend(entry);
 			});
+			// Keep only the newest comments, like the server-rendered list.
+			while (list.children.length > commentLimit) {
+				list.lastElementChild.remove();
+			}
 			list.hidden = false;
 
 			const emptyState = document.getElementById('commentsEmptyState');
 			if (emptyState) {
 				emptyState.remove();
 			}
+			totalComments += newEntries.length;
 			if (heading) {
-				heading.textContent = 'Kommentarer (' + list.children.length + ')';
+				heading.textContent = 'Kommentarer (' + totalComments + ')';
 			}
 
-			// The button disappears on click, so move focus to the first new comment instead.
-			const firstEntry = newEntries[0];
+			// The button disappears on click, so move focus to the newest comment instead.
+			const firstEntry = list.firstElementChild;
 			const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 			firstEntry.tabIndex = -1;
 			firstEntry.focus({ preventScroll: true });
