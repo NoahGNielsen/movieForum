@@ -138,7 +138,6 @@
 				heading.textContent = 'Kommentarer (' + totalComments + ')';
 			}
 
-			// The button disappears on click, so move focus to the newest comment instead.
 			const firstEntry = list.firstElementChild;
 			const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 			firstEntry.tabIndex = -1;
@@ -146,7 +145,6 @@
 			firstEntry.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
 		}
 
-		// Appends the next page of older comments below the oldest one currently shown.
 		function loadOlderComments() {
 			const oldestEntry = list.lastElementChild;
 			const oldestCommentId = oldestEntry ? Number(oldestEntry.id.replace('comment-', '')) : 0;
@@ -192,7 +190,6 @@
 			loadMoreButton.addEventListener('click', loadOlderComments);
 		}
 
-		// Only poll while the tab is visible, and check straight away when the reader comes back.
 		document.addEventListener('visibilitychange', function () {
 			clearTimeout(timer);
 			if (document.visibilityState === 'visible') {

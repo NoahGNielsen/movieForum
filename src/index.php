@@ -11,7 +11,6 @@
     <?php include __DIR__ . '/assets/php/navBar.php'; ?>
     <main>
         <section class="hero">
-            <p class="hero-eyebrow">Dansk filmforum</p>
             <h1>Snak film med andre filmelskere</h1>
             <p class="hero-lead">
                 Pellicula er stedet, hvor du kan dele anmeldelser, starte diskussioner og finde nye film at se, sorteret i kategorier, så du hurtigt finder samtalen, du leder efter.
