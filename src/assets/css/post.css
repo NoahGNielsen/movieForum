@@ -137,6 +137,28 @@
 	cursor: not-allowed;
 }
 
+/* Loads the next page of older comments (commentPoller.js). Outlined so it reads as secondary to "Send kommentar". */
+.loadMoreCommentsButton {
+	display: block;
+	margin: 1rem auto 1.5rem;
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--accent);
+	border-radius: 6px;
+	background: transparent;
+	color: var(--accent);
+	font: inherit;
+	cursor: pointer;
+}
+
+.loadMoreCommentsButton:disabled {
+	opacity: 0.5;
+	cursor: progress;
+}
+
+.loadMoreCommentsButton[hidden] {
+	display: none;
+}
+
 /* Shown by commentPoller.js when new comments arrive while the post is open. */
 .newCommentsButton {
 	position: fixed;

@@ -5,7 +5,8 @@ mysqli_report(MYSQLI_REPORT_OFF);
 
 $newComment = require __DIR__ . '/newComment.php';
 
-// Only the newest comments are shown, newest first. commentPoller.js reads this from data-comment-limit.
+// Only the newest comments are shown, newest first; "Vis flere kommentarer" loads the next page of this size
+// from posts/newComments.php. Ordered by commentId, which is also the cursor that endpoint pages by.
 const COMMENT_DISPLAY_LIMIT = 30;
 
 function loadPostViewer(): array
@@ -76,7 +77,7 @@ function loadPostViewer(): array
 		 FROM Comments AS cm
 		 LEFT JOIN Users AS u ON u.userId = cm.userId
 		 WHERE cm.ownerPostId = ?
-		 ORDER BY cm.timeStamp DESC, cm.commentId DESC
+		 ORDER BY cm.commentId DESC
 		 LIMIT ?'
 	);
 

@@ -63,6 +63,8 @@
                     <?php endforeach; ?>
                 </ol>
 
+                <button class="loadMoreCommentsButton" id="loadMoreCommentsButton" type="button"<?= $totalComments > count($comments) ? '' : ' hidden' ?>>Vis flere kommentarer</button>
+
                 <h3>Skriv en kommentar</h3>
 
                 <?php if (!$newComment['is_registered']): ?>

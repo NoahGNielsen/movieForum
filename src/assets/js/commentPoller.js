@@ -7,6 +7,7 @@
 		const list = document.getElementById('commentList');
 		const button = document.getElementById('newCommentsButton');
 		const heading = document.getElementById('commentsHeading');
+		const loadMoreButton = document.getElementById('loadMoreCommentsButton');
 
 		if (!list || !button) {
 			return;
@@ -110,13 +111,21 @@
 				return;
 			}
 
+			// Keep the list at the length the reader already had (at least one page); anything pushed off the
+			// bottom can be fetched again with "Vis flere kommentarer".
+			const keepCount = Math.max(list.children.length, commentLimit);
+
 			// Pending comments arrive oldest first, so prepending each one leaves the newest at the top.
 			newEntries.forEach(function (entry) {
 				list.prepend(entry);
 			});
-			// Keep only the newest comments, like the server-rendered list.
-			while (list.children.length > commentLimit) {
-				list.lastElementChild.remove();
+			if (list.children.length > keepCount) {
+				while (list.children.length > keepCount) {
+					list.lastElementChild.remove();
+				}
+				if (loadMoreButton) {
+					loadMoreButton.hidden = false;
+				}
 			}
 			list.hidden = false;
 
@@ -137,7 +146,51 @@
 			firstEntry.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
 		}
 
+		// Appends the next page of older comments below the oldest one currently shown.
+		function loadOlderComments() {
+			const oldestEntry = list.lastElementChild;
+			const oldestCommentId = oldestEntry ? Number(oldestEntry.id.replace('comment-', '')) : 0;
+			if (!oldestCommentId) {
+				loadMoreButton.hidden = true;
+				return;
+			}
+
+			loadMoreButton.disabled = true;
+			loadMoreButton.textContent = 'Indlæser…';
+
+			fetch('/posts/newComments?postId=' + encodeURIComponent(postId) + '&before=' + oldestCommentId, {
+				headers: { Accept: 'application/json' }
+			})
+				.then(function (response) {
+					if (!response.ok) {
+						throw new Error('Request failed with status ' + response.status);
+					}
+					return response.json();
+				})
+				.then(function (data) {
+					const comments = Array.isArray(data.comments) ? data.comments : [];
+					comments
+						.filter(function (comment) {
+							return !document.getElementById('comment-' + comment.id);
+						})
+						.forEach(function (comment) {
+							list.appendChild(buildComment(comment));
+						});
+					loadMoreButton.textContent = 'Vis flere kommentarer';
+					loadMoreButton.hidden = !data.hasMore;
+				})
+				.catch(function () {
+					loadMoreButton.textContent = 'Kunne ikke hente kommentarer. Prøv igen';
+				})
+				.finally(function () {
+					loadMoreButton.disabled = false;
+				});
+		}
+
 		button.addEventListener('click', showPendingComments);
+		if (loadMoreButton) {
+			loadMoreButton.addEventListener('click', loadOlderComments);
+		}
 
 		// Only poll while the tab is visible, and check straight away when the reader comes back.
 		document.addEventListener('visibilitychange', function () {
