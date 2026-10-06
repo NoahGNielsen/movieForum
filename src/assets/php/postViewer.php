@@ -5,6 +5,10 @@ mysqli_report(MYSQLI_REPORT_OFF);
 
 $newComment = require __DIR__ . '/newComment.php';
 
+// Only the newest comments are shown, newest first; "Vis flere kommentarer" loads the next page of this size
+// from posts/newComments.php. Ordered by commentId, which is also the cursor that endpoint pages by.
+const COMMENT_DISPLAY_LIMIT = 30;
+
 function loadPostViewer(): array
 {
 	$postIdInput = $_GET['postId'] ?? '';
@@ -55,17 +59,30 @@ function loadPostViewer(): array
 		return ['error' => 'not_found'];
 	}
 
+	// The heading shows the total, even though only the newest COMMENT_DISPLAY_LIMIT are listed.
+	$totalComments = 0;
+	$countComments = $conn->prepare('SELECT COUNT(*) FROM Comments WHERE ownerPostId = ?');
+	if ($countComments !== false) {
+		$countComments->bind_param('i', $postId);
+		$countComments->execute();
+		$countComments->bind_result($totalComments);
+		$countComments->fetch();
+		$countComments->close();
+	}
+
 	$comments = [];
+	$commentLimit = COMMENT_DISPLAY_LIMIT;
 	$findComments = $conn->prepare(
 		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), cm.messageContent, cm.timeStamp
 		 FROM Comments AS cm
 		 LEFT JOIN Users AS u ON u.userId = cm.userId
 		 WHERE cm.ownerPostId = ?
-		 ORDER BY cm.timeStamp ASC, cm.commentId ASC'
+		 ORDER BY cm.commentId DESC
+		 LIMIT ?'
 	);
 
 	if ($findComments !== false) {
-		$findComments->bind_param('i', $postId);
+		$findComments->bind_param('ii', $postId, $commentLimit);
 		$findComments->execute();
 		$findComments->bind_result($commentId, $commentUserName, $commentContent, $commentTimestamp);
 		while ($findComments->fetch()) {
@@ -91,6 +108,7 @@ function loadPostViewer(): array
 			'category' => $categoryName,
 		],
 		'comments' => $comments,
+		'totalComments' => max((int) $totalComments, count($comments)),
 	];
 }
 
@@ -98,6 +116,9 @@ $postViewer = loadPostViewer();
 $post = $postViewer['post'] ?? null;
 $postError = $postViewer['error'] ?? '';
 $comments = $postViewer['comments'] ?? [];
+$totalComments = $postViewer['totalComments'] ?? 0;
+// Starting point for commentPoller.js, which asks for comments newer than this.
+$lastCommentId = empty($comments) ? 0 : max(array_column($comments, 'id'));
 $commentValues = $newComment['values'];
 $commentLimits = $newComment['limits'];
 
