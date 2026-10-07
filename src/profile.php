@@ -19,13 +19,16 @@
             </section>
         <?php else: ?>
             <header class="card profile-header">
-                <?= viewAvatar($profileUser['name'], 'lg') ?>
+                <?= viewAvatar($profileUser['name'], 'lg', $profileUser['avatar_id']) ?>
                 <div class="profile-identity">
                     <h1 class="profile-name"><?= viewUserName($profileUser['name']) ?></h1>
                     <?php if (!empty($profileUser['last_seen'])): ?>
                         <p class="profile-meta">Sidst aktiv <?= viewTime($profileUser['last_seen']) ?></p>
                     <?php endif; ?>
-                    <a class="pill" href="/userMgmt/changeUsername">Skift brugernavn</a>
+                    <div class="profile-actions">
+                        <a class="pill" href="/userMgmt/changeUsername">Skift brugernavn</a>
+                        <a class="pill" href="/userMgmt/profilePicture">Skift profilbillede</a>
+                    </div>
                 </div>
             </header>
 

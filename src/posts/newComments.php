@@ -54,7 +54,7 @@ if ($loadOlder) {
 	// One extra row tells us whether there is yet another page after this one.
 	$fetchLimit = $olderPageSize + 1;
 	$findComments = $conn->prepare(
-		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), cm.messageContent, cm.timeStamp
+		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('cm.userId') . ', cm.messageContent, cm.timeStamp
 		 FROM Comments AS cm
 		 LEFT JOIN Users AS u ON u.userId = cm.userId
 		 WHERE cm.ownerPostId = ? AND cm.commentId < ?
@@ -65,7 +65,7 @@ if ($loadOlder) {
 } else {
 	$fetchLimit = $commentBatchLimit;
 	$findComments = $conn->prepare(
-		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), cm.messageContent, cm.timeStamp
+		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('cm.userId') . ', cm.messageContent, cm.timeStamp
 		 FROM Comments AS cm
 		 LEFT JOIN Users AS u ON u.userId = cm.userId
 		 WHERE cm.ownerPostId = ? AND cm.commentId > ?
@@ -82,7 +82,7 @@ if ($findComments === false) {
 
 $findComments->bind_param('iii', $postId, $cursorCommentId, $fetchLimit);
 $findComments->execute();
-$findComments->bind_result($commentId, $commentUserName, $commentContent, $commentTimestamp);
+$findComments->bind_result($commentId, $commentUserName, $commentAvatarId, $commentContent, $commentTimestamp);
 
 $comments = [];
 while ($findComments->fetch()) {
@@ -94,6 +94,7 @@ while ($findComments->fetch()) {
 		'nameBase' => $nameParts['name'],
 		'nameTag' => $nameParts['tag'],
 		'initial' => viewInitial($commentUserName),
+		'avatarUrl' => $commentAvatarId !== null ? profilePictureUrl((int) $commentAvatarId) : '',
 		'content' => $commentContent,
 		'displayContent' => viewBreakLongWords($commentContent),
 		'timestamp' => $commentTimestamp,

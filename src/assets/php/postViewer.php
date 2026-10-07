@@ -37,7 +37,7 @@ function loadPostViewer(): array
 
 	$conn->set_charset('utf8mb4');
 	$findPost = $conn->prepare(
-		'SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), p.postTitle, p.postContent, p.timeStamp, c.channelName
+		'SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('p.userId') . ', p.postTitle, p.postContent, p.timeStamp, c.channelName
 		 FROM Posts AS p
 		 LEFT JOIN Users AS u ON u.userId = p.userId
 		 LEFT JOIN Channels AS c ON c.channelId = p.channelId
@@ -52,7 +52,7 @@ function loadPostViewer(): array
 
 	$findPost->bind_param('i', $postId);
 	$findPost->execute();
-	$findPost->bind_result($resolvedPostId, $userName, $postTitle, $postContent, $postTimestamp, $categoryName);
+	$findPost->bind_result($resolvedPostId, $userName, $avatarId, $postTitle, $postContent, $postTimestamp, $categoryName);
 	$postFound = $findPost->fetch();
 	$findPost->close();
 
@@ -75,7 +75,7 @@ function loadPostViewer(): array
 	$comments = [];
 	$commentLimit = COMMENT_DISPLAY_LIMIT;
 	$findComments = $conn->prepare(
-		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), cm.messageContent, cm.timeStamp
+		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('cm.userId') . ', cm.messageContent, cm.timeStamp
 		 FROM Comments AS cm
 		 LEFT JOIN Users AS u ON u.userId = cm.userId
 		 WHERE cm.ownerPostId = ?
@@ -86,11 +86,12 @@ function loadPostViewer(): array
 	if ($findComments !== false) {
 		$findComments->bind_param('ii', $postId, $commentLimit);
 		$findComments->execute();
-		$findComments->bind_result($commentId, $commentUserName, $commentContent, $commentTimestamp);
+		$findComments->bind_result($commentId, $commentUserName, $commentAvatarId, $commentContent, $commentTimestamp);
 		while ($findComments->fetch()) {
 			$comments[] = [
 				'id' => $commentId,
 				'username' => $commentUserName,
+				'avatar_id' => $commentAvatarId !== null ? (int) $commentAvatarId : null,
 				'content' => $commentContent,
 				'timestamp' => $commentTimestamp,
 			];
@@ -109,6 +110,7 @@ function loadPostViewer(): array
 			'title' => trim((string) $postTitle),
 			'body' => trim((string) $postContent),
 			'username' => $userName,
+			'avatar_id' => $avatarId !== null ? (int) $avatarId : null,
 			'timestamp' => $postTimestamp,
 			'category' => $categoryName,
 		],

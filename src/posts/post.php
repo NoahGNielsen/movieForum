@@ -29,7 +29,7 @@
 
             <article class="card post-card postArticle">
                 <header class="post-card-head">
-                    <?= viewAvatar($post['username']) ?>
+                    <?= viewAvatar($post['username'], 'md', $post['avatar_id']) ?>
                     <p class="post-card-byline">
                         <?= viewUserName($post['username']) ?>
                         <?= viewTime($post['timestamp']) ?>
@@ -96,7 +96,7 @@
                     <?php foreach ($comments as $comment): ?>
                         <li class="card commentEntry" id="comment-<?= (int) $comment['id'] ?>">
                             <header class="post-card-head">
-                                <?= viewAvatar($comment['username'], 'sm') ?>
+                                <?= viewAvatar($comment['username'], 'sm', $comment['avatar_id']) ?>
                                 <p class="post-card-byline">
                                     <?= viewUserName($comment['username']) ?>
                                     <a class="commentPermalink" href="#comment-<?= (int) $comment['id'] ?>"><?= viewTime($comment['timestamp']) ?></a>

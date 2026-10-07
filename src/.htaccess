@@ -56,6 +56,11 @@ FileETag MTime Size
     <FilesMatch "\.(html|htm|php)$">
         Header set Cache-Control "no-cache"
     </FilesMatch>
+
+    # Profile pictures: every upload gets a new URL, so the content behind one URL never changes
+    <Files "avatar.php">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </Files>
 </IfModule>
 
 # ==============================================================================

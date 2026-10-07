@@ -89,8 +89,17 @@
 			entry.id = 'comment-' + comment.id;
 
 			const head = element('header', 'post-card-head');
-			const avatar = element('span', 'avatar avatar-sm', comment.initial || '?');
-			avatar.setAttribute('aria-hidden', 'true');
+			let avatar;
+			if (comment.avatarUrl) {
+				avatar = element('img', 'avatar avatar-sm avatar-image');
+				avatar.src = comment.avatarUrl;
+				avatar.alt = '';
+				avatar.loading = 'lazy';
+				avatar.decoding = 'async';
+			} else {
+				avatar = element('span', 'avatar avatar-sm', comment.initial || '?');
+				avatar.setAttribute('aria-hidden', 'true');
+			}
 			head.appendChild(avatar);
 
 			const byline = element('p', 'post-card-byline');

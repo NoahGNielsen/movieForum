@@ -24,6 +24,12 @@ main {
 	overflow-wrap: anywhere;
 }
 
+.profile-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
 .profile-meta {
 	margin: 0;
 	color: var(--text-muted);

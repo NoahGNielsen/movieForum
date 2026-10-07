@@ -113,7 +113,7 @@ function loadCategoryViewer(): array
 		? '(SELECT COUNT(*) FROM Comments AS c WHERE c.`' . str_replace('`', '``', $commentPostColumn) . '` = p.postId)'
 		: '0';
 	$findPosts = $conn->prepare(
-		' SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), p.postTitle, p.postContent, p.timeStamp, ' . $commentCountExpression . '
+		' SELECT p.postId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('p.userId') . ', p.postTitle, p.postContent, p.timeStamp, ' . $commentCountExpression . '
 		 FROM Posts AS p
 		 LEFT JOIN Users AS u ON u.userId = p.userId
 		 WHERE p.channelId = ?
@@ -123,11 +123,12 @@ function loadCategoryViewer(): array
 	if ($findPosts !== false) {
 		$findPosts->bind_param('i', $channelId);
 		$findPosts->execute();
-		$findPosts->bind_result($postId, $userName, $postTitle, $postContent, $postTimestamp, $commentCount);
+		$findPosts->bind_result($postId, $userName, $avatarId, $postTitle, $postContent, $postTimestamp, $commentCount);
 		while ($findPosts->fetch()) {
 			$posts[] = [
 				'id' => $postId,
 				'username' => $userName,
+				'avatar_id' => $avatarId !== null ? (int) $avatarId : null,
 				'title' => $postTitle,
 				'content' => $postContent,
 				'timestamp' => $postTimestamp,

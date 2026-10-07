@@ -38,7 +38,7 @@
                                 <li>
                                     <article class="card post-card">
                                         <header class="post-card-head">
-                                            <?= viewAvatar($post['username']) ?>
+                                            <?= viewAvatar($post['username'], 'md', $post['avatar_id']) ?>
                                             <p class="post-card-byline">
                                                 <?= viewUserName($post['username']) ?>
                                                 <?= viewTime($post['timestamp']) ?>

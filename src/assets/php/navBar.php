@@ -18,6 +18,7 @@ $navCurrent = static fn (string $prefix): string => ($prefix === '/' ? $navPath 
                 <?php if ($navUser !== null): ?>
                     <li class="topbar-menu-only"><a class="topbar-link" href="https://forum.noahgajnielsen.dk/profile"<?= $navCurrent('/profile') ?>>Min profil</a></li>
                     <li class="topbar-menu-only"><a class="topbar-link" href="https://forum.noahgajnielsen.dk/userMgmt/changeUsername"<?= $navCurrent('/userMgmt/changeUsername') ?>>Skift brugernavn</a></li>
+                    <li class="topbar-menu-only"><a class="topbar-link" href="https://forum.noahgajnielsen.dk/userMgmt/profilePicture"<?= $navCurrent('/userMgmt/profilePicture') ?>>Skift profilbillede</a></li>
                 <?php endif; ?>
             </ul>
         </nav>
@@ -25,7 +26,7 @@ $navCurrent = static fn (string $prefix): string => ($prefix === '/' ? $navPath 
         <div class="topbar-actions">
             <?php if ($navUser !== null): ?>
                 <a class="topbar-profile" href="https://forum.noahgajnielsen.dk/profile" title="Min profil">
-                    <?= viewAvatar($navUser['name'], 'sm') ?>
+                    <?= viewAvatar($navUser['name'], 'sm', $navUser['avatar_id']) ?>
                     <span class="visually-hidden">Min profil</span>
                 </a>
             <?php else: ?>

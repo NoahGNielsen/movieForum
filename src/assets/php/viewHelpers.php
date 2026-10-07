@@ -1,6 +1,7 @@
 <?php
 // Shared helpers for rendering posts, comments and users the same way on every page.
 require_once __DIR__ . '/userCookieHandeling.php';
+require_once __DIR__ . '/profilePictures.php';
 
 mysqli_report(MYSQLI_REPORT_OFF);
 
@@ -47,13 +48,18 @@ function viewCurrentUser(): ?array
 		return null;
 	}
 
-	$findUser = $conn->prepare('SELECT userName, lastSeen FROM Users WHERE userId = ? LIMIT 1');
+	$findUser = $conn->prepare('SELECT u.userName, u.lastSeen, ' . profilePictureIdSql('u.userId') . ' FROM Users AS u WHERE u.userId = ? LIMIT 1');
 	if ($findUser !== false) {
 		$findUser->bind_param('s', $userId);
 		$findUser->execute();
-		$findUser->bind_result($userName, $lastSeen);
+		$findUser->bind_result($userName, $lastSeen, $avatarId);
 		if ($findUser->fetch()) {
-			$user = ['id' => $userId, 'name' => (string) $userName, 'last_seen' => $lastSeen];
+			$user = [
+				'id' => $userId,
+				'name' => (string) $userName,
+				'last_seen' => $lastSeen,
+				'avatar_id' => $avatarId !== null ? (int) $avatarId : null,
+			];
 		}
 		$findUser->close();
 	}
@@ -143,10 +149,15 @@ function viewInitial($userName): string
 	return $initial !== '' ? $initial : '?';
 }
 
-// Round avatar with the user's first letter. There are no profile pictures yet,
-// and a letter tells users apart better than the same silhouette on every comment.
-function viewAvatar($userName, string $size = 'md'): string
+// Round avatar: the user's profile picture, or else their first letter, which tells users apart
+// better than the same silhouette on every comment. $avatarId comes from profilePictureIdSql().
+function viewAvatar($userName, string $size = 'md', ?int $avatarId = null): string
 {
+	if ($avatarId !== null) {
+		return '<img class="avatar avatar-' . viewEscape($size) . ' avatar-image" src="' . viewEscape(profilePictureUrl($avatarId)) . '"'
+			. ' alt="" loading="lazy" decoding="async">';
+	}
+
 	return '<span class="avatar avatar-' . viewEscape($size) . '" aria-hidden="true">'
 		. viewEscape(viewInitial($userName)) . '</span>';
 }
