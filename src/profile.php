@@ -60,7 +60,7 @@
                                         <a href="<?= viewEscape($itemUrl) ?>"><?= viewEscape($item['post_title']) ?></a>
                                     </h3>
                                     <?php if (trim((string) $item['content']) !== ''): ?>
-                                        <p class="post-card-body"><?= viewEscape(viewExcerpt($item['content'], 180)) ?></p>
+                                        <p class="post-card-body"><?= viewEscape(viewBreakLongWords(viewExcerpt($item['content'], 180))) ?></p>
                                     <?php endif; ?>
                                 </li>
                             <?php endforeach; ?>

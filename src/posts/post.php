@@ -37,7 +37,7 @@
                 </header>
                 <h1 class="postTitle"><?= $escape($post['title']) ?></h1>
                 <?php if ($post['body'] !== ''): ?>
-                    <p class="post-card-body postBody"><?= $escape($post['body']) ?></p>
+                    <p class="post-card-body postBody"><?= $escape(viewBreakLongWords($post['body'])) ?></p>
                 <?php endif; ?>
 
                 <?php // Works as a normal form without JavaScript; postVotes.js sends it in the background instead. ?>
@@ -76,7 +76,7 @@
                     <form class="card commentForm" action="/posts/<?= (int) $post['id'] ?>" method="post">
                         <?= csrfTokenField() ?>
                         <label class="visually-hidden" for="newCommentContent">Skriv en kommentar</label>
-                        <textarea class="commentFormInput" name="newCommentContent" id="newCommentContent" rows="3" placeholder="Skriv en kommentar" minlength="<?= (int) $commentLimits['content_min'] ?>" maxlength="<?= (int) $commentLimits['content_max'] ?>" required><?= $escape($commentValues['content']) ?></textarea>
+                        <textarea class="commentFormInput" name="newCommentContent" id="newCommentContent" rows="3" data-autogrow placeholder="Skriv en kommentar" minlength="<?= (int) $commentLimits['content_min'] ?>" maxlength="<?= (int) $commentLimits['content_max'] ?>" required><?= $escape($commentValues['content']) ?></textarea>
                         <button class="btn commentFormSubmit" type="submit">Send kommentar</button>
                     </form>
                 <?php endif; ?>
@@ -102,7 +102,7 @@
                                     <a class="commentPermalink" href="#comment-<?= (int) $comment['id'] ?>"><?= viewTime($comment['timestamp']) ?></a>
                                 </p>
                             </header>
-                            <p class="commentContent"><?= $escape($comment['content']) ?></p>
+                            <p class="commentContent"><?= $escape(viewBreakLongWords($comment['content'])) ?></p>
                         </li>
                     <?php endforeach; ?>
                 </ol>

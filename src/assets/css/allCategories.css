@@ -1,128 +1,109 @@
 main {
-	padding-top: 2.5rem;
+	--page-width: 56rem;
 }
 
-main > div:first-child {
-	max-width: 900px;
-	margin-bottom: 2.25rem;
+.directory-heading {
+	margin-bottom: var(--space-3);
 }
 
-main > div:first-child h1 {
-	margin-bottom: 0.5rem;
-	color: var(--text);
-	font-size: 2rem;
-	font-weight: 500;
+.directory-heading h1 {
+	margin-bottom: var(--space-1);
 }
 
-main > div:first-child p {
-	max-width: 780px;
-	margin-bottom: 0;
+.directory-heading p {
+	margin: 0;
 	color: var(--text-muted);
 }
 
-.category-container {
-	overflow: hidden;
-	border-top: 1px solid var(--stroke);
-}
-
-.category {
+.directory {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
-	padding: 1.35rem 1rem;
+	gap: var(--space-2);
+}
+
+.directory-group-head {
+	margin-bottom: var(--space-2);
+	padding-bottom: var(--space-2);
 	border-bottom: 1px solid var(--stroke);
-	background: var(--bg);
-	transition: background-color 160ms ease;
 }
 
-.category:hover {
-	background: var(--surface);
+.directory-group-titlebar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem 1rem;
+	margin-bottom: 0.25rem;
 }
 
-.category-title {
-	margin-bottom: 0.35rem;
-	color: var(--text);
-	font-size: 1.35rem;
-	font-weight: 500;
-	line-height: 1.25;
-}
-
-.category-description {
-	grid-column: 1;
-	grid-row: 2;
-	max-width: 850px;
-	margin-bottom: 0.65rem;
-	overflow: hidden;
+/* Handling, ikke en kategori, så den står i overskriften og ikke blandt chips'ene */
+.directory-add {
+	flex-shrink: 0;
 	color: var(--text-muted);
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 2;
-	line-clamp: 2;
+	font-weight: 500;
 }
 
-.category-link {
-	grid-column: 1;
-	grid-row: 3;
-	justify-self: start;
+.directory-empty {
+	margin: 0;
+}
+
+.directory-group-title {
+	margin: 0;
+	font-size: 1.5rem;
+}
+
+.directory-group-title a {
+	color: var(--text);
+	text-decoration: none;
+}
+
+.directory-group-title a:hover,
+.directory-group-title a:focus-visible {
+	color: var(--accent-text);
+	text-decoration: underline;
+}
+
+.directory-group-meta,
+.directory-group-description {
+	margin: 0;
 	color: var(--text-muted);
 	font-size: 0.9rem;
-	text-decoration: none;
 }
 
-.category-link::after {
-	margin-left: 0.35rem;
-	color: var(--accent-text);
-	content: "->";
-}
-
-.category-link:hover,
-.category-link:focus-visible {
-	color: var(--accent-text);
-	text-decoration: none;
-}
-
-.category-stats {
-	display: flex;
-	width: 100%;
-	align-self: stretch;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 0.25rem 1rem;
-	margin-bottom: 0.75rem;
-	color: var(--text-muted);
-	font-size: 0.82rem;
-}
-
-.category-posts,
-.category-comments {
-	color: var(--text-muted);
-}
-
-.category-time {
-	color: var(--text-muted);
-}
-
-.category-icon {
-	display: inline-block;
-	min-width: 1rem;
-	color: var(--text-muted);
+.directory-group-description {
+	margin-top: 0.35rem;
 	font-size: 1rem;
-	line-height: 1;
+}
+
+/* Underkategorier som ens chips i et gitter, som i mockuppen */
+.chip-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+	gap: 0.75rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.chip {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 2.75rem;
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--text-muted);
+	border-radius: 999px;
+	background: var(--bg);
+	color: var(--text);
+	font-weight: 600;
 	text-align: center;
+	text-decoration: none;
+	overflow-wrap: anywhere;
 }
 
-@media (max-width: 760px) {
-	.category {
-		padding: 1.25rem 0.5rem;
-	}
-
-	.category-stats {
-		gap: 0.35rem 0.85rem;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.category {
-		transition: none;
-	}
+.chip:hover,
+.chip:focus-visible {
+	border-color: var(--accent);
+	color: var(--text);
+	text-decoration: none;
 }

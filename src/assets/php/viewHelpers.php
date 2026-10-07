@@ -163,6 +163,30 @@ function viewExcerpt($text, int $length = 220): string
 	return rtrim($cut, " .,;:-") . '…';
 }
 
+// Long unbroken words (e.g. "JDDDDDDDD...") would run out of the card. A soft hyphen (U+00AD) every
+// few characters lets the browser break them, and a "-" is only drawn where a line actually breaks.
+// Applied when rendering, never stored. Counted in grapheme clusters so emoji are never split.
+const VIEW_LONG_WORD_LENGTH = 20;
+const VIEW_HYPHEN_INTERVAL = 10;
+
+function viewBreakLongWords($text): string
+{
+	$text = (string) $text;
+	$result = preg_replace_callback(
+		'/\S{' . (VIEW_LONG_WORD_LENGTH + 1) . ',}/u',
+		static function (array $match): string {
+			if (!preg_match_all('/\X/u', $match[0], $graphemes)) {
+				return $match[0];
+			}
+			$chunks = array_chunk($graphemes[0], VIEW_HYPHEN_INTERVAL);
+			return implode("\u{00AD}", array_map(static fn (array $chunk): string => implode('', $chunk), $chunks));
+		},
+		$text
+	);
+
+	return $result ?? $text;
+}
+
 function viewReplyLabel(int $count): string
 {
 	return $count === 1 ? '1 svar' : "{$count} svar";

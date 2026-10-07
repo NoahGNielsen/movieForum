@@ -48,7 +48,7 @@
                                             <a href="/posts/<?= (int) $post['id'] ?>"><?= $escape($post['title']) ?></a>
                                         </h3>
                                         <?php if (trim((string) $post['content']) !== ''): ?>
-                                            <p class="post-card-body"><?= $escape(viewExcerpt($post['content'])) ?></p>
+                                            <p class="post-card-body"><?= $escape(viewBreakLongWords(viewExcerpt($post['content']))) ?></p>
                                         <?php endif; ?>
                                         <footer class="post-card-actions">
                                             <a class="pill" href="/posts/<?= (int) $post['id'] ?>#comments"><?= viewReplyIcon() ?><?= $escape(viewReplyLabel((int) $post['comment_count'])) ?></a>

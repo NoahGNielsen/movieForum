@@ -112,7 +112,7 @@
 
 			head.appendChild(byline);
 			entry.appendChild(head);
-			entry.appendChild(element('p', 'commentContent', comment.content));
+			entry.appendChild(element('p', 'commentContent', comment.displayContent || comment.content));
 			return entry;
 		}
 
