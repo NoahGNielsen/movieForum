@@ -21,6 +21,80 @@ main {
 	overflow-wrap: anywhere;
 }
 
+.postBody {
+	margin-bottom: 1.25rem;
+}
+
+/* Up/down votes under the post (postVotes.js). A chosen vote is filled, not just recoloured. */
+.postVotes {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: 2.5rem;
+}
+
+.voteButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	padding: 0;
+	border: 1px solid var(--stroke);
+	border-radius: 6px;
+	background: var(--surface);
+	color: var(--text-muted);
+	font: inherit;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+.voteButton[aria-pressed="false"]:hover:not(:disabled) {
+	border-color: var(--accent);
+	color: var(--text);
+}
+
+.voteUp[aria-pressed="true"] {
+	border-color: var(--accent);
+	background: var(--accent);
+	color: var(--on-accent);
+}
+
+.voteDown[aria-pressed="true"] {
+	border-color: var(--error);
+	background: var(--error);
+	color: var(--bg);
+}
+
+.voteButton:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.voteScore {
+	min-width: 2ch;
+	font-weight: 700;
+	text-align: center;
+}
+
+.voteNotice {
+	margin-left: 0.5rem;
+	color: var(--text-muted);
+	font-size: 0.85rem;
+}
+
+.voteError {
+	color: var(--error);
+}
+
+.voteError:empty {
+	display: none;
+}
+
+.postComments h2 {
+	margin-bottom: 1rem;
+	font-size: 1.25rem;
 .postComments {
 	display: flex;
 	flex-direction: column;
