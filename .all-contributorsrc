@@ -56,6 +56,16 @@
         "infra",
         "maintenance"
       ]
+    },
+    {
+      "login": "superged",
+      "name": "superged",
+      "avatar_url": "https://avatars.githubusercontent.com/u/29453427?v=4",
+      "profile": "https://github.com/superged",
+      "contributions": [
+        "research",
+        "userTesting"
+      ]
     }
   ],
   "contributorsPerLine": 7,
