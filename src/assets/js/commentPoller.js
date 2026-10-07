@@ -18,6 +18,8 @@
 		let lastCommentId = Number(list.dataset.lastCommentId) || 0;
 		let totalComments = Number(list.dataset.totalComments) || list.children.length;
 		const commentLimit = Number(list.dataset.commentLimit) || 30;
+		// The comment form is only rendered for registered users, and so is the "Svar" button.
+		const canReply = Boolean(document.getElementById('commentForm'));
 		let pendingComments = [];
 		let delay = baseDelay;
 		let timer = null;
@@ -103,11 +105,7 @@
 			head.appendChild(avatar);
 
 			const byline = element('p', 'post-card-byline');
-			const name = element('span', 'user-name', comment.nameBase || comment.username);
-			if (comment.nameTag) {
-				name.appendChild(element('span', 'user-tag', comment.nameTag));
-			}
-			byline.appendChild(name);
+			byline.appendChild(buildUserName(comment.nameBase || comment.username, comment.nameTag));
 
 			if (comment.timestamp) {
 				const permalink = element('a', 'commentPermalink');
@@ -121,8 +119,59 @@
 
 			head.appendChild(byline);
 			entry.appendChild(head);
+			if (comment.reply) {
+				entry.appendChild(buildReplyContext(comment.reply));
+			}
 			entry.appendChild(element('p', 'commentContent', comment.displayContent || comment.content));
+			if (canReply) {
+				entry.appendChild(buildReplyButton(comment.id));
+			}
 			return entry;
+		}
+
+		function buildUserName(nameBase, nameTag) {
+			const name = element('span', 'user-name', nameBase);
+			if (nameTag) {
+				name.appendChild(element('span', 'user-tag', nameTag));
+			}
+			return name;
+		}
+
+		// Same markup as viewReplyContextHtml() in viewHelpers.php.
+		function buildReplyContext(reply) {
+			if (reply.deleted) {
+				return element('p', 'commentReplyContext', 'Svar til en slettet kommentar');
+			}
+			const context = element('a', 'commentReplyContext');
+			context.href = '#comment-' + reply.id;
+			const replyTo = element('span', 'commentReplyTo', 'Svar til ');
+			replyTo.appendChild(buildUserName(reply.nameBase, reply.nameTag));
+			context.appendChild(replyTo);
+			context.appendChild(element('span', 'commentReplyExcerpt', reply.excerpt));
+			return context;
+		}
+
+		// Same markup as the "Svar" footer in posts/post.php; commentReply.js handles the click.
+		function buildReplyButton(commentId) {
+			const actions = element('footer', 'commentActions');
+			const button = element('a', 'pill');
+			button.href = '/posts/' + encodeURIComponent(postId) + '?replyTo=' + commentId + '#commentForm';
+			button.dataset.replyTo = commentId;
+
+			// Same icon as viewReplyIcon() in viewHelpers.php.
+			const svgNamespace = 'http://www.w3.org/2000/svg';
+			const icon = document.createElementNS(svgNamespace, 'svg');
+			icon.setAttribute('class', 'pill-icon');
+			icon.setAttribute('viewBox', '0 0 24 24');
+			icon.setAttribute('aria-hidden', 'true');
+			const path = document.createElementNS(svgNamespace, 'path');
+			path.setAttribute('d', 'M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z');
+			icon.appendChild(path);
+
+			button.appendChild(icon);
+			button.appendChild(document.createTextNode('Svar'));
+			actions.appendChild(button);
+			return actions;
 		}
 
 		function showPendingComments() {

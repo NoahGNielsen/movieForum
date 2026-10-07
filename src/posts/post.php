@@ -6,6 +6,7 @@
     <meta name="description" content="<?= $escape($pageDescription) ?>">
     <link rel="stylesheet" href="/assets/css/post.css?v=<?= filemtime(__DIR__ . '/../assets/css/post.css') ?>">
     <script src="/assets/js/commentPoller.js?v=<?= filemtime(__DIR__ . '/../assets/js/commentPoller.js') ?>" defer></script>
+    <script src="/assets/js/commentReply.js?v=<?= filemtime(__DIR__ . '/../assets/js/commentReply.js') ?>" defer></script>
     <script src="/assets/js/postVotes.js?v=<?= filemtime(__DIR__ . '/../assets/js/postVotes.js') ?>" defer></script>
     <?php include __DIR__ . '/../assets/php/header.php'; ?>
 </head>
@@ -73,11 +74,22 @@
                         Du skal have et brugernavn for at skrive en kommentar. <a href="/userMgmt/onboarding">Opret et her</a>.
                     </p>
                 <?php else: ?>
-                    <form class="card commentForm" action="/posts/<?= (int) $post['id'] ?>" method="post">
+                    <?php // A "Svar" button on a comment turns this into a reply; commentReply.js does it without reloading.
+                          // Labels here must match setReplyMode() in commentReply.js. ?>
+                    <?php $commentPrompt = $replyTarget ? 'Skriv et svar' : 'Skriv en kommentar'; ?>
+                    <form class="card commentForm" id="commentForm" action="/posts/<?= (int) $post['id'] ?>" method="post">
                         <?= csrfTokenField() ?>
-                        <label class="visually-hidden" for="newCommentContent">Skriv en kommentar</label>
-                        <textarea class="commentFormInput" name="newCommentContent" id="newCommentContent" rows="3" data-autogrow placeholder="Skriv en kommentar" minlength="<?= (int) $commentLimits['content_min'] ?>" maxlength="<?= (int) $commentLimits['content_max'] ?>" required><?= $escape($commentValues['content']) ?></textarea>
-                        <button class="btn commentFormSubmit" type="submit">Send kommentar</button>
+                        <input type="hidden" name="replyToCommentId" id="replyToCommentId" value="<?= $replyTarget ? (int) $replyTarget['id'] : '' ?>">
+                        <div class="commentReplyBanner" id="commentReplyBanner"<?= $replyTarget ? '' : ' hidden' ?>>
+                            <p class="commentReplyBannerText">
+                                <span class="commentReplyTo">Svarer på <span id="commentReplyName"><?= $replyTarget ? viewUserName($replyTarget['username']) : '' ?></span></span>
+                                <span class="commentReplyExcerpt" id="commentReplyExcerpt"><?= $replyTarget ? $escape($replyTarget['excerpt']) : '' ?></span>
+                            </p>
+                            <a class="pill commentReplyCancel" id="commentReplyCancel" href="/posts/<?= (int) $post['id'] ?>#commentForm">Annuller</a>
+                        </div>
+                        <label class="visually-hidden" for="newCommentContent"><?= $commentPrompt ?></label>
+                        <textarea class="commentFormInput" name="newCommentContent" id="newCommentContent" rows="3" data-autogrow placeholder="<?= $commentPrompt ?>" minlength="<?= (int) $commentLimits['content_min'] ?>" maxlength="<?= (int) $commentLimits['content_max'] ?>" required><?= $escape($commentValues['content']) ?></textarea>
+                        <button class="btn commentFormSubmit" type="submit"><?= $replyTarget ? 'Send svar' : 'Send kommentar' ?></button>
                     </form>
                 <?php endif; ?>
 
@@ -102,7 +114,13 @@
                                     <a class="commentPermalink" href="#comment-<?= (int) $comment['id'] ?>"><?= viewTime($comment['timestamp']) ?></a>
                                 </p>
                             </header>
+                            <?= viewReplyContextHtml($comment['reply']) ?>
                             <p class="commentContent"><?= $escape(viewBreakLongWords($comment['content'])) ?></p>
+                            <?php if ($newComment['is_registered']): ?>
+                                <footer class="commentActions">
+                                    <a class="pill" href="/posts/<?= (int) $post['id'] ?>?replyTo=<?= (int) $comment['id'] ?>#commentForm" data-reply-to="<?= (int) $comment['id'] ?>"><?= viewReplyIcon() ?>Svar</a>
+                                </footer>
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ol>

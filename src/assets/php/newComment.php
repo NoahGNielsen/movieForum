@@ -19,7 +19,7 @@ $isRegistered = is_string($userId)
 
 $state = [
 	'errors' => [],
-	'values' => ['content' => ''],
+	'values' => ['content' => '', 'replyTo' => null],
 	'is_registered' => $isRegistered,
 	'limits' => [
 		'content_min' => $commentMinLength,
@@ -27,7 +27,15 @@ $state = [
 	],
 ];
 
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+$isPost = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST';
+
+// The comment being answered: the form's hidden field, or ?replyTo= from a "Svar" link when JavaScript is off.
+// postViewer.php checks that it belongs to this post before showing it in the form.
+$replyToInput = $isPost ? ($_POST['replyToCommentId'] ?? '') : ($_GET['replyTo'] ?? '');
+$replyToCommentId = is_string($replyToInput) && ctype_digit($replyToInput) && (int) $replyToInput > 0 ? (int) $replyToInput : null;
+$state['values']['replyTo'] = $replyToCommentId;
+
+if (!$isPost) {
 	return $state;
 }
 
@@ -40,7 +48,7 @@ $postId = (int) $postIdInput;
 
 $contentInput = $_POST['newCommentContent'] ?? '';
 $content = is_string($contentInput) ? $cleanText($contentInput) : '';
-$state['values'] = ['content' => $content];
+$state['values']['content'] = $content;
 
 if (!isValidCsrfRequest()) {
 	$state['errors'][] = 'Formularen er udløbet. Prøv at sende kommentaren igen.';
@@ -101,8 +109,33 @@ if (!$postExists) {
 	return $state;
 }
 
-// timeStamp is filled in by the database (DEFAULT CURRENT_TIMESTAMP).
-$createComment = $conn->prepare('INSERT INTO Comments (userId, ownerPostId, messageContent) VALUES (?, ?, ?)');
+// A reply must answer a comment on the same post.
+if ($replyToCommentId !== null) {
+	$findParent = $conn->prepare('SELECT commentId FROM Comments WHERE commentId = ? AND ownerPostId = ? LIMIT 1');
+	if ($findParent === false) {
+		$conn->close();
+		http_response_code(500);
+		$state['errors'][] = 'Kommentaren kunne ikke gemmes. Prøv igen senere.';
+		return $state;
+	}
+
+	$findParent->bind_param('ii', $replyToCommentId, $postId);
+	$findParent->execute();
+	$findParent->store_result();
+	$parentExists = $findParent->num_rows > 0;
+	$findParent->close();
+
+	if (!$parentExists) {
+		$conn->close();
+		http_response_code(400);
+		$state['errors'][] = 'Kommentaren, du svarer på, findes ikke længere. Du kan sende din tekst som en almindelig kommentar.';
+		$state['values']['replyTo'] = null;
+		return $state;
+	}
+}
+
+// timeStamp is filled in by the database (DEFAULT CURRENT_TIMESTAMP). replyToCommentId stays NULL for a top-level comment.
+$createComment = $conn->prepare('INSERT INTO Comments (userId, ownerPostId, replyToCommentId, messageContent) VALUES (?, ?, ?, ?)');
 if ($createComment === false) {
 	$conn->close();
 	http_response_code(500);
@@ -110,7 +143,7 @@ if ($createComment === false) {
 	return $state;
 }
 
-$createComment->bind_param('sis', $userId, $postId, $content);
+$createComment->bind_param('siis', $userId, $postId, $replyToCommentId, $content);
 $created = $createComment->execute();
 $newCommentId = $conn->insert_id;
 $createComment->close();

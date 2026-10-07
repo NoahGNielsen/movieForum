@@ -54,9 +54,10 @@ if ($loadOlder) {
 	// One extra row tells us whether there is yet another page after this one.
 	$fetchLimit = $olderPageSize + 1;
 	$findComments = $conn->prepare(
-		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('cm.userId') . ', cm.messageContent, cm.timeStamp
+		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('cm.userId') . ', cm.messageContent, cm.timeStamp, ' . viewReplyColumnsSql() . '
 		 FROM Comments AS cm
 		 LEFT JOIN Users AS u ON u.userId = cm.userId
+		 ' . viewReplyJoinSql() . '
 		 WHERE cm.ownerPostId = ? AND cm.commentId < ?
 		 ORDER BY cm.commentId DESC
 		 LIMIT ?'
@@ -65,9 +66,10 @@ if ($loadOlder) {
 } else {
 	$fetchLimit = $commentBatchLimit;
 	$findComments = $conn->prepare(
-		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('cm.userId') . ', cm.messageContent, cm.timeStamp
+		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('cm.userId') . ', cm.messageContent, cm.timeStamp, ' . viewReplyColumnsSql() . '
 		 FROM Comments AS cm
 		 LEFT JOIN Users AS u ON u.userId = cm.userId
+		 ' . viewReplyJoinSql() . '
 		 WHERE cm.ownerPostId = ? AND cm.commentId > ?
 		 ORDER BY cm.commentId ASC
 		 LIMIT ?'
@@ -82,7 +84,7 @@ if ($findComments === false) {
 
 $findComments->bind_param('iii', $postId, $cursorCommentId, $fetchLimit);
 $findComments->execute();
-$findComments->bind_result($commentId, $commentUserName, $commentAvatarId, $commentContent, $commentTimestamp);
+$findComments->bind_result($commentId, $commentUserName, $commentAvatarId, $commentContent, $commentTimestamp, $replyToCommentId, $parentId, $parentUserName, $parentContent);
 
 $comments = [];
 while ($findComments->fetch()) {
@@ -100,6 +102,7 @@ while ($findComments->fetch()) {
 		'timestamp' => $commentTimestamp,
 		'displayTime' => viewRelativeTime($commentTimestamp),
 		'exactTime' => viewExactTime($commentTimestamp),
+		'reply' => viewReplyContext($replyToCommentId, $parentId, $parentUserName, $parentContent),
 	];
 }
 $findComments->close();

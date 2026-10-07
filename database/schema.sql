@@ -61,6 +61,7 @@ CREATE TABLE `Comments` (
   `userId` char(18) NOT NULL,
   `ownerPostId` int NOT NULL,
   `messageContent` text NOT NULL,
+  `replyToCommentId` int DEFAULT NULL,
   `timeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 -- --------------------------------------------------------

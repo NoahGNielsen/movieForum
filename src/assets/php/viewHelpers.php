@@ -198,6 +198,60 @@ function viewBreakLongWords($text): string
 	return $result ?? $text;
 }
 
+// A reply quotes the start of the comment it answers. Matches REPLY_EXCERPT_LENGTH in commentReply.js.
+const VIEW_REPLY_EXCERPT_LENGTH = 100;
+
+// Extra columns and joins for a comment query (Comments AS cm) that describe the comment each reply answers.
+// Read the four columns back with viewReplyContext().
+function viewReplyColumnsSql(): string
+{
+	return 'cm.replyToCommentId, parent.commentId, COALESCE(pu.userName, \'Ukendt bruger\'), LEFT(parent.messageContent, 200)';
+}
+
+function viewReplyJoinSql(): string
+{
+	return 'LEFT JOIN Comments AS parent ON parent.commentId = cm.replyToCommentId
+		 LEFT JOIN Users AS pu ON pu.userId = parent.userId';
+}
+
+// What a reply shows about the comment it answers, or null for a comment that is not a reply.
+// If that comment has been deleted, the reply still says it was one.
+function viewReplyContext($replyToCommentId, $parentId, $parentUserName, $parentContent): ?array
+{
+	if ($replyToCommentId === null) {
+		return null;
+	}
+	if ($parentId === null) {
+		return ['id' => (int) $replyToCommentId, 'deleted' => true];
+	}
+
+	$nameParts = viewSplitUserName($parentUserName);
+	return [
+		'id' => (int) $parentId,
+		'deleted' => false,
+		'username' => (string) $parentUserName,
+		'nameBase' => $nameParts['name'],
+		'nameTag' => $nameParts['tag'],
+		'excerpt' => viewExcerpt($parentContent, VIEW_REPLY_EXCERPT_LENGTH),
+	];
+}
+
+// "Svar til <name>" and the start of the answered comment, linking to it. Takes viewReplyContext().
+// commentPoller.js builds the same markup in buildReplyContext(); keep the two in sync.
+function viewReplyContextHtml(?array $reply): string
+{
+	if ($reply === null) {
+		return '';
+	}
+	if ($reply['deleted']) {
+		return '<p class="commentReplyContext">Svar til en slettet kommentar</p>';
+	}
+
+	return '<a class="commentReplyContext" href="#comment-' . (int) $reply['id'] . '">'
+		. '<span class="commentReplyTo">Svar til ' . viewUserName($reply['username']) . '</span>'
+		. '<span class="commentReplyExcerpt">' . viewEscape($reply['excerpt']) . '</span></a>';
+}
+
 function viewReplyLabel(int $count): string
 {
 	return $count === 1 ? '1 svar' : "{$count} svar";

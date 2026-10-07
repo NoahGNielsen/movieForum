@@ -11,7 +11,7 @@ $newComment = require __DIR__ . '/newComment.php';
 // from posts/newComments.php. Ordered by commentId, which is also the cursor that endpoint pages by.
 const COMMENT_DISPLAY_LIMIT = 30;
 
-function loadPostViewer(): array
+function loadPostViewer(?int $replyToId): array
 {
 	$postIdInput = $_GET['postId'] ?? '';
 	if (!is_string($postIdInput) || !ctype_digit($postIdInput) || (int) $postIdInput <= 0) {
@@ -75,9 +75,10 @@ function loadPostViewer(): array
 	$comments = [];
 	$commentLimit = COMMENT_DISPLAY_LIMIT;
 	$findComments = $conn->prepare(
-		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('cm.userId') . ', cm.messageContent, cm.timeStamp
+		'SELECT cm.commentId, COALESCE(u.userName, \'Ukendt bruger\'), ' . profilePictureIdSql('cm.userId') . ', cm.messageContent, cm.timeStamp, ' . viewReplyColumnsSql() . '
 		 FROM Comments AS cm
 		 LEFT JOIN Users AS u ON u.userId = cm.userId
+		 ' . viewReplyJoinSql() . '
 		 WHERE cm.ownerPostId = ?
 		 ORDER BY cm.commentId DESC
 		 LIMIT ?'
@@ -86,7 +87,7 @@ function loadPostViewer(): array
 	if ($findComments !== false) {
 		$findComments->bind_param('ii', $postId, $commentLimit);
 		$findComments->execute();
-		$findComments->bind_result($commentId, $commentUserName, $commentAvatarId, $commentContent, $commentTimestamp);
+		$findComments->bind_result($commentId, $commentUserName, $commentAvatarId, $commentContent, $commentTimestamp, $replyToCommentId, $parentId, $parentUserName, $parentContent);
 		while ($findComments->fetch()) {
 			$comments[] = [
 				'id' => $commentId,
@@ -94,9 +95,31 @@ function loadPostViewer(): array
 				'avatar_id' => $commentAvatarId !== null ? (int) $commentAvatarId : null,
 				'content' => $commentContent,
 				'timestamp' => $commentTimestamp,
+				'reply' => viewReplyContext($replyToCommentId, $parentId, $parentUserName, $parentContent),
 			];
 		}
 		$findComments->close();
+	}
+
+	// The comment the form is answering (a "Svar" link without JavaScript, or a reply that failed validation).
+	$replyTarget = null;
+	if ($replyToId !== null) {
+		$findReplyTarget = $conn->prepare(
+			'SELECT COALESCE(u.userName, \'Ukendt bruger\'), LEFT(cm.messageContent, 200)
+			 FROM Comments AS cm
+			 LEFT JOIN Users AS u ON u.userId = cm.userId
+			 WHERE cm.commentId = ? AND cm.ownerPostId = ?
+			 LIMIT 1'
+		);
+		if ($findReplyTarget !== false) {
+			$findReplyTarget->bind_param('ii', $replyToId, $postId);
+			$findReplyTarget->execute();
+			$findReplyTarget->bind_result($targetUserName, $targetContent);
+			if ($findReplyTarget->fetch()) {
+				$replyTarget = viewReplyContext($replyToId, $replyToId, $targetUserName, $targetContent);
+			}
+			$findReplyTarget->close();
+		}
 	}
 
 	$viewerId = $_COOKIE['user_session_cookie'] ?? '';
@@ -117,10 +140,11 @@ function loadPostViewer(): array
 		'comments' => $comments,
 		'totalComments' => max((int) $totalComments, count($comments)),
 		'votes' => $votes,
+		'replyTarget' => $replyTarget,
 	];
 }
 
-$postViewer = loadPostViewer();
+$postViewer = loadPostViewer($newComment['values']['replyTo']);
 $post = $postViewer['post'] ?? null;
 $postError = $postViewer['error'] ?? '';
 $comments = $postViewer['comments'] ?? [];
@@ -130,6 +154,7 @@ $postVotes = $postViewer['votes'] ?? ['upvotes' => 0, 'downvotes' => 0, 'score' 
 $lastCommentId = empty($comments) ? 0 : max(array_column($comments, 'id'));
 $commentValues = $newComment['values'];
 $commentLimits = $newComment['limits'];
+$replyTarget = $postViewer['replyTarget'] ?? null;
 
 if ($post === null) {
 	http_response_code($postError === 'database' ? 500 : 404);

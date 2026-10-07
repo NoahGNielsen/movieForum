@@ -150,6 +150,72 @@ main {
 	hyphens: manual;
 }
 
+/* "Svar til <navn>" og starten af kommentaren, der svares på. Linker til den kommentar. */
+.commentReplyContext {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	max-width: 70ch;
+	margin: 0.75rem 0 0;
+	padding: 0.4rem 0.75rem;
+	border-left: 3px solid var(--stroke);
+	border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+	background: var(--bg);
+	color: var(--text-muted);
+	font-size: 0.85rem;
+	text-decoration: none;
+}
+
+a.commentReplyContext:hover,
+a.commentReplyContext:focus-visible {
+	border-left-color: var(--accent);
+	text-decoration: none;
+}
+
+.commentReplyTo .user-name {
+	color: var(--text);
+}
+
+/* Citatet er højst to linjer; resten af kommentaren står ved linket */
+.commentReplyExcerpt {
+	display: -webkit-box;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.commentActions {
+	display: flex;
+	margin-top: 0.75rem;
+}
+
+/* Vises i kommentarformularen, når man svarer (commentReply.js). Guld kant, så man kan se, at det er et svar. */
+.commentReplyBanner {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.5rem 0.75rem;
+	border-left: 3px solid var(--accent);
+	border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+	background: var(--bg);
+	font-size: 0.85rem;
+}
+
+.commentReplyBannerText {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	min-width: 0;
+	margin: 0;
+	color: var(--text-muted);
+}
+
+.commentReplyCancel {
+	flex-shrink: 0;
+}
+
 .postMessage {
 	color: var(--text-muted);
 }
