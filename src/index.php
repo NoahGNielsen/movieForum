@@ -9,6 +9,13 @@
 </head>
 <body>
     <?php include __DIR__ . '/assets/php/navBar.php'; ?>
+    <?php if (isset($_GET['onboarded'])): ?>
+        <div class="success-toast" id="successToast" role="status">
+            <p>Velkommen! Dit brugernavn er oprettet.</p>
+            <button type="button" class="success-toast-close" aria-label="Luk besked">&times;</button>
+        </div>
+        <script src="/assets/js/successToast.js?v=<?= filemtime(__DIR__ . '/assets/js/successToast.js') ?>"></script>
+    <?php endif; ?>
     <main>
         <section class="hero">
             <h1>Snak film med andre filmelskere</h1>

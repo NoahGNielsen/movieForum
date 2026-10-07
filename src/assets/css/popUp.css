@@ -125,3 +125,70 @@
 .newUserPopUpLink:hover {
     text-decoration: underline;
 }
+
+.success-toast {
+	position: fixed;
+	top: 24px;
+	left: 50%;
+	z-index: 1100;
+	display: flex;
+	gap: 16px;
+	align-items: center;
+	width: max-content;
+	max-width: calc(100% - 32px);
+	padding: 14px 16px 14px 20px;
+	color: var(--text);
+	background: var(--surface);
+	border: 1px solid var(--stroke);
+	border-left: 4px solid var(--success);
+	border-radius: 8px;
+	box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+	transform: translateX(-50%);
+	animation: success-toast-appear 220ms ease-out both;
+	transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.success-toast p {
+	margin: 0;
+	font-weight: 600;
+}
+
+.success-toast-close {
+	padding: 0 4px;
+	color: var(--text-muted);
+	background: none;
+	border: 0;
+	font: inherit;
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.success-toast-close:hover,
+.success-toast-close:focus-visible {
+	color: var(--text);
+}
+
+.success-toast-hide {
+	opacity: 0;
+	transform: translate(-50%, -8px);
+}
+
+@keyframes success-toast-appear {
+	from {
+		opacity: 0;
+		transform: translate(-50%, -8px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.success-toast {
+		animation: none;
+		transition: none;
+	}
+}

@@ -91,7 +91,7 @@ if ($checkUser->num_rows === 0) {
 $checkUser->close();
 $conn->close();
 
-header('Location: ../../userMgmt/onboarding.php');
+header('Location: ../../?onboarded=1');
 exit;
 
 
