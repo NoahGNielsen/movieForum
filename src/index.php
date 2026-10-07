@@ -12,7 +12,6 @@
     <?php include __DIR__ . '/assets/php/navBar.php'; ?>
     <main>
         <section class="hero">
-            <p class="hero-eyebrow">Dansk filmforum</p>
             <h1>Snak film med andre filmelskere</h1>
             <p class="hero-lead">
                 Del anmeldelser, start diskussioner og find nye film at se, sorteret i kategorier, så du hurtigt finder samtalen, du leder efter.

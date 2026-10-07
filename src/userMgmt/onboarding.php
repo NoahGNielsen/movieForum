@@ -4,7 +4,7 @@
 <head>
     <title>Onboarding - Pellicula Film Forum</title>
     <meta name="description" content="Onboarding side for nye brugere på Pellicula Film Forum. Her kan nye brugere oprette et brugernavn til brug på siden.">
-    <link rel="stylesheet" href="../assets/css/userMgmt.css">
+    <link rel="stylesheet" href="../assets/css/userMgmt.css?v=<?= filemtime(__DIR__ . '/../css/userMgmt.css') ?>">
     <?php include '../assets/php/header.php'; ?>
 </head>
 <body>
