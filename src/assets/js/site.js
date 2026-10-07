@@ -19,6 +19,18 @@
 				menuButton.focus();
 			}
 		});
+
+		// Luk menuen når et link i den vælges, og når siden vises igen via tilbage-knappen
+		// (browserens back/forward-cache gemmer ellers siden med menuen åben)
+		topbar.querySelectorAll('.topbar-nav a').forEach(function (link) {
+			link.addEventListener('click', function () {
+				setOpen(false);
+			});
+		});
+
+		window.addEventListener('pageshow', function () {
+			setOpen(false);
+		});
 	}
 
 	// Tekstfelter med data-autogrow vokser med indholdet op til CSS-max-height og scroller derefter

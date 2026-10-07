@@ -1,3 +1,9 @@
+// Marks that JavaScript runs, so CSS may hide the mobile menu until the menu button opens it.
+// Set here, in an external file loaded in <head> before the page is drawn, and not in an inline
+// <script>: a Content-Security-Policy that blocks inline scripts would otherwise leave the menu
+// always open on phones.
+document.documentElement.classList.add('has-js');
+
 (function () {
 	const cookieName = 'theme';
 	const cookieLifetime = 31536000;
