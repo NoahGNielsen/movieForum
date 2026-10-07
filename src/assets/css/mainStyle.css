@@ -310,6 +310,13 @@ textarea::placeholder {
   text-decoration: none;
 }
 
+/* Score i lister: faste ciffer-bredder, så tallene står roligt under hinanden */
+.vote-score span:not(.visually-hidden) {
+  min-width: 1ch;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
 .pill-icon {
   width: 1rem;
   height: 1rem;

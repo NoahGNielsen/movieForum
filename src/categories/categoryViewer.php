@@ -51,6 +51,7 @@
                                             <p class="post-card-body"><?= $escape(viewBreakLongWords(viewExcerpt($post['content']))) ?></p>
                                         <?php endif; ?>
                                         <footer class="post-card-actions">
+                                            <?= viewVoteScore((int) $post['id'], $post['upvotes'], $post['downvotes']) ?>
                                             <a class="pill" href="/posts/<?= (int) $post['id'] ?>#comments"><?= viewReplyIcon() ?><?= $escape(viewReplyLabel((int) $post['comment_count'])) ?></a>
                                             <?= viewShareButton('/posts/' . (int) $post['id'], (string) $post['title']) ?>
                                         </footer>

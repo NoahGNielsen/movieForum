@@ -211,6 +211,17 @@ function viewShareButton(string $path, string $title): string
 		. '<span data-share-label aria-live="polite">Del</span></button>';
 }
 
+// Read-only score for lists of posts. Links to the vote buttons on the post, since voting happens there.
+function viewVoteScore(int $postId, int $upvotes, int $downvotes): string
+{
+	$score = $upvotes - $downvotes;
+	$detail = $upvotes . ' op, ' . $downvotes . ' ned';
+
+	return '<a class="pill vote-score" href="/posts/' . $postId . '#postVotes" title="' . viewEscape($detail) . '">'
+		. '<svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>'
+		. '<span>' . $score . '</span><span class="visually-hidden"> point (' . viewEscape($detail) . ')</span></a>';
+}
+
 function viewReplyIcon(): string
 {
 	return '<svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg>';
