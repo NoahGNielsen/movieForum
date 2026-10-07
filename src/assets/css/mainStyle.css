@@ -649,3 +649,149 @@ textarea::placeholder {
   background: #0F1420;
   color: var(--chrome-text);
 }
+
+/* --- Formularsider (ny underkategori, skift brugernavn, profilbillede) ---- */
+
+.form-page {
+  max-width: 36rem;
+  margin-inline: auto;
+}
+
+.form-page h1 {
+  margin-bottom: var(--space-1);
+}
+
+.form-intro {
+  margin-bottom: var(--space-3);
+  color: var(--text-muted);
+}
+
+.form-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: var(--space-2);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.form-notice {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field-label {
+  font-weight: 700;
+}
+
+.field-hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.field input[type="text"],
+.field select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.85rem;
+}
+
+/* Egen pil i select, så den matcher i begge temaer og alle browsere */
+.field select {
+  padding-right: 2.5rem;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.25rem) calc(50% + 0.1rem),
+    calc(100% - 0.95rem) calc(50% + 0.1rem);
+  background-size: 0.3rem 0.3rem;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+/* Felt med fast tekst før/efter, fx "#12345" som serveren tilføjer */
+.input-group {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--text-muted);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.input-group:focus-within {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 1px;
+}
+
+.field .input-group input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+}
+
+.input-group input:focus-visible {
+  outline: none;
+}
+
+.input-addon {
+  display: flex;
+  align-items: center;
+  padding: 0 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.input-addon:first-child {
+  border-right: 1px solid var(--stroke);
+}
+
+.input-addon:last-child {
+  border-left: 1px solid var(--stroke);
+}
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.check-row input {
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0.2rem 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.form-cancel {
+  color: var(--text-muted);
+}

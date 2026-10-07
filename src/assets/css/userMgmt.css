@@ -1,19 +1,86 @@
 /* --- Beskeder efter en formular er sendt ---------------------------------- */
 
+/* Fejl og bekræftelser vises altid med ikon og tekst, ikke kun farve (farvedokumentet) */
 .message {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.6rem;
+	margin-bottom: var(--space-3);
 	padding: 0.75rem 1rem;
 	border: 1px solid currentColor;
+	border-left-width: 4px;
 	border-radius: var(--radius-sm);
 	background: var(--surface);
 	font-weight: 700;
+	overflow-wrap: anywhere;
+}
+
+.message::before {
+	flex-shrink: 0;
+	font-weight: 800;
 }
 
 .message.success {
 	color: var(--success);
 }
 
+.message.success::before {
+	content: "\2713";
+}
+
 .message.error {
 	color: var(--error);
+}
+
+.message.error::before {
+	content: "\2715";
+}
+
+/* --- Skift brugernavn ------------------------------------------------------ */
+
+.current-username-display {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding-bottom: var(--space-3);
+	border-bottom: 1px solid var(--stroke);
+}
+
+.current-username-display p {
+	margin: 0;
+}
+
+.current-username-label {
+	color: var(--text-muted);
+	font-size: 0.85rem;
+}
+
+.username-text {
+	font-size: 1.15rem;
+	overflow-wrap: anywhere;
+}
+
+.changeUsername-info-box {
+	margin-top: var(--space-3);
+	padding: var(--space-2) var(--space-3);
+	border-left: 3px solid var(--stroke);
+	color: var(--text-muted);
+}
+
+.changeUsername-info-box h2 {
+	margin-bottom: 0.5rem;
+	color: var(--text);
+	font-size: 1rem;
+}
+
+.changeUsername-info-list {
+	margin: 0;
+	padding-left: 1.1rem;
+	font-size: 0.9rem;
+}
+
+.changeUsername-info-list li + li {
+	margin-top: 0.35rem;
 }
 
 /* --- Profilbillede --------------------------------------------------------- */

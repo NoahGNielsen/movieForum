@@ -1,5 +1,6 @@
 <?php
 require_once '../assets/php/userCookieHandeling.php';
+require_once __DIR__ . '/../assets/php/viewHelpers.php';
 require '../../config.php';
 
 $message = '';
@@ -97,60 +98,81 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
 <!DOCTYPE html>
 <html lang="da">
 <head>
-    <title>Brugernavns ændring - Pellicula Film Forum</title>
-    <meta name="description" content="Ændring af brugernavn for eksisterende brugere.">
-   <link rel="stylesheet" href="../assets/css/userMgmt.css?v=<?= filemtime(__DIR__ . '/../assets/css/userMgmt.css') ?>">¨
+    <title>Skift brugernavn - Pellicula Film Forum</title>
+    <meta name="description" content="Skift dit brugernavn på Pellicula Film Forum.">
+    <link rel="stylesheet" href="/assets/css/userMgmt.css?v=<?= filemtime(__DIR__ . '/../assets/css/userMgmt.css') ?>">
     <?php include '../assets/php/header.php'; ?>
 </head>
 <body>
     <?php include __DIR__ . '/../assets/php/navBar.php'; ?>
     <main>
-        <div class="change-username-container">
-            <h1>Ændring af brugernavn</h1>
+        <section class="form-page change-username-container">
+            <h1>Skift brugernavn</h1>
+            <p class="form-intro">Dit nye navn bliver vist på alle dine opslag og kommentarer, også de gamle.</p>
 
             <?php if (!empty($message)): ?>
-                <div class="message <?php echo htmlspecialchars($messageType, ENT_QUOTES, 'UTF-8'); ?>">
-                    <?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>
-                </div>
+                <p class="message <?= viewEscape($messageType) ?>" role="<?= $messageType === 'error' ? 'alert' : 'status' ?>"><?= viewEscape($message) ?></p>
             <?php endif; ?>
 
             <?php if (!empty($currentUsername) && preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId)): ?>
-                <div class="current-username-display">
-                    <p><strong>Dit nuværende brugernavn:</strong></p>
-                    <p class="username-text"><?php echo htmlspecialchars($currentUsername, ENT_QUOTES, 'UTF-8'); ?></p>
-                </div>
-
-                <form method="POST" class="change-username-form">
-                    <?= csrfTokenField() ?>
-                    <div class="form-group">
-                        <label for="new_username">Nyt brugernavn:</label>
-                        <input 
-                            type="text" 
-                            id="new_username" 
-                            name="new_username"
-                            minlength="3" 
-                            maxlength="20" 
-                            pattern="[A-Za-z0-9.,_@:!?()+&-]+"
-                            title="Brug bogstaver, tal eller tegnene . , _ @ : ! ? ( ) + & -"
-                            placeholder="Indtast nyt brugernavn"
-                            required
-                        >
+                <?php $changeUser = viewCurrentUser(); ?>
+                <div class="card form-stack">
+                    <div class="current-username-display">
+                        <?= viewAvatar($currentUsername, 'md', $changeUser['avatar_id'] ?? null) ?>
+                        <div>
+                            <p class="current-username-label">Nuværende brugernavn</p>
+                            <p class="username-text"><?= viewUserName($currentUsername) ?></p>
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn-submit">Ændre brugernavn</button>
-                </form>
+                    <form method="POST" class="form-stack change-username-form">
+                        <?= csrfTokenField() ?>
+                        <div class="field">
+                            <label class="field-label" for="new_username">Nyt brugernavn</label>
+                            <?php // The #id suffix is added by the server; shown here so users see the final name. ?>
+                            <div class="input-group">
+                                <?php if (strncmp($currentUsername, 'G-', 2) === 0): ?>
+                                    <span class="input-addon" aria-hidden="true">G-</span>
+                                <?php endif; ?>
+                                <input
+                                    type="text"
+                                    id="new_username"
+                                    name="new_username"
+                                    minlength="3"
+                                    maxlength="20"
+                                    pattern="[A-Za-z0-9.,_@:!?()+&-]+"
+                                    title="Brug bogstaver, tal eller tegnene . , _ @ : ! ? ( ) + & -"
+                                    placeholder="Indtast nyt brugernavn"
+                                    aria-describedby="newUsernameHint"
+                                    autocomplete="off"
+                                    required
+                                >
+                                <span class="input-addon" aria-hidden="true">#<?= viewEscape(substr($userId, -5)) ?></span>
+                            </div>
+                            <p class="field-hint" id="newUsernameHint">3-20 tegn: A-Z, a-z, 0-9 og . , _ @ : ! ? ( ) + &amp; - (ikke æ, ø og å). Dit ID-nummer tilføjes automatisk.</p>
+                        </div>
 
-                <div class="changeUsername-info-box">
-                    <p><strong>Vigtig information:</strong></p>
-                    <ul class="changeUsername-info-list">
-                        <li>Brugernavnet må indeholde A-Z, a-z, 0-9</li>
-                        <li>Dit unikke ID-nummer (#xxxxx) bliver automatisk tilføjet til dit brugernavn</li>
-                        <li>Brugernavnet skal være mellem 3 og 20 tegn langt</li>
-                        <small>Du kan ikke vælge et brugernavn, hvis en anden bruger med samme ID allerede har det.</small>
-                    </ul>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-submit">Gem brugernavn</button>
+                            <a class="form-cancel" href="/profile">Annullér</a>
+                        </div>
+                    </form>
                 </div>
+
+                <aside class="changeUsername-info-box">
+                    <h2>Godt at vide</h2>
+                    <ul class="changeUsername-info-list">
+                        <li>Dit ID-nummer (#<?= viewEscape(substr($userId, -5)) ?>) følger med dig og kan ikke ændres.</li>
+                        <li>To brugere kan godt hedde det samme, så længe de har forskellige ID-numre.</li>
+                        <?php if (strncmp($currentUsername, 'G-', 2) === 0): ?>
+                            <li>Du er gæst, derfor beholder navnet G- foran.</li>
+                        <?php endif; ?>
+                    </ul>
+                </aside>
+            <?php else: ?>
+                <a class="btn" href="/userMgmt/onboarding">Opret dit brugernavn</a>
             <?php endif; ?>
-        </div>
+        </section>
     </main>
     <?php include '../assets/php/footer.php'; ?>
 </body>
