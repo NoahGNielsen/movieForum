@@ -106,6 +106,11 @@ if ($changeVote !== false) {
 	$changeVote->close();
 }
 
+// Written to the server's error log (not shown to the visitor), e.g. a missing column or a failing foreign key.
+if (!$saved) {
+	error_log('vote.php: could not save vote on post ' . $postId . ': ' . $conn->error);
+}
+
 $votes = loadPostVotes($conn, $postId, $userId);
 $conn->close();
 

@@ -18,6 +18,7 @@ function loadPostVotes(mysqli $conn, int $postId, string $userId): array
 	);
 
 	if ($countVotes === false) {
+		error_log('loadPostVotes: ' . $conn->error);
 		return $votes;
 	}
 

@@ -7,6 +7,14 @@
 			return;
 		}
 
+		// Error codes sent by vote.php. Anything else (including a non-JSON answer) gets the general message.
+		const errorMessages = {
+			csrf: 'Siden er udløbet. Genindlæs siden og prøv igen.',
+			not_registered: 'Du skal have en registreret bruger for at stemme.',
+			not_found: 'Indlægget findes ikke længere.'
+		};
+		const defaultErrorMessage = 'Din stemme kunne ikke gemmes. Prøv igen.';
+
 		const upButton = form.querySelector('.voteUp');
 		const downButton = form.querySelector('.voteDown');
 		let isSending = false;
@@ -47,18 +55,25 @@
 				body: data
 			})
 				.then(function (response) {
-					return response.json().then(function (votes) {
-						// A failed save still sends the current totals, so the page stays in sync with the database.
-						if (typeof votes.score === 'number') {
-							showVotes(votes);
-						}
-						if (!response.ok) {
-							throw new Error('Request failed with status ' + response.status);
-						}
-					});
+					return response.json()
+						.catch(function () {
+							throw new Error('Expected JSON from ' + form.action + ' but got status ' + response.status);
+						})
+						.then(function (votes) {
+							// A failed save still sends the current totals, so the page stays in sync with the database.
+							if (typeof votes.score === 'number') {
+								showVotes(votes);
+							}
+							if (!response.ok) {
+								const error = new Error('Vote failed with status ' + response.status + ': ' + votes.error);
+								error.code = votes.error;
+								throw error;
+							}
+						});
 				})
-				.catch(function () {
-					errorMessage.textContent = 'Din stemme kunne ikke gemmes. Prøv igen.';
+				.catch(function (error) {
+					console.error(error);
+					errorMessage.textContent = errorMessages[error.code] || defaultErrorMessage;
 				})
 				.finally(function () {
 					isSending = false;
