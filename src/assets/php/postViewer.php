@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/userCookieHandeling.php';
+require_once __DIR__ . '/postVotes.php';
 
 mysqli_report(MYSQLI_REPORT_OFF);
 
@@ -96,6 +97,9 @@ function loadPostViewer(): array
 		$findComments->close();
 	}
 
+	$viewerId = $_COOKIE['user_session_cookie'] ?? '';
+	$votes = loadPostVotes($conn, $postId, is_string($viewerId) ? $viewerId : '');
+
 	$conn->close();
 
 	return [
@@ -109,6 +113,7 @@ function loadPostViewer(): array
 		],
 		'comments' => $comments,
 		'totalComments' => max((int) $totalComments, count($comments)),
+		'votes' => $votes,
 	];
 }
 
@@ -117,6 +122,7 @@ $post = $postViewer['post'] ?? null;
 $postError = $postViewer['error'] ?? '';
 $comments = $postViewer['comments'] ?? [];
 $totalComments = $postViewer['totalComments'] ?? 0;
+$postVotes = $postViewer['votes'] ?? ['upvotes' => 0, 'downvotes' => 0, 'score' => 0, 'userVote' => 0];
 // Starting point for commentPoller.js, which asks for comments newer than this.
 $lastCommentId = empty($comments) ? 0 : max(array_column($comments, 'id'));
 $commentValues = $newComment['values'];

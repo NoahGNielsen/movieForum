@@ -4,8 +4,9 @@
 <head>
     <title><?= $escape($pageTitle) ?> - Pellicula Film Forum</title>
     <meta name="description" content="<?= $escape($pageDescription) ?>">
-    <link rel="stylesheet" href="/assets/css/post.css">
+    <link rel="stylesheet" href="/assets/css/post.css?v=<?= filemtime(__DIR__ . '/../assets/css/post.css') ?>">
     <script src="/assets/js/commentPoller.js?v=<?= filemtime(__DIR__ . '/../assets/js/commentPoller.js') ?>" defer></script>
+    <script src="/assets/js/postVotes.js?v=<?= filemtime(__DIR__ . '/../assets/js/postVotes.js') ?>" defer></script>
     <?php include __DIR__ . '/../assets/php/header.php'; ?>
 </head>
 <body>
@@ -34,6 +35,18 @@
                 <?php if ($post['body'] !== ''): ?>
                     <p class="postBody"><?= $escape($post['body']) ?></p>
                 <?php endif; ?>
+
+                <?php // Works as a normal form without JavaScript; postVotes.js sends it in the background instead. ?>
+                <form class="postVotes" id="postVotes" action="/posts/vote" method="post">
+                    <?= csrfTokenField() ?>
+                    <input type="hidden" name="postId" value="<?= (int) $post['id'] ?>">
+                    <button class="voteButton voteUp" type="submit" name="vote" value="up" aria-label="Stem op" aria-pressed="<?= $postVotes['userVote'] === POST_VOTE_UP ? 'true' : 'false' ?>"<?= $newComment['is_registered'] ? '' : ' disabled' ?>><span aria-hidden="true">&#9650;</span></button>
+                    <output class="voteScore" id="voteScore" aria-live="polite" title="<?= (int) $postVotes['upvotes'] ?> op, <?= (int) $postVotes['downvotes'] ?> ned"><?= (int) $postVotes['score'] ?></output>
+                    <button class="voteButton voteDown" type="submit" name="vote" value="down" aria-label="Stem ned" aria-pressed="<?= $postVotes['userVote'] === POST_VOTE_DOWN ? 'true' : 'false' ?>"<?= $newComment['is_registered'] ? '' : ' disabled' ?>><span aria-hidden="true">&#9660;</span></button>
+                    <?php if (!$newComment['is_registered']): ?>
+                        <span class="voteNotice"><a href="/userMgmt/onboarding">Opret en bruger</a> for at stemme.</span>
+                    <?php endif; ?>
+                </form>
             </article>
 
             <section class="postComments" aria-labelledby="commentsHeading">
