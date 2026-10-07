@@ -41,16 +41,19 @@
                 <ol class="card-list">
                     <?php foreach ($activeThreads as $thread): ?>
                         <li class="card thread-row">
-                            <h3 class="thread-title">
-                                <a href="/posts/<?= (int) $thread['id'] ?>"><?= viewEscape($thread['title']) ?></a>
-                            </h3>
-                            <p class="thread-meta">
-                                <?php if ($thread['category'] !== ''): ?>
-                                    <a class="thread-category" href="/categories/<?= viewEscape(rawurlencode($thread['category'])) ?>"><?= viewEscape($thread['category']) ?></a>
-                                <?php endif; ?>
-                                <span><?= viewEscape(viewReplyLabel($thread['replies'])) ?></span>
-                                <span>Seneste aktivitet <?= viewTime($thread['last_activity']) ?></span>
-                            </p>
+                            <div class="thread-main">
+                                <h3 class="thread-title">
+                                    <a href="/posts/<?= (int) $thread['id'] ?>"><?= viewEscape($thread['title']) ?></a>
+                                </h3>
+                                <p class="thread-meta">
+                                    <?php if ($thread['category'] !== ''): ?>
+                                        <a class="thread-category" href="/categories/<?= viewEscape(rawurlencode($thread['category'])) ?>"><?= viewEscape($thread['category']) ?></a>
+                                    <?php endif; ?>
+                                    <span><?= viewEscape(viewReplyLabel($thread['replies'])) ?></span>
+                                    <span>Seneste aktivitet <?= viewTime($thread['last_activity']) ?></span>
+                                </p>
+                            </div>
+                            <?= viewVoteScore((int) $thread['id'], $thread['upvotes'], $thread['downvotes']) ?>
                         </li>
                     <?php endforeach; ?>
                 </ol>
