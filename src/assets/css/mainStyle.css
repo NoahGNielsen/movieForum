@@ -32,7 +32,8 @@
   --space-3: 1.5rem;
   --space-4: 2.5rem;
   --space-5: 4rem;
-  --content-width: 68rem;
+  --content-width: 72rem;
+  --page-gutter: clamp(1rem, 4vw, 2rem);
 }
 
 :root.light {
@@ -68,19 +69,35 @@ body {
   flex-direction: column;
   min-width: 320px;
   min-height: 100vh;
-  max-width: var(--content-width);
-  margin: 0 auto;
-  padding: 0 clamp(1rem, 4vw, 2rem);
+  margin: 0;
   background-color: var(--bg);
   color: var(--text);
   font-family: 'Raleway', sans-serif;
   line-height: 1.6;
 }
 
+/* Indholdet ligger i én centreret kolonne. Sider kan gøre den smallere med --page-width. */
 main {
   flex: 1;
+  width: min(100% - 2 * var(--page-gutter), var(--page-width, 60rem));
   min-height: 60vh;
+  margin-inline: auto;
   padding: var(--space-4) 0;
+}
+
+/* Komponenter med display: flex/grid må ikke overtrumfe hidden-attributten */
+[hidden] {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 h1,
@@ -221,117 +238,378 @@ textarea::placeholder {
   filter: none;
 }
 
-/* --- Navigation og footer (mørkeblå flade i begge temaer) ---------------- */
+/* --- Fælles komponenter: kort, avatar, pill-knapper ---------------------- */
 
-.navBar,
-footer {
-  background: var(--chrome-bg);
-  color: var(--chrome-text);
+.card {
+  padding: var(--space-3);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  background: var(--surface);
 }
 
-.navBar a:focus-visible,
-footer a:focus-visible,
-footer select:focus-visible {
-  outline-color: var(--accent);
+.avatar {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--text-muted);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 800;
+  line-height: 1;
 }
 
-.navBar {
+.avatar-sm {
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 0.9rem;
+}
+
+.avatar-lg {
+  width: 6rem;
+  height: 6rem;
+  font-size: 2.5rem;
+}
+
+.user-name {
+  font-weight: 700;
+}
+
+/* #12345-delen af brugernavnet er sekundær information */
+.user-tag {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Sekundære handlinger (Svar, Del). Diskrete, så siden kun har én gylden knap. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--text-muted);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pill:hover,
+.pill:focus-visible {
+  border-color: var(--text);
+  text-decoration: none;
+}
+
+.pill-icon {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Opslagskort, bruges på forsiden, i kategorier, på opslagssiden og profilen */
+.post-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.post-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.post-card-byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.6rem;
+  min-width: 0;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.post-card-byline time,
+.post-card-context {
+  color: var(--text-muted);
+}
+
+.post-card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.post-card-title a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.post-card-title a:hover,
+.post-card-title a:focus-visible {
+  color: var(--accent-text);
+  text-decoration: underline;
+}
+
+.post-card-body {
+  max-width: 70ch;
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.post-card-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1) var(--space-3);
-  margin-top: var(--space-2);
-  padding: 0.75rem 1.25rem;
-  border: 1px solid var(--chrome-stroke);
-  border-radius: var(--radius);
+  gap: var(--space-1);
+  margin-top: 0.25rem;
 }
 
-/* Logoet er en bred wordmark (750x171) i hvid udgave, som kan ses på mørkeblå */
-.navBar-logo {
-  width: auto;
-  height: 40px;
+/* Del-knappen skubbes til højre som i mockuppen */
+.post-card-actions [data-share-path] {
+  margin-left: auto;
 }
 
-.navBar-list {
+.card-list {
   display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
+  flex-direction: column;
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.navBar-link {
+.section-heading {
+  margin-bottom: var(--space-2);
+  font-size: 1.35rem;
+}
+
+.empty-state {
+  color: var(--text-muted);
+}
+
+/* --- Topbar (mørkeblå i begge temaer) ------------------------------------ */
+
+.topbar,
+.site-footer {
+  background: var(--chrome-bg);
+  color: var(--chrome-text);
+}
+
+.topbar :focus-visible,
+.site-footer :focus-visible {
+  outline-color: var(--accent);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--chrome-stroke);
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: min(100% - 2 * var(--page-gutter), var(--content-width));
+  min-height: 4rem;
+  margin-inline: auto;
+}
+
+.topbar-brand {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* Wordmark på 750x171 i hvid udgave; højden styrer størrelsen */
+.topbar-logo {
+  width: auto;
+  height: 36px;
+}
+
+.topbar-nav {
+  flex: 1;
+}
+
+.topbar-list {
+  display: flex;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.topbar-link {
   display: inline-block;
   padding: 0.35rem 0;
   border-bottom: 2px solid transparent;
   color: var(--chrome-text);
-  font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
 }
 
-.navBar-link:hover,
-.navBar-link:focus-visible {
-  border-bottom-color: var(--accent);
+.topbar-link:hover,
+.topbar-link:focus-visible {
+  border-bottom-color: var(--chrome-muted);
   text-decoration: none;
 }
 
-@media (max-width: 40rem) {
-  .navBar {
-    justify-content: space-between;
-    column-gap: var(--space-1);
-    padding: 0.75rem 1rem;
-  }
-
-  .navBar-Onboarding {
-    padding: 0.4rem 0.85rem;
-  }
-
-  .navBar-list {
-    order: 3;
-    flex-basis: 100%;
-  }
+/* Aktiv side markeres med guld (accent = "skal lægges mærke til") */
+.topbar-link[aria-current="page"] {
+  border-bottom-color: var(--accent);
 }
 
-/* Sekundær handling i navigationen, så siden kun har én gylden primærknap */
-.navBar-Onboarding {
-  padding: 0.5rem 1.1rem;
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
+.topbar-profile {
+  display: inline-flex;
+  border-radius: 50%;
+  text-decoration: none;
+}
+
+.topbar-profile .avatar {
+  border-color: var(--chrome-muted);
+  background: #0F1420;
+  color: var(--chrome-text);
+}
+
+.topbar-profile:hover .avatar,
+.topbar-profile:focus-visible .avatar {
+  border-color: var(--accent);
+}
+
+.topbar-cta {
+  padding: 0.45rem 1rem;
   border: 2px solid var(--chrome-muted);
   border-radius: 999px;
   color: var(--chrome-text);
   font-weight: 700;
   text-decoration: none;
+  white-space: nowrap;
 }
 
-.navBar-Onboarding:hover,
-.navBar-Onboarding:focus-visible {
+.topbar-cta:hover,
+.topbar-cta:focus-visible {
   border-color: var(--chrome-text);
   text-decoration: none;
 }
 
-footer {
+.topbar-menu-button {
+  display: none;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--chrome-stroke);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--chrome-text);
+  cursor: pointer;
+}
+
+.topbar-menu-button svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Profil-links står i menuen på mobil; på desktop dækker profilikonet dem */
+.topbar-menu-only {
+  display: none;
+}
+
+/* Mobil: links bag hamburger-knappen. Uden JavaScript vises de altid. */
+@media (max-width: 48rem) {
+  .topbar-inner {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
+  .topbar-menu-button {
+    display: inline-grid;
+  }
+
+  .topbar-nav {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .has-js .topbar-nav {
+    display: none;
+  }
+
+  .has-js .topbar.is-open .topbar-nav {
+    display: block;
+  }
+
+  .topbar-list {
+    flex-direction: column;
+    gap: 0;
+    padding: var(--space-1) 0 var(--space-2);
+  }
+
+  .topbar-menu-only {
+    display: list-item;
+  }
+
+  .topbar-link {
+    display: block;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--chrome-stroke);
+  }
+
+  .topbar-link[aria-current="page"] {
+    border-bottom-color: var(--chrome-stroke);
+    color: var(--accent);
+  }
+}
+
+/* --- Footer --------------------------------------------------------------- */
+
+.site-footer {
+  margin-top: var(--space-5);
+  border-top: 1px solid var(--chrome-stroke);
+  color: var(--chrome-muted);
+  font-size: 0.9rem;
+}
+
+.site-footer-inner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2) var(--space-3);
-  margin: var(--space-4) 0 var(--space-2);
-  padding: var(--space-3) 1.25rem;
-  border: 1px solid var(--chrome-stroke);
-  border-radius: var(--radius);
-  color: var(--chrome-muted);
-  font-size: 0.9rem;
+  width: min(100% - 2 * var(--page-gutter), var(--content-width));
+  margin-inline: auto;
+  padding: var(--space-3) 0;
 }
 
-footer p {
+.site-footer p {
   margin: 0;
   color: inherit;
   font-size: inherit;
 }
 
-footer a {
+.site-footer a {
   color: var(--chrome-text);
 }
 

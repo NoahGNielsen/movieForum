@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../assets/php/userCookieHandeling.php';
+require_once __DIR__ . '/../assets/php/viewHelpers.php';
 
 mysqli_report(MYSQLI_REPORT_OFF);
 
@@ -86,14 +86,18 @@ $findComments->bind_result($commentId, $commentUserName, $commentContent, $comme
 
 $comments = [];
 while ($findComments->fetch()) {
-	$time = strtotime((string) $commentTimestamp);
+	// Pre-formatted with the same helpers post.php uses, so cards added by commentPoller.js match.
+	$nameParts = viewSplitUserName($commentUserName);
 	$comments[] = [
 		'id' => $commentId,
 		'username' => $commentUserName,
+		'nameBase' => $nameParts['name'],
+		'nameTag' => $nameParts['tag'],
+		'initial' => viewInitial($commentUserName),
 		'content' => $commentContent,
 		'timestamp' => $commentTimestamp,
-		// Same format as $formatTime in postViewer.php.
-		'displayTime' => $time === false ? (string) $commentTimestamp : date('d.m.Y \k\l. H:i', $time),
+		'displayTime' => viewRelativeTime($commentTimestamp),
+		'exactTime' => viewExactTime($commentTimestamp),
 	];
 }
 $findComments->close();

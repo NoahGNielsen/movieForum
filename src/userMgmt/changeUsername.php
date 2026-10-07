@@ -99,7 +99,7 @@ if (!preg_match('/^[A-Za-z]{8}_[0-9]{3}_[0-9]{5}$/', $userId) || !isUserSessionC
 <head>
     <title>Brugernavns ændring - Pellicula Film Forum</title>
     <meta name="description" content="Ændring af brugernavn for eksisterende brugere.">
-    <link rel="stylesheet" href="../assets/css/userMgmt.css?v=<?= filemtime(__DIR__ . '/../css/userMgmt.css') ?>">
+   <link rel="stylesheet" href="../assets/css/userMgmt.css?v=<?= filemtime(__DIR__ . '/../assets/css/userMgmt.css') ?>">¨
     <?php include '../assets/php/header.php'; ?>
 </head>
 <body>

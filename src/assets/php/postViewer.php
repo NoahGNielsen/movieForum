@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/userCookieHandeling.php';
+require_once __DIR__ . '/viewHelpers.php';
 
 mysqli_report(MYSQLI_REPORT_OFF);
 
@@ -127,10 +127,6 @@ if ($post === null) {
 }
 
 $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-$formatTime = static function ($timestamp): string {
-	$time = strtotime((string) $timestamp);
-	return $time === false ? (string) $timestamp : date('d.m.Y \k\l. H:i', $time);
-};
 
 $pageTitle = $post ? $post['title'] : 'Indlægget blev ikke fundet';
 $pageDescription = $post ? ($post['body'] !== '' ? $post['body'] : $post['title']) : 'Indlægget kunne ikke findes.';
