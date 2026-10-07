@@ -21,6 +21,22 @@
 		});
 	}
 
+	// Tekstfelter med data-autogrow vokser med indholdet op til CSS-max-height og scroller derefter
+	document.querySelectorAll('textarea[data-autogrow]').forEach(function (textarea) {
+		const resize = function () {
+			const maxHeight = parseFloat(getComputedStyle(textarea).maxHeight) || Infinity;
+			textarea.style.height = 'auto';
+			const border = textarea.offsetHeight - textarea.clientHeight;
+			const wanted = textarea.scrollHeight + border;
+			textarea.style.height = Math.min(wanted, maxHeight) + 'px';
+			textarea.classList.toggle('is-capped', wanted > maxHeight);
+		};
+
+		textarea.addEventListener('input', resize);
+		window.addEventListener('resize', resize);
+		resize();
+	});
+
 	// Del-knapper: systemets delingsmenu hvis den findes, ellers kopieres linket
 	document.querySelectorAll('[data-share-path]').forEach(function (button) {
 		const label = button.querySelector('[data-share-label]');

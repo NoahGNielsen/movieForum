@@ -95,6 +95,7 @@ while ($findComments->fetch()) {
 		'nameTag' => $nameParts['tag'],
 		'initial' => viewInitial($commentUserName),
 		'content' => $commentContent,
+		'displayContent' => viewBreakLongWords($commentContent),
 		'timestamp' => $commentTimestamp,
 		'displayTime' => viewRelativeTime($commentTimestamp),
 		'exactTime' => viewExactTime($commentTimestamp),

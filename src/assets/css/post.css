@@ -21,17 +21,12 @@ main {
 	overflow-wrap: anywhere;
 }
 
-.postBody {
-	margin-bottom: 1.25rem;
-}
-
 /* Up/down votes under the post (postVotes.js). A chosen vote is filled, not just recoloured. */
 .postVotes {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 0.5rem;
-	margin-bottom: 2.5rem;
 }
 
 .voteButton {
@@ -92,9 +87,6 @@ main {
 	display: none;
 }
 
-.postComments h2 {
-	margin-bottom: 1rem;
-	font-size: 1.25rem;
 .postComments {
 	display: flex;
 	flex-direction: column;
@@ -108,11 +100,21 @@ main {
 	padding: var(--space-2);
 }
 
+/* Fylder kortets bredde og vokser med teksten (site.js). Låst, så den ikke kan trækkes skæv;
+   meget lange kommentarer scroller inde i feltet i stedet for at skubbe siden. */
 .commentFormInput {
+	display: block;
 	width: 100%;
 	min-height: 5rem;
-	padding: 0.6rem 0.75rem;
-	resize: vertical;
+	max-height: 24rem;
+	padding: 0.75rem 1rem;
+	resize: none;
+	overflow-y: hidden;
+	line-height: 1.5;
+}
+
+.commentFormInput.is-capped {
+	overflow-y: auto;
 }
 
 .commentFormSubmit {
@@ -139,11 +141,13 @@ main {
 	box-shadow: 0 0 0 1px var(--accent);
 }
 
+/* Lange ord får bløde bindestreger i PHP (viewBreakLongWords); overflow-wrap er sikkerhedsnettet */
 .commentContent {
 	max-width: 70ch;
 	margin: 0.75rem 0 0;
 	white-space: pre-wrap;
 	overflow-wrap: anywhere;
+	hyphens: manual;
 }
 
 .postMessage {
@@ -177,6 +181,7 @@ main {
 /* Henter næste side af ældre kommentarer (commentPoller.js). Bruger .pill, så den er sekundær. */
 .loadMoreCommentsButton {
 	align-self: center;
+	margin: var(--space-1) 0 var(--space-2);
 }
 
 .loadMoreCommentsButton:disabled {
