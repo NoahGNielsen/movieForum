@@ -1,0 +1,5 @@
+/* Ny underkategori bruger formularkomponenterne i mainStyle.css (.form-page, .field, .check-row) */
+.newCategoriForm .check-row {
+	padding-top: var(--space-2);
+	border-top: 1px solid var(--stroke);
+}
