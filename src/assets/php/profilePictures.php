@@ -8,7 +8,7 @@ const PROFILE_PICTURE_MAX_BYTES = 4 * 1024 * 1024;
 const PROFILE_PICTURE_MAX_SIDE = 496;
 const PROFILE_PICTURE_WEBP_QUALITY = 82;
 // GD needs about 4 bytes per pixel to decode, so larger images could run out of memory.
-const PROFILE_PICTURE_MAX_PIXELS = 25000000;
+const PROFILE_PICTURE_MAX_PIXELS = 15000000;
 
 // Subquery for the user's current profile picture id (or NULL), for use in a SELECT list.
 function profilePictureIdSql(string $userIdColumn): string
@@ -65,7 +65,7 @@ function profilePictureFromUpload($upload): array
 		return ['error' => 'Filen skal være et JPG-, PNG-, GIF- eller WebP-billede.'];
 	}
 	if ($info[0] < 1 || $info[1] < 1 || $info[0] * $info[1] > PROFILE_PICTURE_MAX_PIXELS) {
-		return ['error' => 'Billedet har for mange pixels. Brug et billede på højst 25 megapixel.'];
+		return ['error' => 'Billedet har for mange pixels. Brug et billede på højst 15 megapixel.'];
 	}
 
 	ini_set('memory_limit', '256M');
