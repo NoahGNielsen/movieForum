@@ -1,16 +1,18 @@
-<footer>
-    <div class="footer-darkmode-toggle">
-        <label class="footer-darkmode-label" for="darkModeSwitch">Tema:</label>
-        <select class="darkModeSwitch" name="darkModeSwitch" id="darkModeSwitch">
-            <option value="dark">Mørk</option>
-            <option value="light">Lys</option>
-        </select>
-    </div>
-    <div class="footer-info">
-        <p>&copy; 2026 Pellicula Film Forum. Alle rettigheder forbeholdes.</p>
-    </div>
-    <div class="footer-links">
-        <a href="https://forum.noahgajnielsen.dk/legal/terms" target="_blank">Vilkar og betingelser</a>
-        <a href="https://forum.noahgajnielsen.dk/legal/privacy" target="_blank">Privatlivspolitik</a>
+<footer class="site-footer">
+    <div class="site-footer-inner">
+        <div class="footer-darkmode-toggle">
+            <label class="footer-darkmode-label" for="darkModeSwitch">Tema:</label>
+            <select class="darkModeSwitch" name="darkModeSwitch" id="darkModeSwitch">
+                <option value="dark">Mørk</option>
+                <option value="light">Lys</option>
+            </select>
+        </div>
+        <div class="footer-info">
+            <p>&copy; 2026 Pellicula Film Forum. Alle rettigheder forbeholdes.</p>
+        </div>
+        <div class="footer-links">
+            <a href="https://forum.noahgajnielsen.dk/legal/terms" target="_blank">Vilkår og betingelser</a>
+            <a href="https://forum.noahgajnielsen.dk/legal/privacy" target="_blank">Privatlivspolitik</a>
+        </div>
     </div>
 </footer>

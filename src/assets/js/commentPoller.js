@@ -8,6 +8,7 @@
 		const button = document.getElementById('newCommentsButton');
 		const heading = document.getElementById('commentsHeading');
 		const loadMoreButton = document.getElementById('loadMoreCommentsButton');
+		const replyCountLabel = document.getElementById('replyCountLabel');
 
 		if (!list || !button) {
 			return;
@@ -70,31 +71,48 @@
 			button.textContent = count === 1 ? 'Vis 1 ny kommentar' : 'Vis ' + count + ' nye kommentarer';
 		}
 
+		function element(tag, className, text) {
+			const node = document.createElement(tag);
+			if (className) {
+				node.className = className;
+			}
+			if (text !== undefined) {
+				node.textContent = text;
+			}
+			return node;
+		}
+
+		// Same card markup as the comment loop in posts/post.php; keep the two in sync.
 		// Built with textContent so user-written text is never parsed as HTML.
 		function buildComment(comment) {
-			const entry = document.createElement('li');
-			entry.className = 'commentEntry';
+			const entry = element('li', 'card commentEntry');
 			entry.id = 'comment-' + comment.id;
 
-			const meta = document.createElement('p');
-			meta.className = 'postMeta';
-			const author = document.createElement('span');
-			author.textContent = comment.username;
-			meta.appendChild(author);
+			const head = element('header', 'post-card-head');
+			const avatar = element('span', 'avatar avatar-sm', comment.initial || '?');
+			avatar.setAttribute('aria-hidden', 'true');
+			head.appendChild(avatar);
+
+			const byline = element('p', 'post-card-byline');
+			const name = element('span', 'user-name', comment.nameBase || comment.username);
+			if (comment.nameTag) {
+				name.appendChild(element('span', 'user-tag', comment.nameTag));
+			}
+			byline.appendChild(name);
 
 			if (comment.timestamp) {
-				const time = document.createElement('time');
+				const permalink = element('a', 'commentPermalink');
+				permalink.href = '#comment-' + comment.id;
+				const time = element('time', '', comment.displayTime);
 				time.dateTime = comment.timestamp;
-				time.textContent = comment.displayTime;
-				meta.appendChild(time);
+				time.title = comment.exactTime || '';
+				permalink.appendChild(time);
+				byline.appendChild(permalink);
 			}
 
-			const content = document.createElement('p');
-			content.className = 'commentContent';
-			content.textContent = comment.content;
-
-			entry.appendChild(meta);
-			entry.appendChild(content);
+			head.appendChild(byline);
+			entry.appendChild(head);
+			entry.appendChild(element('p', 'commentContent', comment.content));
 			return entry;
 		}
 
@@ -136,6 +154,9 @@
 			totalComments += newEntries.length;
 			if (heading) {
 				heading.textContent = 'Kommentarer (' + totalComments + ')';
+			}
+			if (replyCountLabel) {
+				replyCountLabel.textContent = totalComments === 1 ? '1 svar' : totalComments + ' svar';
 			}
 
 			// The button disappears on click, so move focus to the newest comment instead.

@@ -4,7 +4,7 @@
 <head>
     <title><?= $escape($pageTitle) ?> - Pellicula Film Forum</title>
     <meta name="description" content="<?= $escape($pageDescription) ?>">
-    <link rel="stylesheet" href="../assets/css/categoryViewer.css">
+    <link rel="stylesheet" href="/assets/css/categoryViewer.css?v=<?= filemtime(__DIR__ . '/../assets/css/categoryViewer.css') ?>">
     <?php include __DIR__ . '/../assets/php/header.php'; ?>
 </head>
 <body>
@@ -24,7 +24,7 @@
                         <p><?= $escape($category['description']) ?></p>
                     <?php endif; ?>
                 </div>
-                <a class="new-post-link" href="https://forum.noahgajnielsen.dk/categories/<?= $escape(rawurlencode($category['name'])) ?>?newPost=true">Lav et nyt indlæg</a>
+                <a class="btn" href="https://forum.noahgajnielsen.dk/categories/<?= $escape(rawurlencode($category['name'])) ?>?newPost=true">Lav et nyt indlæg</a>
             </header>
 
             <div class="category-layout<?= $category['is_top'] ? ' has-subcategories' : '' ?>">
@@ -33,20 +33,31 @@
                     <?php if (empty($posts)): ?>
                         <p class="empty-state">Der er endnu ingen indlæg i denne kategori.</p>
                     <?php else: ?>
-                        <?php foreach ($posts as $post): ?>
-                            <article class="post-entry">
-                                <h3 class="post-title"><?= $escape($post['title']) ?></h3>
-                                <p class="post-content"><?= nl2br($escape($post['content'])) ?></p>
-                                <footer class="post-meta">
-                                    <span>Skrevet af <?= $escape($post['username']) ?></span>
-                                    <span><?= (int) $post['comment_count'] ?> kommentarer</span>
-                                    <?php if (!empty($post['timestamp'])): ?>
-                                        <time datetime="<?= $escape($post['timestamp']) ?>"><?= $escape($post['timestamp']) ?></time>
-                                    <?php endif; ?>
-                                </footer>
-                                <a class="post-link" href="https://forum.noahgajnielsen.dk/posts/<?= (int) $post['id'] ?>">Gå til indlæg</a>
-                            </article>
-                        <?php endforeach; ?>
+                        <ol class="card-list">
+                            <?php foreach ($posts as $post): ?>
+                                <li>
+                                    <article class="card post-card">
+                                        <header class="post-card-head">
+                                            <?= viewAvatar($post['username']) ?>
+                                            <p class="post-card-byline">
+                                                <?= viewUserName($post['username']) ?>
+                                                <?= viewTime($post['timestamp']) ?>
+                                            </p>
+                                        </header>
+                                        <h3 class="post-card-title">
+                                            <a href="/posts/<?= (int) $post['id'] ?>"><?= $escape($post['title']) ?></a>
+                                        </h3>
+                                        <?php if (trim((string) $post['content']) !== ''): ?>
+                                            <p class="post-card-body"><?= $escape(viewExcerpt($post['content'])) ?></p>
+                                        <?php endif; ?>
+                                        <footer class="post-card-actions">
+                                            <a class="pill" href="/posts/<?= (int) $post['id'] ?>#comments"><?= viewReplyIcon() ?><?= $escape(viewReplyLabel((int) $post['comment_count'])) ?></a>
+                                            <?= viewShareButton('/posts/' . (int) $post['id'], (string) $post['title']) ?>
+                                        </footer>
+                                    </article>
+                                </li>
+                            <?php endforeach; ?>
+                        </ol>
                     <?php endif; ?>
                 </section>
 
