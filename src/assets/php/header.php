@@ -6,6 +6,8 @@
 <link rel="stylesheet" href="https://forum.noahgajnielsen.dk/assets/css/mainStyle.css?v=<?= filemtime(__DIR__ . '/../css/mainStyle.css') ?>">
 <link rel="stylesheet" href="https://forum.noahgajnielsen.dk/assets/css/popUp.css?v=<?= filemtime(__DIR__ . '/../css/popUp.css') ?>">
 <?php include __DIR__ . '/darkModeHandler.php'; ?>
+<script>document.documentElement.classList.add('has-js');</script>
+<script src="/assets/js/site.js?v=<?= filemtime(__DIR__ . '/../js/site.js') ?>" defer></script>
 <link rel="terms-of-service" href="https://noahgajnielsen.dk/legal/terms.html">
 <link rel="privacy-policy" href="https://noahgajnielsen.dk/legal/privacy.html">
 

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/userCookieHandeling.php';
+require_once __DIR__ . '/viewHelpers.php';
 
 mysqli_report(MYSQLI_REPORT_OFF);
 

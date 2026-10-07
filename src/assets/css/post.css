@@ -1,42 +1,23 @@
-.postHeading {
-	margin-bottom: 1.5rem;
-	padding-bottom: 1.25rem;
-	border-bottom: 1px solid var(--stroke);
+main {
+	--page-width: 48rem;
 }
 
-.postHeading h1 {
-	margin-bottom: 0.5rem;
-	overflow-wrap: anywhere;
-}
-
-.postCategory {
-	display: inline-block;
-	margin-bottom: 0.4rem;
-	color: var(--accent-text);
-	font-size: 0.78rem;
-	font-weight: 700;
-	text-transform: uppercase;
-	text-decoration: none;
-}
-
-.postCategory:hover,
-.postCategory:focus-visible {
-	text-decoration: underline;
-}
-
-.postMeta {
+.postBreadcrumb {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5rem 1rem;
-	margin: 0;
+	gap: 0.5rem;
+	margin-bottom: var(--space-2);
 	color: var(--text-muted);
-	font-size: 0.85rem;
+	font-size: 0.9rem;
 }
 
-.postBody,
-.commentContent {
-	max-width: 70ch;
-	white-space: pre-wrap;
+.postArticle {
+	margin-bottom: var(--space-3);
+}
+
+.postTitle {
+	margin: 0;
+	font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
 	overflow-wrap: anywhere;
 }
 
@@ -114,49 +95,67 @@
 .postComments h2 {
 	margin-bottom: 1rem;
 	font-size: 1.25rem;
+.postComments {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
 }
 
-.postComments h3 {
-	margin: 2rem 0 0.75rem;
-	font-size: 1.1rem;
+.commentForm {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	padding: var(--space-2);
 }
 
-.commentList {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+.commentFormInput {
+	width: 100%;
+	min-height: 5rem;
+	padding: 0.6rem 0.75rem;
+	resize: vertical;
+}
+
+.commentFormSubmit {
+	align-self: flex-end;
 }
 
 .commentEntry {
-	padding: 1rem 0;
-	border-top: 1px solid var(--stroke);
+	padding: var(--space-2) var(--space-3);
 }
 
-.commentEntry:last-child {
-	border-bottom: 1px solid var(--stroke);
+/* Linket fra kommentarens tid gør det muligt at dele en bestemt kommentar */
+.commentPermalink {
+	color: var(--text-muted);
+	text-decoration: none;
+}
+
+.commentPermalink:hover,
+.commentPermalink:focus-visible {
+	text-decoration: underline;
 }
 
 .commentEntry:target {
-	padding-left: 0.75rem;
-	border-left: 3px solid var(--accent);
+	border-color: var(--accent);
+	box-shadow: 0 0 0 1px var(--accent);
 }
 
 .commentContent {
-	margin: 0.5rem 0 0;
+	max-width: 70ch;
+	margin: 0.75rem 0 0;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
 }
 
-.postEmptyState,
 .postMessage {
 	color: var(--text-muted);
 }
 
 .postNotice,
 .postErrors {
-	max-width: 70ch;
-	margin-bottom: 1.5rem;
+	margin: 0;
 	padding: 0.75rem 1rem;
 	border: 1px solid var(--stroke);
-	border-radius: 6px;
+	border-radius: var(--radius-sm);
 	background: var(--surface);
 }
 
@@ -175,76 +174,28 @@
 	content: "\2715  Fejl";
 }
 
-
-.commentForm {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	max-width: 70ch;
-}
-
-.commentFormLabel {
-	font-weight: 700;
-}
-
-.commentFormInput {
-	width: 100%;
-	min-height: 7rem;
-	margin-bottom: 0.75rem;
-	padding: 0.5rem 0.65rem;
-	border: 1px solid var(--text-muted);
-	border-radius: 6px;
-	background: var(--surface);
-	color: var(--text);
-	font: inherit;
-	resize: vertical;
-}
-
-.commentFormSubmit {
-	align-self: flex-start;
-	padding: 0.5rem 1rem;
-	border: 1px solid var(--accent);
-	border-radius: 6px;
-	background: var(--accent);
-	color: var(--on-accent);
-	font: inherit;
-	cursor: pointer;
-}
-
-.commentFormSubmit:disabled,
-.commentFormInput:disabled {
-	opacity: 0.5;
-	cursor: not-allowed;
-}
-
-/* Loads the next page of older comments (commentPoller.js). Outlined so it reads as secondary to "Send kommentar". */
+/* Henter næste side af ældre kommentarer (commentPoller.js). Bruger .pill, så den er sekundær. */
 .loadMoreCommentsButton {
-	display: block;
-	margin: 1rem auto 1.5rem;
-	padding: 0.5rem 1rem;
-	border: 1px solid var(--accent);
-	border-radius: 6px;
-	background: transparent;
-	color: var(--accent);
-	font: inherit;
-	cursor: pointer;
+	align-self: center;
 }
 
 .loadMoreCommentsButton:disabled {
-	opacity: 0.5;
+	opacity: 0.6;
 	cursor: progress;
 }
 
-.loadMoreCommentsButton[hidden] {
-	display: none;
+/* Live-regionen holder kun den fastlåste knap, så den må ikke give ekstra afstand i listen */
+.newCommentsRegion {
+	position: absolute;
 }
 
-/* Shown by commentPoller.js when new comments arrive while the post is open. */
+/* Vises af commentPoller.js, når der kommer nye kommentarer, mens opslaget er åbent.
+   Guld, fordi det er noget brugeren skal lægge mærke til; tekst på guld er altid mørk. */
 .newCommentsButton {
 	position: fixed;
 	bottom: 1.5rem;
 	left: 50%;
-	z-index: 100;
+	z-index: 90;
 	transform: translateX(-50%);
 	padding: 0.55rem 1.1rem;
 	border: 1px solid var(--accent);
@@ -257,15 +208,12 @@
 	cursor: pointer;
 }
 
-.newCommentsButton[hidden] {
-	display: none;
-}
-
+/* commentPoller.js flytter fokus til den nyeste kommentar; markeres som et link-anker (:target) */
 .commentEntry:focus {
 	outline: none;
 }
 
 .commentEntry:focus-visible {
-	padding-left: 0.75rem;
-	border-left: 3px solid var(--accent);
+	border-color: var(--accent);
+	box-shadow: 0 0 0 1px var(--accent);
 }

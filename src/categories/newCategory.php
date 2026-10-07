@@ -4,7 +4,7 @@
 <head>
     <title>Lav et nyt indlæg - Pellicula Film Forum</title>
     <meta name="description" content="På denne side kan du oprette et nyt indlæg i forumet. Udfyld de nødvendige oplysninger og del dine tanker med andre filmelskere. Hvorefter du kan deltage i diskussioner og få feedback på dine indlæg.">
-    <link rel="stylesheet" href="../assets/css/newCategory.css?v=<?= filemtime(__DIR__ . '/../css/newCategory.css') ?>">
+    <link rel="stylesheet" href="../assets/css/newCategory.css?v=<?= filemtime(__DIR__ . '/../assets/css/allCategories.css') ?>">
     <?php include __DIR__ . '/../assets/php/header.php'; ?>
 </head>
 <body>

@@ -19,21 +19,25 @@
                 <a href="/categories/">Gå til kategorier</a>
             </section>
         <?php else: ?>
-            <article class="postArticle">
-                <header class="postHeading">
-                    <?php if (!empty($post['category'])): ?>
-                        <a class="postCategory" href="/categories/<?= $escape(rawurlencode($post['category'])) ?>"><?= $escape($post['category']) ?></a>
-                    <?php endif; ?>
-                    <h1><?= $escape($post['title']) ?></h1>
-                    <p class="postMeta">
-                        <span>Skrevet af <?= $escape($post['username']) ?></span>
-                        <?php if (!empty($post['timestamp'])): ?>
-                            <time datetime="<?= $escape($post['timestamp']) ?>"><?= $escape($formatTime($post['timestamp'])) ?></time>
-                        <?php endif; ?>
+            <?php if (!empty($post['category'])): ?>
+                <nav class="postBreadcrumb" aria-label="Brødkrumme">
+                    <a href="/categories/">Kategorier</a>
+                    <span aria-hidden="true">/</span>
+                    <a href="/categories/<?= $escape(rawurlencode($post['category'])) ?>"><?= $escape($post['category']) ?></a>
+                </nav>
+            <?php endif; ?>
+
+            <article class="card post-card postArticle">
+                <header class="post-card-head">
+                    <?= viewAvatar($post['username']) ?>
+                    <p class="post-card-byline">
+                        <?= viewUserName($post['username']) ?>
+                        <?= viewTime($post['timestamp']) ?>
                     </p>
                 </header>
+                <h1 class="postTitle"><?= $escape($post['title']) ?></h1>
                 <?php if ($post['body'] !== ''): ?>
-                    <p class="postBody"><?= $escape($post['body']) ?></p>
+                    <p class="post-card-body postBody"><?= $escape($post['body']) ?></p>
                 <?php endif; ?>
 
                 <?php // Works as a normal form without JavaScript; postVotes.js sends it in the background instead. ?>
@@ -47,44 +51,14 @@
                         <span class="voteNotice"><a href="/userMgmt/onboarding">Opret en bruger</a> for at stemme.</span>
                     <?php endif; ?>
                 </form>
+                <footer class="post-card-actions">
+                    <a class="pill" href="#comments"><?= viewReplyIcon() ?><span id="replyCountLabel"><?= $escape(viewReplyLabel((int) $totalComments)) ?></span></a>
+                    <?= viewShareButton('/posts/' . (int) $post['id'], $post['title']) ?>
+                </footer>
             </article>
 
-            <section class="postComments" aria-labelledby="commentsHeading">
-                <h2 id="commentsHeading">Kommentarer (<?= (int) $totalComments ?>)</h2>
-
-                <?php if (empty($comments)): ?>
-                    <p class="postEmptyState" id="commentsEmptyState">Der er endnu ingen kommentarer. Vær den første til at kommentere.</p>
-                <?php endif; ?>
-
-                <?php // Above the list, since new comments are added at the top. ?>
-                <div aria-live="polite">
-                    <button class="newCommentsButton" id="newCommentsButton" type="button" hidden></button>
-                </div>
-
-                <?php // Always rendered (hidden when empty) so commentPoller.js has a list to add new comments to. ?>
-                <ol class="commentList" id="commentList" data-post-id="<?= (int) $post['id'] ?>" data-last-comment-id="<?= (int) $lastCommentId ?>" data-total-comments="<?= (int) $totalComments ?>" data-comment-limit="<?= COMMENT_DISPLAY_LIMIT ?>"<?= empty($comments) ? ' hidden' : '' ?>>
-                    <?php foreach ($comments as $comment): ?>
-                        <li class="commentEntry" id="comment-<?= (int) $comment['id'] ?>">
-                            <p class="postMeta">
-                                <span><?= $escape($comment['username']) ?></span>
-                                <?php if (!empty($comment['timestamp'])): ?>
-                                    <time datetime="<?= $escape($comment['timestamp']) ?>"><?= $escape($formatTime($comment['timestamp'])) ?></time>
-                                <?php endif; ?>
-                            </p>
-                            <p class="commentContent"><?= $escape($comment['content']) ?></p>
-                        </li>
-                    <?php endforeach; ?>
-                </ol>
-
-                <button class="loadMoreCommentsButton" id="loadMoreCommentsButton" type="button"<?= $totalComments > count($comments) ? '' : ' hidden' ?>>Vis flere kommentarer</button>
-
-                <h3>Skriv en kommentar</h3>
-
-                <?php if (!$newComment['is_registered']): ?>
-                    <p class="postNotice" role="status">
-                        Du skal have en registreret bruger for at skrive en kommentar. <a href="/userMgmt/onboarding">Opret en bruger her</a>.
-                    </p>
-                <?php endif; ?>
+            <section class="postComments" id="comments" aria-labelledby="commentsHeading">
+                <h2 class="visually-hidden" id="commentsHeading">Kommentarer (<?= (int) $totalComments ?>)</h2>
 
                 <?php if (!empty($newComment['errors'])): ?>
                     <ul class="postErrors" role="alert">
@@ -94,12 +68,46 @@
                     </ul>
                 <?php endif; ?>
 
-                <form class="commentForm" action="/posts/<?= (int) $post['id'] ?>" method="post">
-                    <?= csrfTokenField() ?>
-                    <label class="commentFormLabel" for="newCommentContent">Kommentar: </label>
-                    <textarea class="commentFormInput" name="newCommentContent" id="newCommentContent" rows="5" minlength="<?= (int) $commentLimits['content_min'] ?>" maxlength="<?= (int) $commentLimits['content_max'] ?>" required<?= $newComment['is_registered'] ? '' : ' disabled' ?>><?= $escape($commentValues['content']) ?></textarea>
-                    <button class="commentFormSubmit" type="submit"<?= $newComment['is_registered'] ? '' : ' disabled' ?>>Send kommentar</button>
-                </form>
+                <?php if (!$newComment['is_registered']): ?>
+                    <p class="postNotice" role="status">
+                        Du skal have et brugernavn for at skrive en kommentar. <a href="/userMgmt/onboarding">Opret et her</a>.
+                    </p>
+                <?php else: ?>
+                    <form class="card commentForm" action="/posts/<?= (int) $post['id'] ?>" method="post">
+                        <?= csrfTokenField() ?>
+                        <label class="visually-hidden" for="newCommentContent">Skriv en kommentar</label>
+                        <textarea class="commentFormInput" name="newCommentContent" id="newCommentContent" rows="3" placeholder="Skriv en kommentar" minlength="<?= (int) $commentLimits['content_min'] ?>" maxlength="<?= (int) $commentLimits['content_max'] ?>" required><?= $escape($commentValues['content']) ?></textarea>
+                        <button class="btn commentFormSubmit" type="submit">Send kommentar</button>
+                    </form>
+                <?php endif; ?>
+
+                <?php if (empty($comments)): ?>
+                    <p class="empty-state" id="commentsEmptyState">Der er endnu ingen kommentarer. Vær den første til at kommentere.</p>
+                <?php endif; ?>
+
+                <?php // Above the list, since new comments are added at the top. ?>
+                <div class="newCommentsRegion" aria-live="polite">
+                    <button class="newCommentsButton" id="newCommentsButton" type="button" hidden></button>
+                </div>
+
+                <?php // Always rendered (hidden when empty) so commentPoller.js has a list to add new comments to.
+                      // commentPoller.js builds the same card markup in buildComment(); keep the two in sync. ?>
+                <ol class="card-list commentList" id="commentList" data-post-id="<?= (int) $post['id'] ?>" data-last-comment-id="<?= (int) $lastCommentId ?>" data-total-comments="<?= (int) $totalComments ?>" data-comment-limit="<?= COMMENT_DISPLAY_LIMIT ?>"<?= empty($comments) ? ' hidden' : '' ?>>
+                    <?php foreach ($comments as $comment): ?>
+                        <li class="card commentEntry" id="comment-<?= (int) $comment['id'] ?>">
+                            <header class="post-card-head">
+                                <?= viewAvatar($comment['username'], 'sm') ?>
+                                <p class="post-card-byline">
+                                    <?= viewUserName($comment['username']) ?>
+                                    <a class="commentPermalink" href="#comment-<?= (int) $comment['id'] ?>"><?= viewTime($comment['timestamp']) ?></a>
+                                </p>
+                            </header>
+                            <p class="commentContent"><?= $escape($comment['content']) ?></p>
+                        </li>
+                    <?php endforeach; ?>
+                </ol>
+
+                <button class="pill loadMoreCommentsButton" id="loadMoreCommentsButton" type="button"<?= $totalComments > count($comments) ? '' : ' hidden' ?>>Vis flere kommentarer</button>
             </section>
         <?php endif; ?>
     </main>
