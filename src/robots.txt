@@ -1,9 +1,12 @@
 User-agent: *
-Disallow: /
-
-User-agent: Claude-User
 Allow: /
 Disallow: /assets/php/
 Disallow: /assets/css/
 Disallow: /assets/js/
 Disallow: /.well-known/
+Disallow: /posts/vote
+Disallow: /posts/newPost
+Disallow: /posts/newComments
+Disallow: /categories/newCategory
+
+Sitemap: https://noahgajnielsen.dk/sitemap.xml
