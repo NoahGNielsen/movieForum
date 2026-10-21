@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/userCookieHandeling.php';
+require_once __DIR__ . '/postImages.php';
 mysqli_report(MYSQLI_REPORT_OFF);
 
 $titleMinLength = 3;
@@ -30,6 +31,8 @@ $state = [
 		'title_max' => $titleMaxLength,
 		'content_min' => $contentMinLength,
 		'content_max' => $contentMaxLength,
+		'images_max' => POST_IMAGE_MAX_COUNT,
+		'image_bytes_max' => PROFILE_PICTURE_MAX_BYTES,
 	],
 ];
 
@@ -93,6 +96,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
 	return $state;
 }
 
+if (empty($_POST) && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
+	// Above post_max_size PHP drops the whole request body, the title and CSRF token included.
+	$conn->close();
+	http_response_code(413);
+	$state['errors'][] = 'Billederne fylder for meget. Du kan vedhæfte højst ' . POST_IMAGE_MAX_COUNT . ' billeder på hver højst 4 MB.';
+	return $state;
+}
+
 $titleInput = $_POST['newPostTitle'] ?? '';
 $contentInput = $_POST['newPostContent'] ?? '';
 $title = is_string($titleInput) ? $cleanText(str_replace(["\n", "\t"], ' ', $titleInput)) : '';
@@ -119,6 +130,14 @@ if (($_POST['acceptTerms'] ?? '') !== '1') {
 	$state['errors'][] = 'Du skal acceptere erklæringen for at oprette et indlæg.';
 }
 
+// Decoding images is heavy, so it is skipped when the request could not create a post anyway.
+$images = [];
+if (empty($state['errors'])) {
+	$postImages = postImagesFromUploads($_FILES['newPostImages'] ?? null);
+	$images = $postImages['images'];
+	array_push($state['errors'], ...$postImages['errors']);
+}
+
 if (!empty($state['errors'])) {
 	$conn->close();
 	http_response_code(400);
@@ -134,13 +153,22 @@ if ($createPost === false) {
 	return $state;
 }
 
+// The post and its images are saved together, so a failed image doesn't leave a post without it.
+$conn->begin_transaction();
 $createPost->bind_param('siss', $userId, $channelId, $title, $content);
 $created = $createPost->execute();
-$newPostId = $conn->insert_id;
+$newPostId = (int) $conn->insert_id;
 $createPost->close();
+
+$created = $created && $newPostId > 0 && savePostImages($conn, $userId, $newPostId, $images);
+if ($created) {
+	$conn->commit();
+} else {
+	$conn->rollback();
+}
 $conn->close();
 
-if (!$created || $newPostId <= 0) {
+if (!$created) {
 	http_response_code(500);
 	$state['errors'][] = 'Indlægget kunne ikke oprettes. Prøv igen senere.';
 	return $state;

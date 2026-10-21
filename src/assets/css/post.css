@@ -21,6 +21,44 @@ main {
 	overflow-wrap: anywhere;
 }
 
+/* Billeder vedhæftet indlægget. Flere billeder vises som ens felter i et gitter; ét billede vises helt. */
+.postImages {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 0.5rem;
+}
+
+.postImagesSingle {
+	grid-template-columns: 1fr;
+}
+
+.postImageLink {
+	display: block;
+	overflow: hidden;
+	border: 1px solid var(--stroke);
+	border-radius: var(--radius-sm);
+	background: var(--bg);
+}
+
+.postImageLink:focus-visible {
+	border-color: var(--accent);
+	box-shadow: 0 0 0 1px var(--accent);
+}
+
+.postImage {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+}
+
+.postImagesSingle .postImage {
+	height: auto;
+	max-height: 32rem;
+	aspect-ratio: auto;
+	object-fit: contain;
+}
+
 /* Up/down votes under the post (postVotes.js). A chosen vote is filled, not just recoloured. */
 .postVotes {
 	display: flex;

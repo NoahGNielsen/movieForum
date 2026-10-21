@@ -41,6 +41,17 @@
                     <p class="post-card-body postBody"><?= $escape(viewBreakLongWords($post['body'])) ?></p>
                 <?php endif; ?>
 
+                <?php if (!empty($post['image_ids'])): ?>
+                    <?php $imageCount = count($post['image_ids']); ?>
+                    <div class="postImages<?= $imageCount === 1 ? ' postImagesSingle' : '' ?>">
+                        <?php foreach ($post['image_ids'] as $index => $imageId): ?>
+                            <a class="postImageLink" href="<?= $escape(postImageUrl($imageId)) ?>" target="_blank" rel="noopener">
+                                <img class="postImage" src="<?= $escape(postImageUrl($imageId)) ?>" alt="Billede <?= $index + 1 ?> af <?= $imageCount ?> vedhæftet indlægget (åbner i en ny fane)" loading="lazy" decoding="async">
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
                 <?php // Works as a normal form without JavaScript; postVotes.js sends it in the background instead. ?>
                 <form class="postVotes" id="postVotes" action="/posts/vote" method="post">
                     <?= csrfTokenField() ?>

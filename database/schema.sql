@@ -32,7 +32,8 @@ CREATE TABLE `Attachments` (
   `userId` char(18) NOT NULL,
   `attachmentType` varchar(25) NOT NULL,
   `attachmentFile` longblob NOT NULL,
-  `attachmentUploadTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `attachmentUploadTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `postId` int DEFAULT NULL COMMENT 'Set for postImage attachments'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -112,7 +113,8 @@ CREATE TABLE `Users` (
 ALTER TABLE `Attachments`
   ADD PRIMARY KEY (`attachmentId`),
   ADD KEY `attachmentType` (`attachmentType`),
-  ADD KEY `userId` (`userId`);
+  ADD KEY `userId` (`userId`),
+  ADD KEY `fk_attachments_post` (`postId`);
 
 --
 -- Indexes for table `Channels`
@@ -196,6 +198,7 @@ ALTER TABLE `Posts`
 -- Constraints for table `Attachments`
 --
 ALTER TABLE `Attachments`
+  ADD CONSTRAINT `fk_attachments_post` FOREIGN KEY (`postId`) REFERENCES `Posts` (`postId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_attachments_user` FOREIGN KEY (`userId`) REFERENCES `Users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

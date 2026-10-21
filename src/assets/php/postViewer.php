@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/userCookieHandeling.php';
 require_once __DIR__ . '/postVotes.php';
+require_once __DIR__ . '/postImages.php';
 require_once __DIR__ . '/viewHelpers.php';
 
 mysqli_report(MYSQLI_REPORT_OFF);
@@ -124,6 +125,7 @@ function loadPostViewer(?int $replyToId): array
 
 	$viewerId = $_COOKIE['user_session_cookie'] ?? '';
 	$votes = loadPostVotes($conn, $postId, is_string($viewerId) ? $viewerId : '');
+	$imageIds = loadPostImageIds($conn, $postId);
 
 	$conn->close();
 
@@ -136,6 +138,7 @@ function loadPostViewer(?int $replyToId): array
 			'avatar_id' => $avatarId !== null ? (int) $avatarId : null,
 			'timestamp' => $postTimestamp,
 			'category' => $categoryName,
+			'image_ids' => $imageIds,
 		],
 		'comments' => $comments,
 		'totalComments' => max((int) $totalComments, count($comments)),

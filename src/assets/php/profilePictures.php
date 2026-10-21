@@ -23,10 +23,16 @@ function profilePictureUrl(int $attachmentId): string
 	return '/userMgmt/avatar?id=' . $attachmentId;
 }
 
-// Validates an uploaded image and re-encodes it as WebP, scaled down to fit within
-// PROFILE_PICTURE_MAX_SIDE x PROFILE_PICTURE_MAX_SIDE. Re-encoding also strips EXIF data such as GPS location.
-// Returns ['data' => WebP bytes] or ['error' => message for the user].
 function profilePictureFromUpload($upload): array
+{
+	return webpFromUploadedImage($upload, PROFILE_PICTURE_MAX_SIDE);
+}
+
+// Validates an uploaded image and re-encodes it as WebP, scaled down to fit within $maxSide x $maxSide.
+// Re-encoding also strips EXIF data such as GPS location. Post images (postImages.php) use it too,
+// with the same byte and pixel limits as profile pictures.
+// Returns ['data' => WebP bytes] or ['error' => message for the user].
+function webpFromUploadedImage($upload, int $maxSide): array
 {
 	if (!is_array($upload) || !isset($upload['error'], $upload['tmp_name']) || !is_int($upload['error'])) {
 		return ['error' => 'Vælg et billede at uploade.'];
@@ -78,7 +84,7 @@ function profilePictureFromUpload($upload): array
 
 	$width = imagesx($source);
 	$height = imagesy($source);
-	$scale = min(1, PROFILE_PICTURE_MAX_SIDE / max($width, $height));
+	$scale = min(1, $maxSide / max($width, $height));
 	$targetWidth = max(1, (int) round($width * $scale));
 	$targetHeight = max(1, (int) round($height * $scale));
 

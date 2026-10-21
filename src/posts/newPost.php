@@ -14,8 +14,9 @@ $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QU
 <head>
     <title>Lav et nyt indlæg<?= $category ? ' i ' . $escape($category['name']) : '' ?> - Pellicula Film Forum</title>
     <meta name="description" content="På denne side kan du oprette et nyt indlæg i forumet. Udfyld de nødvendige oplysninger og del dine tanker med andre filmelskere. Hvorefter du kan deltage i diskussioner og få feedback på dine indlæg.">
-    <link rel="stylesheet" href="/assets/css/newPost.css">
+    <link rel="stylesheet" href="/assets/css/newPost.css?v=<?= filemtime(__DIR__ . '/../assets/css/newPost.css') ?>">
     <?php include __DIR__ . '/../assets/php/header.php'; ?>
+    <script src="/assets/js/newPostImages.js?v=<?= filemtime(__DIR__ . '/../assets/js/newPostImages.js') ?>" defer></script>
 </head>
 <body>
     <?php include __DIR__ . '/../assets/php/navBar.php'; ?>
@@ -46,13 +47,18 @@ $escape = static fn ($value): string => htmlspecialchars((string) $value, ENT_QU
                 </ul>
             <?php endif; ?>
 
-            <form class="newPostForm" action="" method="post">
+            <form class="newPostForm" action="" method="post" enctype="multipart/form-data">
                 <?= csrfTokenField() ?>
                 <label class="newPostFormLabel" for="newPostTitle">Titel: </label>
                 <input class="newPostFormInput" type="text" name="newPostTitle" id="newPostTitle" minlength="<?= (int) $limits['title_min'] ?>" maxlength="<?= (int) $limits['title_max'] ?>" value="<?= $escape($values['title']) ?>" required>
 
                 <label class="newPostFormLabel" for="newPostContent">Indhold: </label>
                 <textarea class="newPostFormInput newPostFormTextarea" name="newPostContent" id="newPostContent" rows="10" minlength="<?= (int) $limits['content_min'] ?>" maxlength="<?= (int) $limits['content_max'] ?>" required><?= $escape($values['content']) ?></textarea>
+
+                <label class="newPostFormLabel" for="newPostImages">Billeder (valgfrit): </label>
+                <input class="newPostFormInput" type="file" name="newPostImages[]" id="newPostImages" accept="image/jpeg,image/png,image/gif,image/webp" multiple data-max-count="<?= (int) $limits['images_max'] ?>" data-max-bytes="<?= (int) $limits['image_bytes_max'] ?>" aria-describedby="newPostImagesHint">
+                <p class="newPostFormHint" id="newPostImagesHint">Op til <?= (int) $limits['images_max'] ?> billeder i JPG, PNG, GIF eller WebP på højst 4 MB hver.<?= empty($newPost['errors']) ? '' : ' Vælg billederne igen, hvis du havde valgt nogen.' ?></p>
+                <div class="newPostImagePreview" id="newPostImagePreview" hidden></div>
 
                 <div class="newPostFormTerms">
                     <input type="checkbox" name="acceptTerms" id="acceptTerms" value="1" required>

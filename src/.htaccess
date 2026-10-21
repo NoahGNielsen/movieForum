@@ -63,6 +63,12 @@ FileETag MTime Size
         Header set Cache-Control "public, max-age=31536000, immutable" "expr=%{REQUEST_STATUS} == 200"
         Header set Cache-Control "no-store" "expr=%{REQUEST_STATUS} != 200"
     </Files>
+
+    # Post images are never edited either, so they are cached the same way.
+    <Files "image.php">
+        Header set Cache-Control "public, max-age=31536000, immutable" "expr=%{REQUEST_STATUS} == 200"
+        Header set Cache-Control "no-store" "expr=%{REQUEST_STATUS} != 200"
+    </Files>
 </IfModule>
 
 # ==============================================================================
